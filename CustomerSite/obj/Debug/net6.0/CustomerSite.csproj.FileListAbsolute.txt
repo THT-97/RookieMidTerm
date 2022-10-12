@@ -68,3 +68,13 @@ D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\CustomerSite\obj\Debug\net6.0\refi
 D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\CustomerSite\obj\Debug\net6.0\CustomerSite.pdb
 D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\CustomerSite\obj\Debug\net6.0\CustomerSite.genruntimeconfig.cache
 D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\CustomerSite\obj\Debug\net6.0\ref\CustomerSite.dll
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\CustomerSite\bin\Debug\net6.0\EcommerceAPI.deps.json
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\CustomerSite\bin\Debug\net6.0\EcommerceAPI.runtimeconfig.json
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\CustomerSite\bin\Debug\net6.0\EcommerceAPI.exe
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\CustomerSite\bin\Debug\net6.0\Microsoft.OpenApi.dll
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\CustomerSite\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\CustomerSite\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\CustomerSite\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\CustomerSite\bin\Debug\net6.0\EcommerceAPI.dll
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\CustomerSite\bin\Debug\net6.0\EcommerceAPI.pdb
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\CustomerSite\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
