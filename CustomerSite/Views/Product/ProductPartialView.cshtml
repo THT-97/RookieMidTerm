@@ -1,0 +1,47 @@
+﻿@model CustomerSite.Models.Product
+
+<div class="card">
+    <h4 class="card-header">Product</h4>
+    <div class="card-body">
+        <p class="card-text">
+            <b>Product: </b>
+            <span>@Model.Name</span>
+        </p>
+        <p class="card-text">
+            @Html.DisplayNameFor(model => model.Colors)
+            @Html.DisplayFor(model => model.Colors)
+        </p>
+        <p class="card-text">
+            @Html.DisplayNameFor(model => model.Sizes)
+            @Html.DisplayFor(model => model.Sizes)
+        </p>
+        <p class="card-text">
+            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayFor(model => model.Description)
+        </p>
+        <p class="card-text">
+            @Html.DisplayNameFor(model => model.ListPrice)
+            @Html.DisplayFor(model => model.ListPrice)
+        </p>
+        <p class="card-text">
+            @Html.DisplayNameFor(model => model.SalePrice)
+            @Html.DisplayFor(model => model.SalePrice)
+        </p>
+        <p class="card-text">
+            @Html.DisplayNameFor(model => model.CreatedDate)
+            @Html.DisplayFor(model => model.CreatedDate)
+        </p>
+        <p class="card-text">
+            @Html.DisplayNameFor(model => model.Quantity)
+            @if (Model.Quantity > 0)
+            {
+                @Html.DisplayFor(model => model.Quantity)
+            }
+            else{<i class="text-danger">Out of stock</i>}
+        </p>
+        <p class="card-text">
+            @Html.DisplayNameFor(model => model.Rating)
+            @Html.DisplayFor(model => model.Rating)
+        </p>
+    </div>
+</div>

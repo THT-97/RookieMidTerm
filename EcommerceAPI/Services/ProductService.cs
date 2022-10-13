@@ -4,18 +4,18 @@ using System.Data.Common;
 
 namespace EcommerceAPI.Services
 {
-    public class ProductService : IProductService
+    public class ProductService : IGetService<Product>
     {
-        private EcommerceDbContext _context;
+        private readonly EcommerceDbContext context;
 
         public ProductService(EcommerceDbContext dbContext)
         {
-            _context = dbContext;
+            context = dbContext;
         }
 
         public List<Product>? GetAllProducts()
         {
-            return _context.Products.ToList<Product>();
+            return context.Products.ToList<Product>();
         }
 
         public Product? GetProduct(int id)

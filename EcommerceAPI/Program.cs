@@ -1,4 +1,5 @@
 using EcommerceAPI.Data;
+using EcommerceAPI.Models;
 using EcommerceAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<EcommerceDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IGetService<Product>, ProductService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

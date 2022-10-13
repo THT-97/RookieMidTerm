@@ -9,19 +9,19 @@ namespace EcommerceAPI.Controllers
     [Route("[controller]")]
     public class ProductController : Controller
     {
-        private readonly EcommerceDbContext _context;
-        private ProductService _productService;
+        private readonly EcommerceDbContext context;
+        private ProductService productService;
         public ProductController(EcommerceDbContext dbContext)
         {
-            _context = dbContext;
-            _productService = new ProductService(dbContext);
+            context = dbContext;
+            productService = new ProductService(dbContext);
         }
 
         // GET: ProductController
         [HttpGet(Name = "GetAllProducts")]
         public ActionResult GetAllProducts()
         {
-            List<Product> products = _productService.GetAllProducts();
+            List<Product> products = productService.GetAllProducts();
             if(products != null) return Json(products);
             return BadRequest();
         }

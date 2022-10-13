@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using CustomerSite.Models;
 
 namespace CustomerSite.Data
 {
@@ -9,5 +10,6 @@ namespace CustomerSite.Data
             : base(options)
         {
         }
+        public DbSet<CustomerSite.Models.Product> Product { get; set; }
     }
 }

@@ -1,8 +1,16 @@
-﻿@{
+﻿@model List<Product>
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @if(Model!=null){
+        @foreach(Product product in Model){
+            if(product.Status==1){
+                <partial name="../Product/ProductPartialView" for="@product" />
+            }
+        }
+    }
 </div>
