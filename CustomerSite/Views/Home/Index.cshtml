@@ -1,16 +1,41 @@
-﻿@model List<Product>
-@{
+﻿@{
     ViewData["Title"] = "Home Page";
+    List<Product> products = ViewBag.products;
+    List<Product> newProducts = ViewBag.newProducts;
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    @if(Model!=null){
-        @foreach(Product product in Model){
-            if(product.Status==1){
-                <partial name="../Product/ProductPartialView" for="@product" />
-            }
+    <div class="row">
+        @if (newProducts != null && newProducts.Count > 0)
+        {
+            <h4>New products</h4>
+            <div class="row col-8">
+                @foreach (Product product in newProducts)
+                {
+                    if (product.Status == 1)
+                    {
+                        <partial name="../Product/ProductPartialView" for="@product" />
+                    }
+                }
+            </div>
+            <hr />
         }
-    }
+
+        @if (products != null && products.Count > 0)
+        {
+            <h4>All products</h4>
+            <div class="row col-8">
+                @foreach (Product product in products)
+                {
+                    if (product.Status == 1)
+                    {
+                        <partial name="../Product/ProductPartialView" for="@product" />
+                    }
+                }
+            </div>
+            <hr />
+        }
+    </div>
+    
 </div>

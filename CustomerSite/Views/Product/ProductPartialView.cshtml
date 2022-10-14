@@ -1,47 +1,33 @@
 ﻿@model CustomerSite.Models.Product
-
-<div class="card">
-    <h4 class="card-header">Product</h4>
+@{
+    string img = Model.Images.Split(' ')[0];
+}
+<link rel="stylesheet" href="/css/ProductPartial.css" />
+<div id="productCard" class="card col-4 m-3">
+    <!--Product image slide-->
+    <img src="@($"/Images/P{Model.Id}/{img}")" class="card-img-top">
     <div class="card-body">
-        <p class="card-text">
-            <b>Product: </b>
-            <span>@Model.Name</span>
-        </p>
-        <p class="card-text">
-            @Html.DisplayNameFor(model => model.Colors)
-            @Html.DisplayFor(model => model.Colors)
-        </p>
-        <p class="card-text">
-            @Html.DisplayNameFor(model => model.Sizes)
-            @Html.DisplayFor(model => model.Sizes)
-        </p>
-        <p class="card-text">
-            @Html.DisplayNameFor(model => model.Description)
-            @Html.DisplayFor(model => model.Description)
-        </p>
-        <p class="card-text">
-            @Html.DisplayNameFor(model => model.ListPrice)
-            @Html.DisplayFor(model => model.ListPrice)
-        </p>
-        <p class="card-text">
-            @Html.DisplayNameFor(model => model.SalePrice)
-            @Html.DisplayFor(model => model.SalePrice)
-        </p>
-        <p class="card-text">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-            @Html.DisplayFor(model => model.CreatedDate)
-        </p>
-        <p class="card-text">
-            @Html.DisplayNameFor(model => model.Quantity)
-            @if (Model.Quantity > 0)
+        <h4 class="card-title">@Model.Name</h4>
+        <p id="rating" class="card-text">
+            @for (var i = 1; i <= 5; i++)
             {
-                @Html.DisplayFor(model => model.Quantity)
+                if(i<=Model.Rating) {<i class="fa fa-star text-warning"></i>}
+                else if (i-Model.Rating < 1){<i class="fa fa-star-half text-warning"></i>}
             }
-            else{<i class="text-danger">Out of stock</i>}
+            (@Model.Rating)
         </p>
-        <p class="card-text">
-            @Html.DisplayNameFor(model => model.Rating)
-            @Html.DisplayFor(model => model.Rating)
-        </p>
+        @if(Model.ListPrice!=Model.SalePrice){
+            <span id="ogPrice" class="card-text text-secondary m-2">
+                @Model.ListPrice$
+            </span>
+            <span id="dcPrice" class="card-text text-success">
+                @Model.SalePrice$
+            </span>
+        }
+        else{
+            <p class="card-text">
+                @Model.SalePrice
+            </p>
+        }
     </div>
 </div>

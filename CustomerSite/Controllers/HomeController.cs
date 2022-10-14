@@ -13,6 +13,7 @@ namespace CustomerSite.Controllers
         private HttpClient httpClient;   
         private readonly ILogger<HomeController> _logger;
         private List<Product> products;
+        private List<Product> newProducts;
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -22,10 +23,17 @@ namespace CustomerSite.Controllers
         public async Task<IActionResult> Index()
         {
             //Call to API Controller to get list of all products
-            var response = await httpClient.GetAsync("https://localhost:7171/Product");
+            var response = await httpClient.GetAsync("https://localhost:7171/api/Product/GetAllProducts");
             var content = await response.Content.ReadAsStringAsync();
             products = JsonConvert.DeserializeObject<List<Product>>(content);
-            return View(products);
+            //Call again to get new products
+            response = await httpClient.GetAsync("https://localhost:7171/api/Product/GetNewProducts");
+            content = await response.Content.ReadAsStringAsync();
+            newProducts = JsonConvert.DeserializeObject<List<Product>>(content);
+            //Transfer data to ViewBag
+            ViewBag.products = products;
+            ViewBag.newProducts = newProducts;
+            return View();
         }
         [Authorize]
         public IActionResult Privacy()

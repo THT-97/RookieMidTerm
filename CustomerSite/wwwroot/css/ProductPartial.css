@@ -1,0 +1,13 @@
+﻿#productCard:hover {
+    transform: scale(1.1);
+    box-shadow: 1px 2px 2px 1px lightgray;
+    background-color: z-index: 1;
+}
+
+#rating{
+    text-align: left
+}
+
+#ogPrice{
+    text-decoration: line-through;
+}
