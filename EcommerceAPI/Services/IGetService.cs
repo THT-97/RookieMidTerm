@@ -4,7 +4,8 @@ namespace EcommerceAPI.Services
 {
     public interface IGetService<T>
     {
-        public Task<List<T>>? GetAllProductsAsync();
-        public Task<T>? GetProductAsync(int id);
+        public Task<List<T>>? GetAllAsync();
+        public Task<T>? GetByIDAsync(int id);
+        public Task<int> CountAsync();
     }
 }

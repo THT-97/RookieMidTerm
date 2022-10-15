@@ -10,19 +10,19 @@ namespace EcommerceAPI.Controllers
     [Route("api/[controller]/[action]")]
     public class ProductController : Controller
     {
-        private readonly EcommerceDbContext context;
-        private ProductService productService;
+        private readonly EcommerceDbContext _context;
+        private ProductService _productService;
         public ProductController(EcommerceDbContext dbContext)
         {
-            context = dbContext;
-            productService = new ProductService(dbContext);
+            _context = dbContext;
+            _productService = new ProductService(dbContext);
         }
 
         [HttpGet(Name = "AllProducts")]
         //[ProducesResponseType(typeof(List<ProductDTO>), StatusCodes.Status200OK)]
         public async Task<ActionResult> GetAllProducts()
         {
-            List<Product> products = await productService.GetAllProductsAsync();
+            List<Product> products = await _productService.GetAllAsync();
             if(products != null) return Json(products);
             return BadRequest();
         }
@@ -30,7 +30,7 @@ namespace EcommerceAPI.Controllers
         [HttpGet(Name = "NewProducts")]
         public async Task<ActionResult> GetNewProducts()
         {
-            List<Product> products = await productService.GetNewAsync();
+            List<Product> products = await _productService.GetNewAsync();
             if (products != null) return Json(products);
             return BadRequest();
         }
@@ -39,7 +39,7 @@ namespace EcommerceAPI.Controllers
         //[ProducesResponseType(typeof(List<ProductDTO>), StatusCodes.Status200OK)]
         public async Task<ActionResult> GetByCategory(int id)
         {
-            List<Product> products = await productService.GetByCategoryAsync(id);
+            List<Product> products = await _productService.GetByCategoryAsync(id);
             if (products != null && products.Count>0) return Json(products);
             if (products.Count == 0) return NotFound();
             return BadRequest();

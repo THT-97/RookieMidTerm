@@ -10,24 +10,25 @@ namespace CustomerSite.Controllers
 {
     public class HomeController : Controller
     {
-        private HttpClient httpClient;   
+        private HttpClient _httpClient;   
         private readonly ILogger<HomeController> _logger;
-        private List<Product> products;
-        private List<Product> newProducts;
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            httpClient = new HttpClient();
+            _httpClient = new HttpClient();
         }
 
         public async Task<IActionResult> Index()
         {
+            List<Product> products;
+            List<Product> newProducts;
             //Call to API Controller to get list of all products
-            var response = await httpClient.GetAsync("https://localhost:7171/api/Product/GetAllProducts");
+            var response = await _httpClient.GetAsync("https://localhost:7171/api/Product/GetAllProducts");
             var content = await response.Content.ReadAsStringAsync();
             products = JsonConvert.DeserializeObject<List<Product>>(content);
             //Call again to get new products
-            response = await httpClient.GetAsync("https://localhost:7171/api/Product/GetNewProducts");
+            response = await _httpClient.GetAsync("https://localhost:7171/api/Product/GetNewProducts");
             content = await response.Content.ReadAsStringAsync();
             newProducts = JsonConvert.DeserializeObject<List<Product>>(content);
             //Transfer data to ViewBag
