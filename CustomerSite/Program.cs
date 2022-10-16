@@ -5,10 +5,12 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+//Add connection string
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//Add DbContext for indentity service
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 //Identity service
 builder.Services.AddDefaultIdentity<IdentityUser>(
     //Identity service options

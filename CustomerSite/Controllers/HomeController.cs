@@ -23,6 +23,7 @@ namespace CustomerSite.Controllers
         {
             List<Product> products;
             List<Product> newProducts;
+            List<Category> categories;
             //Call to API Controller to get list of all products
             var response = await _httpClient.GetAsync("https://localhost:7171/api/Product/GetAllProducts");
             var content = await response.Content.ReadAsStringAsync();
@@ -31,7 +32,12 @@ namespace CustomerSite.Controllers
             response = await _httpClient.GetAsync("https://localhost:7171/api/Product/GetNewProducts");
             content = await response.Content.ReadAsStringAsync();
             newProducts = JsonConvert.DeserializeObject<List<Product>>(content);
+            //Call again to get categories
+            response = await _httpClient.GetAsync("https://localhost:7171/api/Category/GetAllCategories");
+            content = await response.Content.ReadAsStringAsync();
+            categories = JsonConvert.DeserializeObject<List<Category>>(content);
             //Transfer data to ViewBag
+            ViewBag.categories = categories;
             ViewBag.products = products;
             ViewBag.newProducts = newProducts;
             return View();

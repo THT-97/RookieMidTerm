@@ -16,8 +16,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 //Add DbContext
 builder.Services.AddDbContext<EcommerceDbContext>(options =>
     options.UseSqlServer(connectionString));
-
+//Add Repository scopes
 builder.Services.AddScoped<IGetService<Product>, ProductService>();
+builder.Services.AddScoped<IProductRepository, ProductService>();
+builder.Services.AddScoped<IGetService<Category>, CategoryService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

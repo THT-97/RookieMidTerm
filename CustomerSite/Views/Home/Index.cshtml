@@ -1,16 +1,24 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    List<Category> categories = ViewBag.categories;
     List<Product> products = ViewBag.products;
     List<Product> newProducts = ViewBag.newProducts;
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+<div class="col-2">
+    @if(categories!=null && categories.Count>0){
+        <select class="form-select" aria-label="Default select example">
+        @foreach(Category category in categories){
+            <option value="@category.Id">@category.Name</option>
+        }
+        </select>
+    }
+</div>
+<div class="text-center col-10">
     <div class="row">
         @if (newProducts != null && newProducts.Count > 0)
         {
             <h4>New products</h4>
-            <div class="row col-8">
+            <div class="row">
                 @foreach (Product product in newProducts)
                 {
                     if (product.Status == 1)

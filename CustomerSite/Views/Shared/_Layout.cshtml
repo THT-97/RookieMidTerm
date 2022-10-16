@@ -12,7 +12,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 fixed-top">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow p-0 fixed-top">
             <div class="container-fluid">
                 <a class="navbar-brand w-25" asp-area="" asp-controller="Home" asp-action="Index">CustomerSite</a>
                 <div class="navbar w-50 justify-content-center">
@@ -37,7 +37,8 @@
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <div class="row mb-5" style="height:50px"></div>
+        <main role="main" class="row pt-3 pb-3">
             @RenderBody()
         </main>
     </div>

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceAPI.Services
 {
-    public interface IProductRepository:IGetService<Product>, IDisposable
+    public interface IProductRepository
     {
         public Task<List<Product>>? GetNewAsync();
         public Task<List<Product>>? GetByCategoryAsync(int categoryId);
