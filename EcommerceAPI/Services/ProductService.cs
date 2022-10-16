@@ -1,10 +1,11 @@
 ﻿using EcommerceAPI.Data;
 using EcommerceAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceAPI.Services
 {
-    public class ProductService : IGetService<Product>, IProductRepository, IDisposable
+    public class ProductService : ICRUDService<Product>, IProductRepository, IDisposable
     {
         private readonly EcommerceDbContext _context;
 
@@ -44,8 +45,8 @@ namespace EcommerceAPI.Services
             int skip = count - 10; //calculate skipped records to get 10 newest records
             if (skip < 0) skip = 0;
             return await _context.Products
-                                .Where(p => p.CreatedDate.Year == DateTime.UtcNow.Year &&
-                                            p.CreatedDate.Month >= DateTime.UtcNow.Month-3)
+                                .Where(p => p.CreatedDate.Year == DateTime.Now.Year &&
+                                            p.CreatedDate.Month >= DateTime.Now.Month-3)
                                 .Skip(skip).OrderByDescending(p => p.CreatedDate).ToListAsync();
         }
         
@@ -55,6 +56,11 @@ namespace EcommerceAPI.Services
             return await _context.Products
                                 .Where(p => p.Rating > 3)
                                 .ToListAsync();
+        }
+
+        public Task<ActionResult> CreateAsync(Product entry)
+        {
+            throw new NotImplementedException();
         }
 
         public void Dispose()

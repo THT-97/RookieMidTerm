@@ -1,4 +1,4 @@
-﻿namespace EcommerceAPI.DTOs
+﻿namespace EcommerceClassLibrary.DTOs
 {
     //DTO class for Product
     public class ProductDTO

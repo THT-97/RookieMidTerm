@@ -22,7 +22,12 @@ namespace EcommerceAPI.Controllers
         public async Task<ActionResult> GetAllCategories()
         {
             List<Category> categories = await _categoryService.GetAllAsync();
-            if (categories != null) return Json(categories);
+            if (categories != null)
+            {
+                if(categories.Count > 0) return Json(categories);
+                return NotFound();
+            }
+
             return BadRequest();
         }
 
@@ -30,7 +35,14 @@ namespace EcommerceAPI.Controllers
         public async Task<ActionResult> GetCategory(int id)
         {
             Category category = await _categoryService.GetByIDAsync(id);
-            return category != null ? Json(category) : BadRequest();
+            return category != null ? Json(category) : NotFound();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateCategory(Category category)
+        {
+            if (ModelState.IsValid) return await _categoryService.CreateAsync(category);
+            return BadRequest();
         }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using EcommerceAPI.Data;
 using EcommerceAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceAPI.Services
 {
-    public class CategoryService : IGetService<Category>, IDisposable
+    public class CategoryService : ICRUDService<Category>, IDisposable
     {
         private readonly EcommerceDbContext _context;
 
@@ -29,9 +30,17 @@ namespace EcommerceAPI.Services
                                             .SingleOrDefaultAsync();
         }
 
+        public async Task<ActionResult> CreateAsync(Category entry)
+        {
+            if (await _context.Categories.AnyAsync(c => c.Name == entry.Name)) return new BadRequestResult();
+            await _context.Categories.AddAsync(entry);
+            return new OkResult();
+        }
+
         public void Dispose()
         {
             _context.Dispose();
         }
+
     }
 }

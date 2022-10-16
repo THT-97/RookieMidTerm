@@ -23,7 +23,12 @@ namespace EcommerceAPI.Controllers
         public async Task<ActionResult> GetAllProducts()
         {
             List<Product> products = await _productService.GetAllAsync();
-            if(products != null) return Json(products);
+            if(products != null)
+            {
+                if(products.Count > 0) return Json(products);
+                return NotFound();
+            }
+
             return BadRequest();
         }
 
@@ -31,7 +36,12 @@ namespace EcommerceAPI.Controllers
         public async Task<ActionResult> GetNewProducts()
         {
             List<Product> products = await _productService.GetNewAsync();
-            if (products != null) return Json(products);
+            if (products != null)
+            {
+                if(products.Count > 0) return Json(products);
+                return NotFound();
+            }
+
             return BadRequest();
         }
 
@@ -40,8 +50,12 @@ namespace EcommerceAPI.Controllers
         public async Task<ActionResult> GetByCategory(int id)
         {
             List<Product> products = await _productService.GetByCategoryAsync(id);
-            if (products != null && products.Count>0) return Json(products);
-            if (products.Count == 0) return NotFound();
+            if (products != null)
+            {
+                if(products.Count > 0) return Json(products);
+                return NotFound();
+            }
+
             return BadRequest();
         }
     }

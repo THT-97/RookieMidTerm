@@ -4,13 +4,20 @@
     List<Product> products = ViewBag.products;
     List<Product> newProducts = ViewBag.newProducts;
 }
-<div class="col-2">
+<div class="col-2 p-3" style="background-color:lightgray">
+    <!--Dropdown menu for Categories-->
     @if(categories!=null && categories.Count>0){
-        <select class="form-select" aria-label="Default select example">
-        @foreach(Category category in categories){
-            <option value="@category.Id">@category.Name</option>
-        }
-        </select>
+        <div class="dropdown" style="position: sticky; top: 3em;">
+            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                CATEGORIES
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownBtn">
+                @foreach (Category category in categories)
+                {
+                    <li><a class="dropdown-item" href="#"><h6>@category.Name</h6></a></li>
+                }
+            </ul>
+        </div>
     }
 </div>
 <div class="text-center col-10">
