@@ -16,10 +16,13 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 //Add DbContext
 builder.Services.AddDbContext<EcommerceDbContext>(options =>
     options.UseSqlServer(connectionString));
-//Add Repository scopes
+/*Add Repository scopes
 builder.Services.AddScoped<ICRUDService<Product>, ProductService>();
 builder.Services.AddScoped<IProductRepository, ProductService>();
-builder.Services.AddScoped<ICRUDService<Category>, CategoryService>();
+builder.Services.AddScoped<ICRUDService<Category>, CategoryService>();*/
+
+//Add automapper
+builder.Services.AddAutoMapper(typeof(Program));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

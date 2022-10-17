@@ -10,5 +10,7 @@ namespace EcommerceAPI.Services
         public Task<int> CountAsync();
 
         public Task<ActionResult> CreateAsync(T entry);
+        public Task<ActionResult> UpdateAsync(int id, T entry);
+        public Task<ActionResult> DeleteAsync(int id);
     }
 }

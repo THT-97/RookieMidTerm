@@ -13,5 +13,7 @@
         public int Quantity { get; set; }
         public float? Rating { get; set; }
         public int? RatingCount { get; set; }
+        public int CategoryID { get; set; }
+        public int BrandID { get; set; }
     }
 }

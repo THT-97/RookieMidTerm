@@ -1,6 +1,8 @@
-﻿using EcommerceAPI.Data;
+﻿using AutoMapper;
+using EcommerceAPI.Data;
 using EcommerceAPI.Models;
 using EcommerceAPI.Services;
+using EcommerceClassLibrary.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceAPI.Controllers
@@ -11,11 +13,13 @@ namespace EcommerceAPI.Controllers
     {
         private readonly EcommerceDbContext _context;
         private CategoryService _categoryService;
+        private IMapper _mapper;
 
         public CategoryController(EcommerceDbContext context)
         {
             _context = context;
             _categoryService = new CategoryService(_context);
+            _mapper = new MapperConfiguration(cfg => cfg.CreateMap<Category, CategoryDTO>()).CreateMapper();
         }
 
         [HttpGet]
@@ -24,7 +28,7 @@ namespace EcommerceAPI.Controllers
             List<Category> categories = await _categoryService.GetAllAsync();
             if (categories != null)
             {
-                if(categories.Count > 0) return Json(categories);
+                if(categories.Count > 0) return Json(_mapper.Map<List<Category>, List<CategoryDTO>>(categories));
                 return NotFound();
             }
 
@@ -43,6 +47,18 @@ namespace EcommerceAPI.Controllers
         {
             if (ModelState.IsValid) return await _categoryService.CreateAsync(category);
             return BadRequest();
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> UpdateCategory(int id, Category category)
+        {
+            return await _categoryService.UpdateAsync(id, category);
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteCategory(int id)
+        {
+            return await _categoryService.DeleteAsync(id);
         }
     }
 }

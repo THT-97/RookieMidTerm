@@ -63,6 +63,16 @@ namespace EcommerceAPI.Services
             throw new NotImplementedException();
         }
 
+        public Task<ActionResult> UpdateAsync(int id, Product entry)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ActionResult> DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Dispose()
         {
             _context.Dispose();

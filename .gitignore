@@ -10,3 +10,4 @@ EcommerceAPI/obj/
 EcommerceAPI/EcommerceAPI.csproj
 EcommerceAPI/EcommerceAPI.csproj.user
 EcommerceClassLibrary/obj/
+/EcommerceClassLibrary/bin/Debug/net6.0
