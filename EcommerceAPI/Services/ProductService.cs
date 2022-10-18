@@ -1,5 +1,7 @@
-﻿using EcommerceAPI.Data;
+﻿using AutoMapper;
+using EcommerceAPI.Data;
 using EcommerceAPI.Models;
+using EcommerceClassLibrary.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +10,7 @@ namespace EcommerceAPI.Services
     public class ProductService : ICRUDService<Product>, IProductRepository, IDisposable
     {
         private readonly EcommerceDbContext _context;
+
 
         public ProductService(EcommerceDbContext context)
         {
@@ -21,7 +24,10 @@ namespace EcommerceAPI.Services
 
         public async Task<List<Product>>? GetAllAsync()
         {
-            return await _context.Products.ToListAsync();
+            List<Product> products = await _context.Products.Include(p => p.Brand)
+                                                            .Include(p => p.Category)
+                                                            .ToListAsync();
+            return products;
         }
 
         public async Task<Product>? GetByIDAsync(int id)
@@ -30,11 +36,10 @@ namespace EcommerceAPI.Services
                                           .SingleOrDefaultAsync();
         }
         
-        public async Task<List<Product>>? GetByCategoryAsync(int categoryId)
+        public async Task<List<Product>>? GetByCategoryAsync(string categoryName)
         {
-            return await _context.Products
-                                .Where(p=>p.Category.Id == categoryId)
-                                .ToListAsync();
+            return await _context.Products.Where(p => p.Category.Name == categoryName)
+                                          .ToListAsync();
         }
 
         //get 10 newest products (created within 3 months)
@@ -44,10 +49,13 @@ namespace EcommerceAPI.Services
             //newest records are at bottom of the data table
             int skip = count - 10; //calculate skipped records to get 10 newest records
             if (skip < 0) skip = 0;
-            return await _context.Products
-                                .Where(p => p.CreatedDate.Year == DateTime.Now.Year &&
-                                            p.CreatedDate.Month >= DateTime.Now.Month-3)
-                                .Skip(skip).OrderByDescending(p => p.CreatedDate).ToListAsync();
+            return await _context.Products.Where(p => p.CreatedDate.Year == DateTime.Now.Year
+                                                      && p.CreatedDate.Month >= DateTime.Now.Month - 3)
+                                          .Include(p => p.Category)
+                                          .Include(p => p.Brand)
+                                          .Skip(skip)
+                                          .OrderByDescending(p => p.CreatedDate)
+                                          .ToListAsync();
         }
         
         //get products with high rating (rating > 3)

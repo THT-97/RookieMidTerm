@@ -1,8 +1,9 @@
-﻿@{
+﻿@using EcommerceClassLibrary.DTOs
+@{
     ViewData["Title"] = "Home Page";
-    List<Category> categories = ViewBag.categories;
-    List<Product> products = ViewBag.products;
-    List<Product> newProducts = ViewBag.newProducts;
+    List<CategoryDTO> categories = ViewBag.categories;
+    List<ProductDTO> products = ViewBag.products;
+    List<ProductDTO> newProducts = ViewBag.newProducts;
 }
 <div class="col-2 p-3" style="background-color:lightgray">
     <div class="p-0" style="position: sticky; top: 3em;">
@@ -14,7 +15,7 @@
                     CATEGORIES
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownBtn">
-                    @foreach (Category category in categories)
+                    @foreach (CategoryDTO category in categories)
                     {
                         <li><a class="dropdown-item" href="#"><h6>@category.Name</h6></a></li>
                     }
@@ -31,7 +32,7 @@
         {
             <h4>New products</h4>
             <div class="row">
-                @foreach (Product product in newProducts)
+                @foreach (ProductDTO product in newProducts)
                 {
                     if (product.Status == 1)
                     {
@@ -46,7 +47,7 @@
         {
             <h4>All products</h4>
             <div class="row">
-                @foreach (Product product in products)
+                @foreach (ProductDTO product in products)
                 {
                     if (product.Status == 1)
                     {

@@ -16,12 +16,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 //Add DbContext
 builder.Services.AddDbContext<EcommerceDbContext>(options =>
     options.UseSqlServer(connectionString));
-/*Add Repository scopes
-builder.Services.AddScoped<ICRUDService<Product>, ProductService>();
-builder.Services.AddScoped<IProductRepository, ProductService>();
-builder.Services.AddScoped<ICRUDService<Category>, CategoryService>();*/
-
-//Add automapper
+//Add AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
 var app = builder.Build();
 

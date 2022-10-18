@@ -28,7 +28,7 @@ namespace EcommerceAPI.Controllers
             List<Category> categories = await _categoryService.GetAllAsync();
             if (categories != null)
             {
-                if(categories.Count > 0) return Json(_mapper.Map<List<Category>, List<CategoryDTO>>(categories));
+                if(categories.Count > 0) return Json(_mapper.Map<List<CategoryDTO>>(categories));
                 return NotFound();
             }
 
@@ -39,7 +39,7 @@ namespace EcommerceAPI.Controllers
         public async Task<ActionResult> GetCategory(int id)
         {
             Category category = await _categoryService.GetByIDAsync(id);
-            return category != null ? Json(category) : NotFound();
+            return category != null ? Json(_mapper.Map<CategoryDTO>(category)) : NotFound();
         }
 
         [HttpPost]

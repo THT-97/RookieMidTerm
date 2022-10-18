@@ -2,10 +2,8 @@
 using EcommerceClassLibrary.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
 using System.Diagnostics;
-using System.Text.Json.Serialization;
 
 namespace CustomerSite.Controllers
 {
@@ -21,17 +19,17 @@ namespace CustomerSite.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<Product> products;
-            List<Product> newProducts;
+            List<ProductDTO> products;
+            List<ProductDTO> newProducts;
             List<CategoryDTO> categories;
             //Call to API Controller to get list of all products
             var response = await _httpClient.GetAsync("Product/GetAllProducts");
             var content = await response.Content.ReadAsStringAsync();
-            products = JsonConvert.DeserializeObject<List<Product>>(content);
+            products = JsonConvert.DeserializeObject<List<ProductDTO>>(content);
             //Call again to get new products
             response = await _httpClient.GetAsync("Product/GetNewProducts");
             content = await response.Content.ReadAsStringAsync();
-            newProducts = JsonConvert.DeserializeObject<List<Product>>(content);
+            newProducts = JsonConvert.DeserializeObject<List<ProductDTO>>(content);
             //Call again to get categories
             response = await _httpClient.GetAsync("Category/GetAllCategories");
             content = await response.Content.ReadAsStringAsync();
