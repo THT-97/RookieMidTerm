@@ -22,20 +22,26 @@ namespace CustomerSite.Controllers
             List<ProductDTO> products;
             List<ProductDTO> newProducts;
             List<CategoryDTO> categories;
-            //Call to API Controller to get list of all products
-            var response = await _httpClient.GetAsync("Product/GetAllProducts");
+            List<BrandDTO> brands;
+            //Call API Controller to get list of categories
+            var response = await _httpClient.GetAsync("Category/GetAllCategories");
             var content = await response.Content.ReadAsStringAsync();
+            categories = JsonConvert.DeserializeObject<List<CategoryDTO>>(content);
+            //Call again to get brand
+            response = await _httpClient.GetAsync("Brand/GetAllBrands");
+            content = await response.Content.ReadAsStringAsync();
+            brands = JsonConvert.DeserializeObject<List<BrandDTO>>(content);
+            //Call again to get list of all products
+            response = await _httpClient.GetAsync("Product/GetAllProducts");
+            content = await response.Content.ReadAsStringAsync();
             products = JsonConvert.DeserializeObject<List<ProductDTO>>(content);
             //Call again to get new products
             response = await _httpClient.GetAsync("Product/GetNewProducts");
             content = await response.Content.ReadAsStringAsync();
             newProducts = JsonConvert.DeserializeObject<List<ProductDTO>>(content);
-            //Call again to get categories
-            response = await _httpClient.GetAsync("Category/GetAllCategories");
-            content = await response.Content.ReadAsStringAsync();
-            categories = JsonConvert.DeserializeObject<List<CategoryDTO>>(content);
             //Transfer data to ViewBag
             ViewBag.categories = categories;
+            ViewBag.brands = brands;
             ViewBag.products = products;
             ViewBag.newProducts = newProducts;
             return View();

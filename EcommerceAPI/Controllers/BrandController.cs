@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using EcommerceAPI.Data;
+using EcommerceAPI.Models;
+using EcommerceAPI.Services;
+using EcommerceClassLibrary.DTOs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceAPI.Controllers
@@ -7,6 +12,54 @@ namespace EcommerceAPI.Controllers
     [ApiController]
     public class BrandController : Controller
     {
+        private readonly EcommerceDbContext _context;
+        private BrandService _brandService;
+        private IMapper _mapper;
 
+        public BrandController(EcommerceDbContext context)
+        {
+            _context = context;
+            _brandService = new BrandService(_context);
+            _mapper = new MapperConfiguration(cfg => cfg.CreateMap<Brand, BrandDTO>()).CreateMapper();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetAllBrands()
+        {
+            List<Brand> brands = await _brandService.GetAllAsync();
+            if (brands != null)
+            {
+                if (brands.Count > 0) return Json(_mapper.Map<List<BrandDTO>>(brands));
+                return NotFound();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetBrand(int id)
+        {
+            Brand brand = await _brandService.GetByIDAsync(id);
+            return brand != null ? Json(_mapper.Map<BrandDTO>(brand)) : NotFound();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateBrand(Brand brand)
+        {
+            if (ModelState.IsValid) return await _brandService.CreateAsync(brand);
+            return BadRequest();
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> UpdateCategory(int id, Brand brand)
+        {
+            return await _brandService.UpdateAsync(id, brand);
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteCategory(int id)
+        {
+            return await _brandService.DeleteAsync(id);
+        }
     }
 }

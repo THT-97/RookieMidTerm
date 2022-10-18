@@ -2,28 +2,43 @@
 @{
     ViewData["Title"] = "Home Page";
     List<CategoryDTO> categories = ViewBag.categories;
+    List<BrandDTO> brands = ViewBag.brands;
     List<ProductDTO> products = ViewBag.products;
     List<ProductDTO> newProducts = ViewBag.newProducts;
 }
 <div class="col-2 p-3" style="background-color:lightgray">
-    <div class="p-0" style="position: sticky; top: 3em;">
+    <div class="p-0" style="position: sticky; top: 4em;">
         <!--Dropdown menu for Categories-->
         @if (categories != null && categories.Count > 0)
         {
-            <div class="dropdown p-0">
-                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownBtn" data-bs-toggle="dropdown" aria-expanded="false">
-                    CATEGORIES
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownBtn">
+            <div class="p-0">
+                <div class="m-0" type="button" data-bs-toggle="collapse" data-bs-target="#categories" aria-expanded="false">
+                    <h5>CATEGORIES</h5>
+                </div>
+                <div id="categories" class="collapse btn-group-vertical p-3 m-0">
                     @foreach (CategoryDTO category in categories)
                     {
-                        <li><a class="dropdown-item" href="#"><h6>@category.Name</h6></a></li>
+                        <a class="btn text-start" href="#"><h6>@category.Name.ToUpper()</h6></a>
                     }
-                </ul>
+                </div>
             </div>
         }
         <hr />
-        <div class="navbar">BRUH</div>
+        <!--Dropdown menu for Brands-->
+        @if (brands != null && (brands.Count > 0))
+        {
+            <div class="p-0">
+                <div class="m-0" type="button" data-bs-toggle="collapse" data-bs-target="#brands" aria-expanded="false">
+                    <h5>BRANDS</h5>
+                </div>
+                <div id="brands" class="collapse btn-group-vertical p-3 m-0">
+                    @foreach (BrandDTO brand in brands)
+                    {
+                        <a class="btn text-start" href="#"><h6>@brand.Name.ToUpper()</h6></a>
+                    }
+                </div>
+            </div>
+        }
     </div>
 </div>
 <div class="text-center col-10">
