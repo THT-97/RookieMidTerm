@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Ecommerce.DTO.DTOs;
 
 namespace CustomerSite.Data
 {
@@ -10,6 +9,5 @@ namespace CustomerSite.Data
             : base(options)
         {
         }
-        public DbSet<ProductDTO> ProductDTO { get; set; }
     }
 }
