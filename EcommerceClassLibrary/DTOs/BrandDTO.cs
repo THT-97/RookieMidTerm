@@ -1,4 +1,4 @@
-﻿namespace EcommerceClassLibrary.DTOs
+﻿namespace Ecommerce.DTO.DTOs
 {
     public class BrandDTO
     {

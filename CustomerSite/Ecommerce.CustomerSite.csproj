@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -6,11 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-CustomerSite-6D325DCD-1D0D-441A-9294-19FD1EE06673</UserSecretsId>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\Images\P1\P1_Black.png" />
-    <None Include="wwwroot\Images\P1\P1_Red.png" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
@@ -27,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EcommerceClassLibrary\EcommerceClassLibrary.csproj" />
+    <ProjectReference Include="..\EcommerceClassLibrary\Ecommerce.DTO.csproj" />
   </ItemGroup>
 
 </Project>

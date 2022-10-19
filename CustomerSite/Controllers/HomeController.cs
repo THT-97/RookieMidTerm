@@ -1,5 +1,5 @@
 ﻿using CustomerSite.Models;
-using EcommerceClassLibrary.DTOs;
+using Ecommerce.DTO.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

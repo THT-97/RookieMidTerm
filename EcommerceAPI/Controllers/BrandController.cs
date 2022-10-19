@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
+using Ecommerce.DTO.DTOs;
 using EcommerceAPI.Data;
 using EcommerceAPI.Models;
 using EcommerceAPI.Services;
-using EcommerceClassLibrary.DTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceAPI.Controllers

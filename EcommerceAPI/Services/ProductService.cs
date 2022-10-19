@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using EcommerceAPI.Data;
+﻿using EcommerceAPI.Data;
 using EcommerceAPI.Models;
-using EcommerceClassLibrary.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +24,7 @@ namespace EcommerceAPI.Services
         {
             List<Product> products = await _context.Products.Include(p => p.Brand)
                                                             .Include(p => p.Category)
+                                                            .OrderByDescending(p => p.CreatedDate)
                                                             .ToListAsync();
             return products;
         }
@@ -33,6 +32,8 @@ namespace EcommerceAPI.Services
         public async Task<Product>? GetByIDAsync(int id)
         {
             return await _context.Products.Where(p => p.Id == id)
+                                          .Include(p => p.Category)
+                                          .Include(p => p.Brand)
                                           .SingleOrDefaultAsync();
         }
         
@@ -61,9 +62,7 @@ namespace EcommerceAPI.Services
         //get products with high rating (rating > 3)
         public async Task<List<Product>>? GetHighRatingAsync()
         {
-            return await _context.Products
-                                .Where(p => p.Rating > 3)
-                                .ToListAsync();
+            return await _context.Products.Where(p => p.Rating > 3).ToListAsync();
         }
 
         public Task<ActionResult> CreateAsync(Product entry)

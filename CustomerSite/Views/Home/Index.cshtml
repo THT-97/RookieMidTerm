@@ -1,14 +1,15 @@
-﻿@using EcommerceClassLibrary.DTOs
+﻿@using Ecommerce.DTO.DTOs
 @{
     ViewData["Title"] = "Home Page";
     List<CategoryDTO> categories = ViewBag.categories;
     List<BrandDTO> brands = ViewBag.brands;
     List<ProductDTO> products = ViewBag.products;
     List<ProductDTO> newProducts = ViewBag.newProducts;
+    var count = 0;
 }
 <div class="col-2 p-3" style="background-color:lightgray">
     <div class="p-0" style="position: sticky; top: 4em;">
-        <!--Dropdown menu for Categories-->
+        <!--Collapse menu for Categories-->
         @if (categories != null && categories.Count > 0)
         {
             <div class="p-0">
@@ -24,7 +25,7 @@
             </div>
         }
         <hr />
-        <!--Dropdown menu for Brands-->
+        <!--Collapse menu for Brands-->
         @if (brands != null && (brands.Count > 0))
         {
             <div class="p-0">
@@ -51,7 +52,12 @@
                 {
                     if (product.Status == 1)
                     {
-                        <partial name="../Product/ProductPartialView" for="@product" />
+                        //pass count to partial view as a viewdata key-value
+                        //so the slide controls know which carousel to slide
+                        await Html.RenderPartialAsync("../Product/ProductPartialView", product,
+                        new ViewDataDictionary(ViewData) { { "count", count } });
+                        count++;
+                        <!--<partial name="../Product/ProductPartialView" for="@product"/>-->
                     }
                 }
             </div>
@@ -66,12 +72,16 @@
                 {
                     if (product.Status == 1)
                     {
-                        <partial name="../Product/ProductPartialView" for="@product" />
+                        //pass count to partial view as a viewdata key-value
+                        //so the slide controls know which carousel to slide
+                        await Html.RenderPartialAsync("../Product/ProductPartialView", product,
+                             new ViewDataDictionary(ViewData) { { "count", count } });
+                        count++;
+                        <!--<partial name="../Product/ProductPartialView" for="@product"/>-->
                     }
                 }
             </div>
             <hr />
         }
     </div>
-    
 </div>

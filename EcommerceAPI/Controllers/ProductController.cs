@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using Ecommerce.DTO.DTOs;
 using EcommerceAPI.Data;
 using EcommerceAPI.Models;
 using EcommerceAPI.Services;
-using EcommerceClassLibrary.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceAPI.Controllers
@@ -68,6 +68,14 @@ namespace EcommerceAPI.Controllers
             }
 
             return BadRequest();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetByID(int id)
+        {
+            Product product = await _productService.GetByIDAsync(id);
+            if (product != null) return Json(_mapper.Map<ProductDTO>(product));
+            return NotFound();
         }
     }
 }
