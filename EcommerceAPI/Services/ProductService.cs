@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceAPI.Services
 {
-    public class ProductService : IProductRepository, IDisposable
+    public class ProductService : ICRUDService<Product>, IProductRepository, IDisposable
     {
         private readonly EcommerceDbContext _context;
 

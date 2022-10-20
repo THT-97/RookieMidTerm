@@ -21,28 +21,26 @@
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
                 </div>
-                <div class="navbar justify-content-end ms-5">
-                    <button class="nav-item btn btn-outline-success">
+                <button class="navbar-toggler col-1" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon w-100"></span>
+                </button>
+                <div class="navbar-collapse collapse justify-content-between row">
+                    <button class="nav-item btn btn-outline-success col-3">
                         <i class="fa-solid fa-cart-shopping"></i> Cart
                     </button>
-                </div>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse justify-content-end">
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
     <div class="container container-fluid">
-        <div class="row mb-5" style="height:50px"></div>
+        <div class="row mb-5 h-25"></div>
         <main role="main" class="row pt-3 pb-3">
             @RenderBody()
         </main>
     </div>
-    <footer class="border-top footer text-muted bg-black bottom-0">
+    <footer class="border-top footer text-muted bg-black bottom-0 fixed-bottom">
         <div class="container">
             &copy; @DateTime.Now.Year - Ecommerce - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>

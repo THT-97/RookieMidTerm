@@ -1,0 +1,35 @@
+﻿#rating{
+    position: relative;
+    height: 25%;
+}
+#five {
+    z-index: 0;
+}
+
+#four {
+    z-index: 1;
+}
+
+#three {
+    z-index: 2;
+}
+
+#two {
+    z-index: 3;
+}
+
+#one{
+    z-index: 4;
+}
+
+#rating>label{
+    position: absolute;
+    left: 0;
+}
+
+/*set color and appearance of a star label when its last-child is hovered*/
+#rating > label:has(i:last-child:hover) {
+    cursor: pointer;
+    color: gold;
+    z-index: 5;
+}

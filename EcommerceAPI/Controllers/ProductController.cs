@@ -12,7 +12,7 @@ namespace EcommerceAPI.Controllers
     public class ProductController : Controller
     {
         private readonly EcommerceDbContext _context;
-        private IProductRepository _productService;
+        private ProductService _productService;
         private IMapper _mapper;
 
         public ProductController(EcommerceDbContext context)

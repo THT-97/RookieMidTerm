@@ -2,7 +2,7 @@
 
 namespace EcommerceAPI.Services
 {
-    public interface IProductRepository: ICRUDService<Product>
+    public interface IProductRepository
     {
         public Task<List<Product>>? GetNewAsync();
         public Task<List<Product>>? GetByCategoryAsync(string CategoryName);

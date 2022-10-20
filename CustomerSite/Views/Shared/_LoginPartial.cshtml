@@ -2,10 +2,10 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-<div class="navbar-nav">
+<div class="navbar-nav col-6">
 @if (SignInManager.IsSignedIn(User))
 {
-        <div class="dropdown nav-item">
+    <div class="dropdown nav-item">
         <a class="nav-link text-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="text-end fa fa-user" aria-hidden="true"></i>
         </a>

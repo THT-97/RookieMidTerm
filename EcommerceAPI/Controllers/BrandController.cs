@@ -12,7 +12,7 @@ namespace EcommerceAPI.Controllers
     public class BrandController : Controller
     {
         private readonly EcommerceDbContext _context;
-        private ICRUDService<Brand> _brandService;
+        private BrandService _brandService;
         private IMapper _mapper;
 
         public BrandController(EcommerceDbContext context)

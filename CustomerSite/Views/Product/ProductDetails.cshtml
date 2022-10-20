@@ -7,7 +7,7 @@
     List<string> sizes = Model.Sizes.Split(' ').ToList();
     List<string> colors = Model.Colors.Split(' ').ToList();
 }
-
+<link rel="stylesheet" href="/css/ProductDetails.css" />
 <div class="container">
     @if(Model!=null){
         <div class="row">
@@ -64,25 +64,60 @@
                             }
                         }
                         <span>(@Model.Rating)</span>
-                        <p><i>@Model.RatingCount Rate(s)</i></p>
+                        <p class="m-0"><i>@Model.RatingCount Rate(s)</i></p>
                     }
                     else
                     {
-                        <i>(Be the first to rate)</i>
+                        <p class="m-0"><i>(Be the first to rate)</i></p>
+                    }
+                    <h5>Your rating:</h5>
+                    <!--Rating form WIP-->
+                    @using (Html.BeginForm("Rate", "Product", new { id = Model.Id}, FormMethod.Post, null, new { id = "rating" }))
+                    {
+                        <label id="one">
+                            <input type="radio" name="rate" value="1" onchange="this.form.submit()" hidden/>
+                            <i class="fa fa-star rate-star"></i>
+                        </label>
+                        <label id="two">
+                            <input type="radio" name="rate" value="2" onchange="this.form.submit()" hidden/>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star rate-star"></i>
+                        </label>
+                        <label id="three">
+                            <input type="radio" name="rate" value="3" onchange="this.form.submit()" hidden/>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star rate-star"></i>
+                        </label>
+                        <label id="four">
+                            <input type="radio" name="rate" value="4" onchange="this.form.submit()" hidden/>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star rate-star"></i>
+                        </label>
+                        <label id="five">
+                            <input type="radio" name="rate" value="5" onchange="this.form.submit()" hidden/>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star rate-star"></i>
+                        </label>
                     }
                 </div>
                 @if (Model.ListPrice != Model.SalePrice)
                 {
-                    <h5 class="card-text text-success mb-0">
+                    <h5 class="text-success mb-0">
                         @Model.SalePrice$
                     </h5>
-                    <small class="card-text text-secondary mt-0" style="text-decoration:line-through">
+                    <small class="text-secondary mt-0" style="text-decoration:line-through">
                         @Model.ListPrice$
                     </small>
                 }
                 else
                 {
-                    <h5 class="card-text">
+                    <h5>
                         @Model.SalePrice
                     </h5>
                 }
@@ -127,3 +162,4 @@
     }
     else{@ViewData["response"]}
 </div>
+<script src="/js/ProductDetails.js"></script>

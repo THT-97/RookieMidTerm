@@ -42,5 +42,11 @@ namespace CustomerSite.Controllers
             ViewData["response"] = response.StatusCode;
             return View(null);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Rate(int rate, int id)
+        {
+            return RedirectToAction("ProductDetails", new { id = id });
+        }
     }
 }
