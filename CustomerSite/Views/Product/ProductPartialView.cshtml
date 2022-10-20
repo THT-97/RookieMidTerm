@@ -8,12 +8,12 @@
     @if(images != null){
         <!--Carousel as card image-->
         <div class="slide-wrapper card-img-top">
-            <div id="slide_@count" class="carousel slide" data-bs-ride="true">
+            <div id="slide_@count" class="carousel slide" data-bs-interval="false">
                 <div class="carousel-indicators">
                     @for (int i = 0; i < images.Count; i++)
                     {
                         <button type="button" data-bs-target="#slide_@count"
-                        data-bs-slide-to="@i" aria-current="true" aria-label="Slide @(i+1)" class="slide-btn bg-dark @(i == 0?"active":"")">
+                        data-bs-slide-to="@i" aria-current="true" aria-label="Slide @(i+1)" class="slide-btn bg-info @(i == 0?"active":"")">
                         </button>
                     }
                 </div>
@@ -26,12 +26,12 @@
                     }
                 </div>
                 <div class="slide-control">
-                    <button class="carousel-control-prev bg-dark" type="button" data-bs-target="#slide_@count" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#slide_@count" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
                         <span class="visually-hidden">Previous</span>
                     </button>
-                    <button class="carousel-control-next bg-dark" type="button" data-bs-target="#slide_@count" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <button class="carousel-control-next" type="button" data-bs-target="#slide_@count" data-bs-slide="next">
+                        <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
                         <span class="visually-hidden">Next</span>
                     </button>
                 </div>

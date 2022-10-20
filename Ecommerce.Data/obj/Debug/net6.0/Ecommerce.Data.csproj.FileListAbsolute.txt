@@ -1,0 +1,12 @@
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\Ecommerce.Data\bin\Debug\net6.0\Ecommerce.Data.deps.json
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\Ecommerce.Data\bin\Debug\net6.0\Ecommerce.Data.dll
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\Ecommerce.Data\bin\Debug\net6.0\Ecommerce.Data.pdb
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\Ecommerce.Data\obj\Debug\net6.0\Ecommerce.Data.csproj.AssemblyReference.cache
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\Ecommerce.Data\obj\Debug\net6.0\Ecommerce.Data.GeneratedMSBuildEditorConfig.editorconfig
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\Ecommerce.Data\obj\Debug\net6.0\Ecommerce.Data.AssemblyInfoInputs.cache
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\Ecommerce.Data\obj\Debug\net6.0\Ecommerce.Data.AssemblyInfo.cs
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\Ecommerce.Data\obj\Debug\net6.0\Ecommerce.Data.csproj.CoreCompileInputs.cache
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\Ecommerce.Data\obj\Debug\net6.0\Ecommerce.Data.dll
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\Ecommerce.Data\obj\Debug\net6.0\refint\Ecommerce.Data.dll
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\Ecommerce.Data\obj\Debug\net6.0\Ecommerce.Data.pdb
+D:\LABS\Intern\NashTech\MidTerm\RookieMidTerm\Ecommerce.Data\obj\Debug\net6.0\ref\Ecommerce.Data.dll

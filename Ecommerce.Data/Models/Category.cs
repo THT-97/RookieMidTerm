@@ -1,4 +1,6 @@
-﻿namespace EcommerceAPI.Models
+﻿using Ecommerce.Data.Models;
+
+namespace Ecommerce.Data.Models
 {
     public class Category
     {

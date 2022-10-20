@@ -3,7 +3,7 @@
     ViewData["Title"] = "Home Page";
     List<CategoryDTO> categories = ViewBag.categories;
     List<BrandDTO> brands = ViewBag.brands;
-    List<ProductDTO> products = ViewBag.products;
+    List<ProductDTO> highRatings = ViewBag.highRatings;
     List<ProductDTO> newProducts = ViewBag.newProducts;
     var count = 0;
 }
@@ -19,7 +19,9 @@
                 <div id="categories" class="collapse btn-group-vertical p-3 m-0">
                     @foreach (CategoryDTO category in categories)
                     {
-                        <a class="btn text-start" href="#"><h6>@category.Name.ToUpper()</h6></a>
+                        <a class="btn text-start" href= @Url.Action("ProductsByCategory","Product", new {categoryName = category.Name})>
+                            <h6>@category.Name.ToUpper()</h6>
+                        </a>
                     }
                 </div>
             </div>
@@ -44,11 +46,11 @@
 </div>
 <div class="text-center col-10">
     <div class="row">
-        @if (newProducts != null && newProducts.Count > 0)
+        @if (highRatings != null && highRatings.Count > 0)
         {
-            <h4>New products</h4>
+            <h4>High ratings</h4>
             <div class="row">
-                @foreach (ProductDTO product in newProducts)
+                @foreach (ProductDTO product in highRatings)
                 {
                     if (product.Status == 1)
                     {
@@ -63,19 +65,18 @@
             </div>
             <hr />
         }
-
-        @if (products != null && products.Count > 0)
+        @if (newProducts != null && newProducts.Count > 0)
         {
-            <h4>All products</h4>
+            <h4>New products</h4>
             <div class="row">
-                @foreach (ProductDTO product in products)
+                @foreach (ProductDTO product in newProducts)
                 {
                     if (product.Status == 1)
                     {
                         //pass count to partial view as a viewdata key-value
                         //so the slide controls know which carousel to slide
                         await Html.RenderPartialAsync("../Product/ProductPartialView", product,
-                             new ViewDataDictionary(ViewData) { { "count", count } });
+                        new ViewDataDictionary(ViewData) { { "count", count } });
                         count++;
                         <!--<partial name="../Product/ProductPartialView" for="@product"/>-->
                     }

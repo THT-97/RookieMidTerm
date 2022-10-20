@@ -1,4 +1,4 @@
-﻿namespace EcommerceAPI.Models
+﻿namespace Ecommerce.Data.Models
 {
     public class Brand
     {

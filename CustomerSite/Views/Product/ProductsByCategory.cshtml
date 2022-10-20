@@ -1,0 +1,32 @@
+﻿@using Ecommerce.DTO.DTOs
+@model List<ProductDTO>
+
+@{
+    var count = 0;
+}
+
+<div class="container">
+    <div class="row">
+        @if (Model != null && Model.Count > 0)
+        {
+            <h4>@ViewData["Title"] products</h4>
+            <hr/>
+            <div class="row">
+                @foreach (ProductDTO product in Model)
+                {
+                    if (product.Status == 1)
+                    {
+                        //pass count to partial view as a viewdata key-value
+                        //so the slide controls know which carousel to slide
+                        await Html.RenderPartialAsync("../Product/ProductPartialView", product,
+                        new ViewDataDictionary(ViewData) { { "count", count } });
+                        count++;
+                        <!--<partial name="../Product/ProductPartialView" for="@product"/>-->
+                    }
+                }
+            </div>
+            <hr />
+        }
+        else{@ViewData["response"]}
+    </div>
+</div>

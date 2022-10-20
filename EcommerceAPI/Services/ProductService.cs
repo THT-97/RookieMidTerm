@@ -1,11 +1,11 @@
-﻿using EcommerceAPI.Data;
-using EcommerceAPI.Models;
+﻿using Ecommerce.Data.Models;
+using EcommerceAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceAPI.Services
 {
-    public class ProductService : ICRUDService<Product>, IProductRepository, IDisposable
+    public class ProductService : IProductRepository, IDisposable
     {
         private readonly EcommerceDbContext _context;
 
@@ -40,29 +40,29 @@ namespace EcommerceAPI.Services
         public async Task<List<Product>>? GetByCategoryAsync(string categoryName)
         {
             return await _context.Products.Where(p => p.Category.Name == categoryName)
+                                          .Include(p => p.Category)
+                                          .Include(p => p.Brand)
                                           .ToListAsync();
         }
 
-        //get 10 newest products (created within 3 months)
+        //get 30 newest products
         public async Task<List<Product>>? GetNewAsync()
         {
-            int count = await CountAsync();
-            //newest records are at bottom of the data table
-            int skip = count - 10; //calculate skipped records to get 10 newest records
-            if (skip < 0) skip = 0;
-            return await _context.Products.Where(p => p.CreatedDate.Year == DateTime.Now.Year
-                                                      && p.CreatedDate.Month >= DateTime.Now.Month - 3)
+            return await _context.Products.OrderByDescending(p => p.CreatedDate)
+                                          .Take(30)
                                           .Include(p => p.Category)
                                           .Include(p => p.Brand)
-                                          .Skip(skip)
-                                          .OrderByDescending(p => p.CreatedDate)
                                           .ToListAsync();
         }
         
-        //get products with high rating (rating > 3)
+        //get 30 products with highest rating
         public async Task<List<Product>>? GetHighRatingAsync()
         {
-            return await _context.Products.Where(p => p.Rating > 3).ToListAsync();
+            return await _context.Products.OrderByDescending(p => p.Rating)
+                                          .Take(30)
+                                          .Include(p => p.Category)
+                                          .Include(p => p.Brand)
+                                          .ToListAsync();
         }
 
         public Task<ActionResult> CreateAsync(Product entry)

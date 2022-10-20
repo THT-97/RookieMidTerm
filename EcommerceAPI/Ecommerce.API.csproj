@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ecommerce.Data\Ecommerce.Data.csproj" />
     <ProjectReference Include="..\EcommerceClassLibrary\Ecommerce.DTO.csproj" />
   </ItemGroup>
 

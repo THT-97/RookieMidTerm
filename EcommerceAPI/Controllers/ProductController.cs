@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
 using EcommerceAPI.Data;
-using EcommerceAPI.Models;
 using EcommerceAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +12,7 @@ namespace EcommerceAPI.Controllers
     public class ProductController : Controller
     {
         private readonly EcommerceDbContext _context;
-        private ProductService _productService;
+        private IProductRepository _productService;
         private IMapper _mapper;
 
         public ProductController(EcommerceDbContext context)
@@ -30,7 +30,7 @@ namespace EcommerceAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllProducts()
+        public async Task<ActionResult> GetAll()
         {
             List<Product> products = await _productService.GetAllAsync();
             List<ProductDTO> productDTOs = _mapper.Map<List<ProductDTO>>(products); ;
@@ -44,7 +44,7 @@ namespace EcommerceAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetNewProducts()
+        public async Task<ActionResult> GetNew()
         {
             List<Product> products = await _productService.GetNewAsync();
             if (products != null)
@@ -57,7 +57,19 @@ namespace EcommerceAPI.Controllers
         }
 
         [HttpGet]
-        //[ProducesResponseType(typeof(List<ProductDTO>), StatusCodes.Status200OK)]
+        public async Task<ActionResult> GetHighRatings()
+        {
+            List<Product> products = await _productService.GetHighRatingAsync();
+            if (products != null)
+            {
+                if (products.Count > 0) return Json(_mapper.Map<List<ProductDTO>>(products));
+                return NotFound();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GetByCategory(string categoryName)
         {
             List<Product> products = await _productService.GetByCategoryAsync(categoryName);

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
 using EcommerceAPI.Data;
-using EcommerceAPI.Models;
 using EcommerceAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +23,7 @@ namespace EcommerceAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllCategories()
+        public async Task<ActionResult> GetAll()
         {
             List<Category> categories = await _categoryService.GetAllAsync();
             if (categories != null)
@@ -36,27 +36,27 @@ namespace EcommerceAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetCategory(int id)
+        public async Task<ActionResult> GetByID(int id)
         {
             Category category = await _categoryService.GetByIDAsync(id);
             return category != null ? Json(_mapper.Map<CategoryDTO>(category)) : NotFound();
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateCategory(Category category)
+        public async Task<ActionResult> Create(Category category)
         {
             if (ModelState.IsValid) return await _categoryService.CreateAsync(category);
             return BadRequest();
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult> UpdateCategory(int id, Category category)
+        public async Task<ActionResult> Update(int id, Category category)
         {
             return await _categoryService.UpdateAsync(id, category);
         }
 
         [HttpDelete]
-        public async Task<ActionResult> DeleteCategory(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             return await _categoryService.DeleteAsync(id);
         }

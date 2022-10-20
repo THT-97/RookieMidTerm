@@ -1,7 +1,6 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace EcommerceAPI.Models
+namespace Ecommerce.Data.Models
 {
     public class Product
     {

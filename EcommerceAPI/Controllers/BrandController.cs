@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
 using EcommerceAPI.Data;
-using EcommerceAPI.Models;
 using EcommerceAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +12,7 @@ namespace EcommerceAPI.Controllers
     public class BrandController : Controller
     {
         private readonly EcommerceDbContext _context;
-        private BrandService _brandService;
+        private ICRUDService<Brand> _brandService;
         private IMapper _mapper;
 
         public BrandController(EcommerceDbContext context)
@@ -23,7 +23,7 @@ namespace EcommerceAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllBrands()
+        public async Task<ActionResult> GetAll()
         {
             List<Brand> brands = await _brandService.GetAllAsync();
             if (brands != null)
@@ -36,27 +36,27 @@ namespace EcommerceAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetBrand(int id)
+        public async Task<ActionResult> GetByID(int id)
         {
             Brand brand = await _brandService.GetByIDAsync(id);
             return brand != null ? Json(_mapper.Map<BrandDTO>(brand)) : NotFound();
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateBrand(Brand brand)
+        public async Task<ActionResult> Create(Brand brand)
         {
             if (ModelState.IsValid) return await _brandService.CreateAsync(brand);
             return BadRequest();
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult> UpdateCategory(int id, Brand brand)
+        public async Task<ActionResult> Update(int id, Brand brand)
         {
             return await _brandService.UpdateAsync(id, brand);
         }
 
         [HttpDelete]
-        public async Task<ActionResult> DeleteCategory(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             return await _brandService.DeleteAsync(id);
         }

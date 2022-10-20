@@ -1,8 +1,5 @@
-﻿using EcommerceAPI.Models;
+﻿using Ecommerce.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace EcommerceAPI.Data
 {

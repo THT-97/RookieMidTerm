@@ -19,30 +19,30 @@ namespace CustomerSite.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<ProductDTO> products;
+            List<ProductDTO> highRatings;
             List<ProductDTO> newProducts;
             List<CategoryDTO> categories;
             List<BrandDTO> brands;
             //Call API Controller to get list of categories
-            var response = await _httpClient.GetAsync("Category/GetAllCategories");
+            var response = await _httpClient.GetAsync("Category/GetAll");
             var content = await response.Content.ReadAsStringAsync();
             categories = JsonConvert.DeserializeObject<List<CategoryDTO>>(content);
             //Call again to get brand
-            response = await _httpClient.GetAsync("Brand/GetAllBrands");
+            response = await _httpClient.GetAsync("Brand/GetAll");
             content = await response.Content.ReadAsStringAsync();
             brands = JsonConvert.DeserializeObject<List<BrandDTO>>(content);
             //Call again to get list of all products
-            response = await _httpClient.GetAsync("Product/GetAllProducts");
+            response = await _httpClient.GetAsync("Product/GetHighRatings");
             content = await response.Content.ReadAsStringAsync();
-            products = JsonConvert.DeserializeObject<List<ProductDTO>>(content);
+            highRatings = JsonConvert.DeserializeObject<List<ProductDTO>>(content);
             //Call again to get new products
-            response = await _httpClient.GetAsync("Product/GetNewProducts");
+            response = await _httpClient.GetAsync("Product/GetNew");
             content = await response.Content.ReadAsStringAsync();
             newProducts = JsonConvert.DeserializeObject<List<ProductDTO>>(content);
             //Transfer data to ViewBag
             ViewBag.categories = categories;
             ViewBag.brands = brands;
-            ViewBag.products = products;
+            ViewBag.highRatings = highRatings;
             ViewBag.newProducts = newProducts;
             return View();
         }
