@@ -11,10 +11,9 @@ namespace CustomerSite.Controllers
     {
         private HttpClient _httpClient;   
 
-        public HomeController()
+        public HomeController(IHttpClientFactory clientFactory)
         {
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("https://localhost:7171/api/");
+            _httpClient = clientFactory.CreateClient("client");
         }
 
         public async Task<IActionResult> Index()

@@ -22,6 +22,10 @@ builder.Services.AddDefaultIdentity<IdentityUser>(
     }
 )
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddHttpClient("client",
+    options => { options.BaseAddress = new Uri(builder.Configuration["apiUrl"]); });
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

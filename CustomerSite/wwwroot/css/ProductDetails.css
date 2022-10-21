@@ -33,3 +33,7 @@
     color: gold;
     z-index: 5;
 }
+
+form > input[type="radio"]:checked + label {
+    box-shadow: 1px 0px 2px 1px cyan;
+}

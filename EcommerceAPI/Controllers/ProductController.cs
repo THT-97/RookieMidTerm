@@ -89,5 +89,12 @@ namespace EcommerceAPI.Controllers
             if (product != null) return Json(_mapper.Map<ProductDTO>(product));
             return NotFound();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Rate(ProductRateDTO productRate)
+        {
+            return await _productService.RateAsync(productRate);
+        }
+
     }
 }

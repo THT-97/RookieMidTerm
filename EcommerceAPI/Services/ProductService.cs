@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Data.Models;
+using Ecommerce.DTO.DTOs;
 using EcommerceAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -80,9 +81,29 @@ namespace EcommerceAPI.Services
             throw new NotImplementedException();
         }
 
+        public async Task<IActionResult>? RateAsync(ProductRateDTO productRate)
+        {
+            Product target = _context.Products.Where(p => p.Id == productRate.Id).FirstOrDefault();
+            if (target != null)
+            {
+                target.RatingCount++;
+                target.Rating = (float)(target.Rating + productRate.Rate) / 2;
+                _context.Entry(target).State = EntityState.Modified;
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return new OkResult();
+                }
+                catch { return new BadRequestResult(); }
+            }
+
+            return new NotFoundResult();
+        }
+
         public void Dispose()
         {
             _context.Dispose();
         }
+
     }
 }

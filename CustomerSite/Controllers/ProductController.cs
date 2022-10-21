@@ -8,10 +8,9 @@ namespace CustomerSite.Controllers
     {
         private HttpClient _httpClient;
 
-        public ProductController()
+        public ProductController(IHttpClientFactory clientFactory)
         {
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("https://localhost:7171/api/");
+            _httpClient = clientFactory.CreateClient("client");
         }
 
         [HttpGet]
@@ -44,9 +43,15 @@ namespace CustomerSite.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Rate(int rate, int id)
+        public async Task<IActionResult> Rate(int id, byte rate)
         {
-            return RedirectToAction("ProductDetails", new { id = id });
+            var response = _httpClient.PostAsJsonAsync("Product/Rate",
+                                                       new ProductRateDTO { Id = id, Rate = rate });
+            if (response.IsCompletedSuccessfully)
+            {
+                return RedirectToAction("ProductDetails", new { id = id });
+            }
+            return new BadRequestResult();
         }
     }
 }
