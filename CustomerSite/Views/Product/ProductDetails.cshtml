@@ -54,7 +54,7 @@
             <div class="col-6">
                 <h4>@Model.Name</h4>
                 <small>@Model.Description</small>
-                <div id="rating" class="mb-3">
+                <div id="rating-wrapper" class="h-25">
                     @if (Model.Rating > 0)
                     {
                         @for (var i = 1; i <= 5; i++)
@@ -75,40 +75,42 @@
                     {
                         <p class="m-0"><i>(Be the first to rate)</i></p>
                     }
-                    <h5>Your rating:</h5>
-                    <!--Rating form-->
-                    @using (Html.BeginForm("Rate", "Product", new { id = Model.Id}, FormMethod.Post, null, new { id = "rating" }))
-                    {
-                        <label id="one">
-                            <input type="radio" name="rate" value="1" onchange="this.form.submit()" hidden/>
-                            <i class="fa fa-star rate-star"></i>
-                        </label>
-                        <label id="two">
-                            <input type="radio" name="rate" value="2" onchange="this.form.submit()" hidden/>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star rate-star"></i>
-                        </label>
-                        <label id="three">
-                            <input type="radio" name="rate" value="3" onchange="this.form.submit()" hidden/>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star rate-star"></i>
-                        </label>
-                        <label id="four">
-                            <input type="radio" name="rate" value="4" onchange="this.form.submit()" hidden/>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star rate-star"></i>
-                        </label>
-                        <label id="five">
-                            <input type="radio" name="rate" value="5" onchange="this.form.submit()" hidden/>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star rate-star"></i>
-                        </label>
+                    @if(User.Identity.Name != null){
+                        <h5>Your rating:</h5>
+                        <!--Rating form-->
+                        @using (Html.BeginForm("Rate", "Product", new { id = Model.Id}, FormMethod.Post, null, new { id = "rating" }))
+                        {
+                            <label id="one">
+                                <input type="radio" name="rate" value="1" onchange="this.form.submit()" hidden/>
+                                <i class="fa fa-star rate-star"></i>
+                            </label>
+                            <label id="two">
+                                <input type="radio" name="rate" value="2" onchange="this.form.submit()" hidden/>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star rate-star"></i>
+                            </label>
+                            <label id="three">
+                                <input type="radio" name="rate" value="3" onchange="this.form.submit()" hidden/>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star rate-star"></i>
+                            </label>
+                            <label id="four">
+                                <input type="radio" name="rate" value="4" onchange="this.form.submit()" hidden/>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star rate-star"></i>
+                            </label>
+                            <label id="five">
+                                <input type="radio" name="rate" value="5" onchange="this.form.submit()" hidden/>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star rate-star"></i>
+                            </label>
+                        }
                     }
                 </div>
                 @if (Model.ListPrice != Model.SalePrice)

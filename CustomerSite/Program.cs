@@ -20,8 +20,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(
         options.Password.RequireUppercase = false;
         options.Password.RequiredUniqueChars = 0;
     }
-)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+).AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddHttpClient("client",
     options => { options.BaseAddress = new Uri(builder.Configuration["apiUrl"]); });

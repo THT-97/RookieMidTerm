@@ -86,8 +86,14 @@ namespace EcommerceAPI.Services
             Product target = _context.Products.Where(p => p.Id == productRate.Id).FirstOrDefault();
             if (target != null)
             {
-                target.RatingCount++;
-                target.Rating = (float)(target.Rating + productRate.Rate) / 2;
+                if (target.RatingCount == null) target.RatingCount = 0;
+                if (target.Rating == null || target.Rating <= 0) target.Rating = productRate.Rate;
+                else
+                {
+                    //calculate average rating
+                    target.Rating = (float)(target.Rating * target.RatingCount + productRate.Rate) / (target.RatingCount + 1);
+                    target.RatingCount++;
+                }
                 _context.Entry(target).State = EntityState.Modified;
                 try
                 {
