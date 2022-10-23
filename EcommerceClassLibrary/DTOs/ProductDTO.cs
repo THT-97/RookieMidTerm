@@ -17,5 +17,6 @@
         public byte Status { get; set; }
         public string CategoryName { get; set; }
         public string BrandName { get; set; }
+        public ICollection<ProductRateDTO> Ratings { get; set; }
     }
 }

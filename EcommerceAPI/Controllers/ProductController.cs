@@ -21,12 +21,20 @@ namespace EcommerceAPI.Controllers
             _productService = new ProductService(_context);
             //create mapper with custom config
             _mapper = new MapperConfiguration(cfg =>
+            {
+                //base mapping config
                 cfg.CreateMap<Product, ProductDTO>()
-                   //for CategoryName (Category object => CategoryName)
+                    //config for Category entity
                    .ForMember(dto => dto.CategoryName, src => src.MapFrom(ent => ent.Category.Name))
-                   //for BrandName (Brand object => BrandName)
-                   .ForMember(dto => dto.BrandName, src => src.MapFrom(ent => ent.Brand.Name))
-            ).CreateMapper();
+                   //config for Brand entity
+                   .ForMember(dto => dto.BrandName, src => src.MapFrom(ent => ent.Brand.Name));
+                //specific mapping config for Rating collection
+                cfg.CreateMap<Rating, ProductRateDTO>()
+                   //config for rating points
+                   .ForMember(dto => dto.Rate, src => src.MapFrom(ent => ent.Points))
+                   //config for User entity
+                   .ForMember(dto => dto.UserEmail, src => src.MapFrom(ent => ent.User.Email));
+            }).CreateMapper();
         }
 
         [HttpGet]
@@ -93,7 +101,12 @@ namespace EcommerceAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Rate(ProductRateDTO productRate)
         {
-            return await _productService.RateAsync(productRate);
+            try
+            {
+                return await _productService.RateAsync(productRate);
+            }
+
+            catch { return new BadRequestResult(); }
         }
 
     }

@@ -1,0 +1,12 @@
+﻿@model Ecommerce.DTO.DTOs.ProductRateDTO
+
+<div class="mb-2">
+    <p class="mb-0">
+        <b>@Model.UserEmail: </b>
+        @for (var i = 1; i <= Model.Rate; i++)
+        {
+            <i class="fa fa-star text-warning"></i>
+        }
+    </p>
+    <p class="ms-2 mt-0">@Model.Comment</p>
+</div>

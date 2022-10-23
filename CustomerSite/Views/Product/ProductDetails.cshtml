@@ -1,4 +1,5 @@
-﻿@model Ecommerce.DTO.DTOs.ProductDTO
+﻿@using Ecommerce.DTO.DTOs
+@model Ecommerce.DTO.DTOs.ProductDTO
 
 @{
     ViewData["Title"] = "ProductDetails";
@@ -6,20 +7,22 @@
     List<string> images = new();
     List<string> sizes = new();
     List<string> colors = new();
+    List<ProductRateDTO> ratings = new();
     if(Model != null){
         images = Model.Images.Split(' ').ToList();
         sizes = Model.Sizes.Split(' ').ToList();
         colors = Model.Colors.Split(' ').ToList();
+        ratings = Model.Ratings.ToList();
     }
 }
-<link rel="stylesheet" href="/css/ProductDetails.css" />
+<link href="~/css/productdetails.css" rel="stylesheet" />
 <div class="container mt-5">
     @if(Model!=null){
         <div class="row">
             @if (images != null)
             {
-                <!--Carousel-->
                 <div class="slide-wrapper col-6">
+                    <!--Carousel-->
                     <div id="imageSlide" class="carousel slide" data-bs-ride="true" interval>
                         <div class="carousel-indicators">
                             @for (int i = 0; i < images.Count; i++)
@@ -48,13 +51,21 @@
                             </button>
                         </div>
                     </div>
+                    <hr />
+                    <h5>Ratings:</h5>
+                    <!--Ratings-->
+                    <div class="border border-secondary rounded ps-2">
+                        @foreach(ProductRateDTO rating in ratings){
+                            <partial name="../Product/ProductRatingPartial" for="@rating" />
+                        }
+                    </div>
                 </div>
             }
 
             <div class="col-6">
                 <h4>@Model.Name</h4>
                 <small>@Model.Description</small>
-                <div id="rating-wrapper" class="h-25">
+                <div id="rating-wrapper">
                     @if (Model.Rating > 0)
                     {
                         @for (var i = 1; i <= 5; i++)
@@ -75,52 +86,15 @@
                     {
                         <p class="m-0"><i>(Be the first to rate)</i></p>
                     }
-                    @if(User.Identity.Name != null){
-                        <h5>Your rating:</h5>
-                        <!--Rating form-->
-                        @using (Html.BeginForm("Rate", "Product", new { id = Model.Id}, FormMethod.Post, null, new { id = "rating" }))
-                        {
-                            <label id="one">
-                                <input type="radio" name="rate" value="1" onchange="this.form.submit()" hidden/>
-                                <i class="fa fa-star rate-star"></i>
-                            </label>
-                            <label id="two">
-                                <input type="radio" name="rate" value="2" onchange="this.form.submit()" hidden/>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star rate-star"></i>
-                            </label>
-                            <label id="three">
-                                <input type="radio" name="rate" value="3" onchange="this.form.submit()" hidden/>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star rate-star"></i>
-                            </label>
-                            <label id="four">
-                                <input type="radio" name="rate" value="4" onchange="this.form.submit()" hidden/>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star rate-star"></i>
-                            </label>
-                            <label id="five">
-                                <input type="radio" name="rate" value="5" onchange="this.form.submit()" hidden/>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star rate-star"></i>
-                            </label>
-                        }
-                    }
                 </div>
                 @if (Model.ListPrice != Model.SalePrice)
                 {
                     <h5 class="text-success mb-0">
                         @Model.SalePrice$
                     </h5>
-                    <small class="text-secondary mt-0" style="text-decoration:line-through">
+                    <p class="text-secondary mt-0" style="text-decoration:line-through">
                         @Model.ListPrice$
-                    </small>
+                    </p>
                 }
                 else
                 {
@@ -128,18 +102,18 @@
                         @Model.SalePrice
                     </h5>
                 }
-                <form>
+                <form id="options">
                     <h5 class="mt-3 mb-0">Colors:</h5>
                     @if (colors != null)
                     {
                         @foreach (string color in colors)
                         {
-                            <input id="@color" type="radio" name="color-option" class="color-options" value="@color" hidden/>
                             <label class="color-labels me-3" for="@color" style="width:10%;
                                                                             height:30px;
                                                                             background-color: @color.ToLower();
                                                                             outline: black solid 1px;
                                                                             cursor: pointer">
+                                <input id="@color" type="radio" name="color-option" class="color-options" value="@color" hidden />
                             </label>
                         }
                     }
@@ -147,14 +121,14 @@
                     {
                         <p class="text-secondary">Not specified</p>
                     }
-                    <h5 class="mt-3 mb-0">Sizes:</h5>
+                    <h5 class="mt-3">Sizes:</h5>
                     @if (colors != null)
                     {
                         @foreach (string size in sizes)
                         {
-                            <input id="@size" type="radio" name="size-option" class="size-options" value="@size" hidden/>
                             <label class="size-labels me-3" for="@size" style="cursor:pointer;">
                                 <p class="w-100 p-1" style="outline: black solid 1px;">@size.ToUpper()</p>
+                                <input id="@size" type="radio" name="size-option" class="size-options" value="@size" hidden />
                             </label>
                         }
                     }
@@ -167,8 +141,50 @@
                         <button type="button" class="btn btn-outline-success">Add to cart</button>
                     </div>
                 </form>
-                <h5>Brand: @Model.BrandName</h5>
-                <h5>Category: @Html.ActionLink(Model.CategoryName,"ProductsByCategory","Product", new {categoryName = Model.CategoryName})</h5>
+                @if (User.Identity.Name != null)
+                {
+                    <!--Rating form-->
+                    @using (Html.BeginForm("Rate", "Product", new { productId = Model.Id }, FormMethod.Post, null, new { id = "rating" }))
+                    {
+                        <h5 class="mt-2 mb-0">Your rating:</h5>
+                        <label id="one">
+                            <input type="radio" name="rate" value="1" hidden />
+                            <i class="fa fa-star rate-star"></i>
+                        </label>
+                        <label id="two">
+                            <input type="radio" name="rate" value="2" hidden />
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star rate-star"></i>
+                        </label>
+                        <label id="three">
+                            <input type="radio" name="rate" value="3" hidden />
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star rate-star"></i>
+                        </label>
+                        <label id="four">
+                            <input type="radio" name="rate" value="4" hidden />
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star rate-star"></i>
+                        </label>
+                        <label id="five">
+                            <input type="radio" name="rate" value="5" hidden />
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star rate-star"></i>
+                        </label>
+                        <textarea class="mt-4 w-100" rows="4" cols="50" name="comment" form="rating" placeholder="Comment..."></textarea>
+                        <button class="btn btn-outline-secondary" type="submit">Sumbit</button>
+                    }
+                }
+                <div class="mt-5">
+                    <h5>Brand: @Model.BrandName</h5>
+                    <h5>Category: @Html.ActionLink(Model.CategoryName,"ProductsByCategory","Product", new {categoryName = Model.CategoryName})</h5>
+                </div>
             </div>
         </div>
     }

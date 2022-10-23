@@ -1,5 +1,4 @@
 ﻿using Ecommerce.DTO.DTOs;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -44,14 +43,22 @@ namespace CustomerSite.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Rate(int id, byte rate)
+        public async Task<IActionResult> Rate(int productId, byte rate, string comment)
         {
             if(User.Identity.Name != null)
             {
-                var response = await _httpClient.PostAsJsonAsync("Product/Rate", new ProductRateDTO { Id = id, Rate = rate });
+                var response = await _httpClient.PostAsJsonAsync("Product/Rate", 
+                    new ProductRateDTO
+                    {
+                        ProductId = productId,
+                        UserEmail = User.Identity.Name,
+                        Rate = rate,
+                        Comment = comment
+                    });
+
                 if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("ProductDetails", new { id = id });
+                    return RedirectToAction("ProductDetails", new { id = productId });
                 }
             }
 

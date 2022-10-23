@@ -1,6 +1,8 @@
-﻿using Ecommerce.Data.Models;
+﻿using Ecommerce.API.Services;
+using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
 using EcommerceAPI.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,11 +11,12 @@ namespace EcommerceAPI.Services
     public class ProductService : ICRUDService<Product>, IProductRepository, IDisposable
     {
         private readonly EcommerceDbContext _context;
-
+        private RatingService _ratingService;
 
         public ProductService(EcommerceDbContext context)
         {
             _context = context;
+            _ratingService = new RatingService(_context);
         }
 
         public async Task<int> CountAsync()
@@ -35,6 +38,8 @@ namespace EcommerceAPI.Services
             return await _context.Products.Where(p => p.Id == id)
                                           .Include(p => p.Category)
                                           .Include(p => p.Brand)
+                                          .Include(p => p.Ratings)
+                                          .ThenInclude(r => r.User)
                                           .SingleOrDefaultAsync();
         }
         
@@ -83,27 +88,46 @@ namespace EcommerceAPI.Services
 
         public async Task<IActionResult>? RateAsync(ProductRateDTO productRate)
         {
-            Product target = _context.Products.Where(p => p.Id == productRate.Id).FirstOrDefault();
-            if (target != null)
+            Product? target = await _context.Products.FirstOrDefaultAsync(p => p.Id == productRate.ProductId);
+            IdentityUser? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == productRate.UserEmail);
+            Rating? rate = await _context.Ratings.FirstOrDefaultAsync(r => r.Product.Id == target.Id && r.User.Id == user.Id);
+
+            if (target != null && user != null)
             {
-                if (target.RatingCount == null) target.RatingCount = 0;
-                if (target.Rating == null || target.Rating <= 0) target.Rating = productRate.Rate;
+                if (rate != null)
+                {
+                    //calculate average rating for existing user rating
+                    target.Rating = (float)(target.Rating * target.RatingCount - rate.Points + productRate.Rate) / target.RatingCount;
+                    rate.Comment = productRate.Comment;
+                }
                 else
                 {
-                    //calculate average rating
-                    target.Rating = (float)(target.Rating * target.RatingCount + productRate.Rate) / (target.RatingCount + 1);
-                    target.RatingCount++;
+                    if (target.RatingCount == null) target.RatingCount = 0;
+                    if (target.Rating == null || target.Rating <= 0) target.Rating = productRate.Rate;
+                    else
+                    {
+                        //calculate average rating for new user rating
+                        target.Rating = (float)(target.Rating * target.RatingCount + productRate.Rate) / (target.RatingCount + 1);
+                        target.RatingCount++;
+                    }
+                    _context.Entry(target).State = EntityState.Modified;
+                    rate = new Rating
+                    {
+                        User = user,
+                        Points = productRate.Rate,
+                        Product = target,
+                        Comment = productRate.Comment
+                    };
                 }
-                _context.Entry(target).State = EntityState.Modified;
                 try
                 {
+                    await _ratingService.CreateAsync(rate);
                     await _context.SaveChangesAsync();
                     return new OkResult();
                 }
                 catch { return new BadRequestResult(); }
             }
-
-            return new NotFoundResult();
+            return new BadRequestResult();
         }
 
         public void Dispose()

@@ -18,7 +18,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(
         options.SignIn.RequireConfirmedAccount = false;
         options.SignIn.RequireConfirmedEmail = false;
         options.Password.RequireUppercase = false;
-        options.Password.RequiredUniqueChars = 0;
+        options.Password.RequireDigit = false;
+        options.Password.RequireNonAlphanumeric = false;
     }
 ).AddEntityFrameworkStores<ApplicationDbContext>();
 

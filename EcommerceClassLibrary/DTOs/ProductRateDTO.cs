@@ -2,7 +2,9 @@
 {
     public class ProductRateDTO
     {
-        public int Id { get; set; }
+        public int ProductId { get; set; }
+        public string UserEmail { get; set; }
+        public string? Comment { get; set; }
         public byte Rate { get; set; }
     }
 }

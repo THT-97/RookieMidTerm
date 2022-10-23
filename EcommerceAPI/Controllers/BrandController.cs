@@ -49,7 +49,7 @@ namespace EcommerceAPI.Controllers
             return BadRequest();
         }
 
-        [HttpPatch("{id}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, Brand brand)
         {
             return await _brandService.UpdateAsync(id, brand);

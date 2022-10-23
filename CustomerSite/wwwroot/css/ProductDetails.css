@@ -1,4 +1,8 @@
-﻿#rating{
+﻿#options label:has(input:checked) {
+    transform: scale(1.1);
+}
+
+#rating{
     position: relative;
     height: 25%;
 }
@@ -22,18 +26,23 @@
     z-index: 4;
 }
 
-#rating>label{
+#rating label{
     position: absolute;
     left: 0;
 }
 
 /*set color and appearance of a star label when its last-child is hovered*/
-#rating > label:has(i:last-child:hover) {
+#rating label:has(i:last-child:hover) {
     cursor: pointer;
     color: gold;
     z-index: 5;
 }
 
-form > input[type="radio"]:checked + label {
-    box-shadow: 1px 0px 2px 1px cyan;
+/*set all star labels when an input is checked to gold*/
+#rating:has(label input:checked) label{
+    color: gold;
+}
+/*set all star labels behind checked input to black*/
+#rating label:has(input:checked) ~ label{
+    color: black;
 }
