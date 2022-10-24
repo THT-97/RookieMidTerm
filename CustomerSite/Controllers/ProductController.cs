@@ -20,7 +20,7 @@ namespace CustomerSite.Controllers
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                ProductDTO product = JsonConvert.DeserializeObject<ProductDTO>(content);
+                ProductDTO? product = JsonConvert.DeserializeObject<ProductDTO>(content);
                 return View(product);
             }
             ViewData["response"] = response.StatusCode;
@@ -35,7 +35,7 @@ namespace CustomerSite.Controllers
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                List<ProductDTO> products = JsonConvert.DeserializeObject<List<ProductDTO>>(content);
+                List<ProductDTO>? products = JsonConvert.DeserializeObject<List<ProductDTO>>(content);
                 return View(products);
             }
             ViewData["response"] = response.StatusCode;

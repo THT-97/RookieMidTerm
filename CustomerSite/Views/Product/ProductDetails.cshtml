@@ -144,8 +144,7 @@
                 @if (User.Identity.Name != null)
                 {
                     <!--Rating form-->
-                    @using (Html.BeginForm("Rate", "Product", new { productId = Model.Id }, FormMethod.Post, null, new { id = "rating" }))
-                    {
+                    <form id="rating" class="position-relative h-25" asp-action="Rate" asp-controller="Product" asp-route-productId="@Model.Id" method="post">
                         <h5 class="mt-2 mb-0">Your rating:</h5>
                         <label id="one">
                             <input type="radio" name="rate" value="1" hidden />
@@ -179,11 +178,11 @@
                         </label>
                         <textarea class="mt-4 w-100" rows="4" cols="50" name="comment" form="rating" placeholder="Comment..."></textarea>
                         <button class="btn btn-outline-secondary" type="submit">Sumbit</button>
-                    }
+                    </form>
                 }
                 <div class="mt-5">
                     <h5>Brand: @Model.BrandName</h5>
-                    <h5>Category: @Html.ActionLink(Model.CategoryName,"ProductsByCategory","Product", new {categoryName = Model.CategoryName})</h5>
+                    <h5>Category: <a asp-action="ProductsByCategory" asp-controller="Product" asp-route-categoryName="@Model.CategoryName">@Model.CategoryName</a></h5>
                 </div>
             </div>
         </div>

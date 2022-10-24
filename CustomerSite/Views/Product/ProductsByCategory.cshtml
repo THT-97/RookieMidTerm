@@ -18,10 +18,9 @@
                     {
                         //pass count to partial view as a viewdata key-value
                         //so the slide controls know which carousel to slide
-                        await Html.RenderPartialAsync("../Product/ProductPartialView", product,
-                        new ViewDataDictionary(ViewData) { { "count", count } });
+                        ViewData["count"] = count;
+                        <partial view-data="ViewData" name="../Product/ProductPartialView" for="@product" />
                         count++;
-                        <!--<partial name="../Product/ProductPartialView" for="@product"/>-->
                     }
                 }
             </div>

@@ -45,7 +45,7 @@
                 <div id="categories" class="collapse btn-group-vertical p-3 m-0">
                     @foreach (CategoryDTO category in categories)
                     {
-                        <a class="btn text-start" href= @Url.Action("ProductsByCategory","Product", new {categoryName = category.Name})>
+                        <a class="btn text-start" asp-action="ProductsByCategory" asp-controller="Product" asp-route-categoryName="@category.Name">
                             <h6>@category.Name.ToUpper()</h6>
                         </a>
                     }
@@ -82,10 +82,9 @@
                     {
                         //pass count to partial view as a viewdata key-value
                         //so the slide controls know which carousel to slide
-                        await Html.RenderPartialAsync("../Product/ProductPartialView", product,
-                        new ViewDataDictionary(ViewData) { { "count", count } });
+                        ViewData["count"] = count;
+                        <partial view-data="ViewData" name="../Product/ProductPartialView" for="@product" />
                         count++;
-                        <!--<partial name="../Product/ProductPartialView" for="@product"/>-->
                     }
                 }
             </div>
@@ -101,10 +100,9 @@
                     {
                         //pass count to partial view as a viewdata key-value
                         //so the slide controls know which carousel to slide
-                        await Html.RenderPartialAsync("../Product/ProductPartialView", product,
-                        new ViewDataDictionary(ViewData) { { "count", count } });
+                        ViewData["count"] = count;
+                        <partial view-data="ViewData" name="../Product/ProductPartialView" for="@product" />
                         count++;
-                        <!--<partial name="../Product/ProductPartialView" for="@product"/>-->
                     }
                 }
             </div>
