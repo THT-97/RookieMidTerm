@@ -88,35 +88,38 @@ namespace EcommerceAPI.Services
 
         public async Task<IActionResult>? RateAsync(ProductRateDTO productRate)
         {
-            Product? target = await _context.Products.FirstOrDefaultAsync(p => p.Id == productRate.ProductId);
+            Product? product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productRate.ProductId);
             IdentityUser? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == productRate.UserEmail);
-            Rating? rate = await _context.Ratings.FirstOrDefaultAsync(r => r.Product.Id == target.Id && r.User.Id == user.Id);
+            Rating? rate = await _context.Ratings.FirstOrDefaultAsync(r => r.Product.Id == product.Id && r.User.Id == user.Id);
 
-            if (target != null && user != null)
+            if (product != null && user != null)
             {
                 if (rate != null)
                 {
                     //calculate average rating for existing user rating
-                    target.Rating = (float)(target.Rating * target.RatingCount - rate.Points + productRate.Rate) / target.RatingCount;
+                    product.Rating = (float)(product.Rating * product.RatingCount - rate.Points + productRate.Rate) / product.RatingCount;
+                    rate.Points = productRate.Rate;
                     rate.Comment = productRate.Comment;
+                    rate.Date = productRate.Date;
                 }
                 else
                 {
-                    if (target.RatingCount == null) target.RatingCount = 0;
-                    if (target.Rating == null || target.Rating <= 0) target.Rating = productRate.Rate;
+                    if (product.RatingCount == null) product.RatingCount = 0;
+                    if (product.Rating == null || product.Rating <= 0) product.Rating = productRate.Rate;
                     else
                     {
                         //calculate average rating for new user rating
-                        target.Rating = (float)(target.Rating * target.RatingCount + productRate.Rate) / (target.RatingCount + 1);
-                        target.RatingCount++;
+                        product.Rating = (float)(product.Rating * product.RatingCount + productRate.Rate) / (product.RatingCount + 1);
+                        product.RatingCount++;
                     }
-                    _context.Entry(target).State = EntityState.Modified;
+                    _context.Entry(product).State = EntityState.Modified;
                     rate = new Rating
                     {
                         User = user,
                         Points = productRate.Rate,
-                        Product = target,
-                        Comment = productRate.Comment
+                        Product = product,
+                        Comment = productRate.Comment,
+                        Date = productRate.Date
                     };
                 }
                 try

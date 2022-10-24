@@ -5,7 +5,7 @@
     var count = 0;
 }
 
-<div class="container">
+<div class="container mt-5 pb-5">
     <div class="row">
         @if (Model != null && Model.Count > 0)
         {
@@ -25,7 +25,6 @@
                     }
                 }
             </div>
-            <hr />
         }
         else{@ViewData["response"]}
     </div>

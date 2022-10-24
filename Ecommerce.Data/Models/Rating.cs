@@ -7,6 +7,8 @@ namespace Ecommerce.Data.Models
         public int Id { get; set; }
         public byte Points { get; set; }
         public string? Comment { get; set; }
+        public DateTime Date { get; set; }
+        public byte Status { get; set; }
         public virtual IdentityUser User { get; set; }
         public virtual Product Product { get; set; }
     }

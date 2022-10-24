@@ -43,9 +43,9 @@ namespace CustomerSite.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Rate(int productId, byte rate, string comment)
+        public async Task<IActionResult> RateAsync(int productId, byte rate, string comment)
         {
-            if(User.Identity.Name != null)
+            if (User.Identity.Name != null)
             {
                 var response = await _httpClient.PostAsJsonAsync("Product/Rate", 
                     new ProductRateDTO
@@ -53,6 +53,7 @@ namespace CustomerSite.Controllers
                         ProductId = productId,
                         UserEmail = User.Identity.Name,
                         Rate = rate,
+                        Date = DateTime.Now,
                         Comment = comment
                     });
 
