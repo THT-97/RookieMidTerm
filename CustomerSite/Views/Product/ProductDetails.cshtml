@@ -7,7 +7,7 @@
     List<string> images = new();
     List<string> sizes = new();
     List<string> colors = new();
-    List<ProductRateDTO> ratings = new();
+    List<RatingDTO> ratings = new();
     if(Model != null){
         images = Model.Images.Split(' ').ToList();
         sizes = Model.Sizes.Split(' ').ToList();
@@ -51,14 +51,17 @@
                             </button>
                         </div>
                     </div>
-                    <hr />
-                    <h5>Ratings:</h5>
-                    <!--Ratings-->
-                    <div class="border border-secondary rounded ps-2">
-                        @foreach(ProductRateDTO rating in ratings){
-                            <partial name="../Product/ProductRatingPartial" for="@rating" />
-                        }
-                    </div>
+                    @if(ratings.Count > 0){
+                        <hr />
+                        <h5>Ratings:</h5>
+                        <!--Ratings-->
+                        <div class="border border-secondary rounded ps-2">
+                            @foreach(RatingDTO rating in ratings){
+                                <partial name="../Product/ProductRatingPartial" for="@rating" />
+                            }
+                        </div>
+                    }
+
                 </div>
             }
 

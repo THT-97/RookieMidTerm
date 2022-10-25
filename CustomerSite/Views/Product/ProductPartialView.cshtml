@@ -4,7 +4,7 @@
     var count = ViewData["count"];
 }
 <link rel="stylesheet" href="/css/ProductPartial.css" />
-<div id="productCard" class="card col-4 m-3 text-center">
+<div class="card col-3 m-3 text-center productCard">
     @if(images != null){
         <!--Carousel as card image-->
         <div class="slide-wrapper card-img-top">
@@ -75,9 +75,9 @@
         }
         <div>
             <a class="btn btn-primary card-link" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.Id">
-                Details
+                <small>Details</small>
             </a>
-            <a href="#" class="btn btn-success">Add to cart</a>
+            <a href="#" class="btn btn-success"><small>Add to cart</small></a>
         </div>
     </div>
 </div>

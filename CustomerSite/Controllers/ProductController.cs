@@ -48,7 +48,7 @@ namespace CustomerSite.Controllers
             if (User.Identity.Name != null)
             {
                 var response = await _httpClient.PostAsJsonAsync("Product/Rate", 
-                    new ProductRateDTO
+                    new RatingDTO
                     {
                         ProductId = productId,
                         UserEmail = User.Identity.Name,

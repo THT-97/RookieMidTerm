@@ -1,6 +1,6 @@
 ﻿namespace Ecommerce.DTO.DTOs
 {
-    public class ProductRateDTO
+    public class RatingDTO
     {
         public int ProductId { get; set; }
         public string UserEmail { get; set; }

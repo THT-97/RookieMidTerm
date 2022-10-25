@@ -9,6 +9,6 @@ namespace EcommerceAPI.Services
         public Task<List<Product>>? GetNewAsync();
         public Task<List<Product>>? GetByCategoryAsync(string CategoryName);
         public Task<List<Product>>? GetHighRatingAsync();
-        public Task<IActionResult>? RateAsync(ProductRateDTO productRate);
+        public Task<IActionResult>? RateAsync(RatingDTO productRate);
     }
 }

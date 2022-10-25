@@ -1,4 +1,5 @@
 ﻿using Ecommerce.API.Services;
+using Ecommerce.Data.Enum;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
 using EcommerceAPI.Data;
@@ -38,7 +39,7 @@ namespace EcommerceAPI.Services
             return await _context.Products.Where(p => p.Id == id)
                                           .Include(p => p.Category)
                                           .Include(p => p.Brand)
-                                          .Include(p => p.Ratings)
+                                          .Include(p => p.Ratings.OrderByDescending(r=>r.Date))
                                           .ThenInclude(r => r.User)
                                           .SingleOrDefaultAsync();
         }
@@ -71,12 +72,24 @@ namespace EcommerceAPI.Services
                                           .ToListAsync();
         }
 
-        public Task<ActionResult> CreateAsync(Product entry)
+        public async Task<ActionResult> CreateAsync(Product entry)
         {
-            throw new NotImplementedException();
+            Product? dup = await _context.Products.FirstOrDefaultAsync(p => p.Name == entry.Name
+                                                                            && p.Category.Name == entry.Category.Name
+                                                                            && p.Brand.Name == entry.Brand.Name);
+            if (dup != null) return await UpdateAsync(dup.Id, entry);
+            try
+            {
+                entry.CreatedDate = DateTime.Now;
+                entry.Status = (byte)CommonStatus.Available;
+                await _context.Products.AddAsync(entry);
+                await _context.SaveChangesAsync();
+                return new OkResult();
+            }
+            catch { return new BadRequestResult(); }
         }
 
-        public Task<ActionResult> UpdateAsync(int id, Product entry)
+        public async Task<ActionResult> UpdateAsync(int id, Product entry)
         {
             throw new NotImplementedException();
         }
@@ -86,10 +99,10 @@ namespace EcommerceAPI.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IActionResult>? RateAsync(ProductRateDTO productRate)
+        public async Task<IActionResult>? RateAsync(RatingDTO rating)
         {
-            Product? product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productRate.ProductId);
-            IdentityUser? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == productRate.UserEmail);
+            Product? product = await _context.Products.FirstOrDefaultAsync(p => p.Id == rating.ProductId);
+            IdentityUser? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == rating.UserEmail);
             Rating? rate = await _context.Ratings.FirstOrDefaultAsync(r => r.Product.Id == product.Id && r.User.Id == user.Id);
 
             if (product != null && user != null)
@@ -97,29 +110,29 @@ namespace EcommerceAPI.Services
                 if (rate != null)
                 {
                     //calculate average rating for existing user rating
-                    product.Rating = (float)(product.Rating * product.RatingCount - rate.Points + productRate.Rate) / product.RatingCount;
-                    rate.Points = productRate.Rate;
-                    rate.Comment = productRate.Comment;
-                    rate.Date = productRate.Date;
+                    product.Rating = (float)(product.Rating * product.RatingCount - rate.Points + rating.Rate) / product.RatingCount;
+                    rate.Points = rating.Rate;
+                    rate.Comment = rating.Comment;
+                    rate.Date = rating.Date;
                 }
                 else
                 {
                     if (product.RatingCount == null) product.RatingCount = 0;
-                    if (product.Rating == null || product.Rating <= 0) product.Rating = productRate.Rate;
+                    if (product.Rating == null || product.Rating <= 0) product.Rating = rating.Rate;
                     else
                     {
                         //calculate average rating for new user rating
-                        product.Rating = (float)(product.Rating * product.RatingCount + productRate.Rate) / (product.RatingCount + 1);
-                        product.RatingCount++;
+                        product.Rating = (float)(product.Rating * product.RatingCount + rating.Rate) / (product.RatingCount + 1);
                     }
-                    _context.Entry(product).State = EntityState.Modified;
+                    product.RatingCount++;
                     rate = new Rating
                     {
                         User = user,
-                        Points = productRate.Rate,
+                        Points = rating.Rate,
                         Product = product,
-                        Comment = productRate.Comment,
-                        Date = productRate.Date
+                        Comment = rating.Comment,
+                        Date = rating.Date,
+                        Status = (byte)CommonStatus.Available
                     };
                 }
                 try

@@ -25,4 +25,8 @@
     <ProjectReference Include="..\EcommerceClassLibrary\Ecommerce.DTO.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\P6\" />
+  </ItemGroup>
+
 </Project>
