@@ -24,14 +24,6 @@
                 <div class="slide-wrapper col-6">
                     <!--Carousel-->
                     <div id="imageSlide" class="carousel slide" data-bs-ride="true" interval>
-                        <div class="carousel-indicators">
-                            @for (int i = 0; i < images.Count; i++)
-                            {
-                                <button type="button" data-bs-target="#imageSlide"
-                            data-bs-slide-to="@i" aria-current="true" aria-label="Slide @i" class="slide-btn bg-info @(i == 0?"active":"")">
-                                </button>
-                            }
-                        </div>
                         <div class="carousel-inner">
                             @foreach (string img in images)
                             {
@@ -40,16 +32,27 @@
                                 </div>
                             }
                         </div>
-                        <div class="slide-control">
-                            <button class="carousel-control-prev" type="button" data-bs-target="#imageSlide" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#imageSlide" data-bs-slide="next">
-                                <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
-                        </div>
+                        @if (images.Count > 1)
+                        {
+                            <div class="carousel-indicators" style="height:1%">
+                                @for (int i = 0; i < images.Count; i++)
+                                {
+                                    <button type="button" data-bs-target="#imageSlide" data-bs-slide-to="@i" 
+                                        aria-current="true" aria-label="Slide @i" class="slide-btn bg-info @(i == 0?"active":"")">
+                                    </button>
+                                }
+                            </div>
+                            <div class="slide-control">
+                                <button class="carousel-control-prev" type="button" data-bs-target="#imageSlide" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#imageSlide" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        }    
                     </div>
                     @if(ratings.Count > 0){
                         <hr />
@@ -184,8 +187,18 @@
                     </form>
                 }
                 <div class="mt-5">
-                    <h5>Brand: @Model.BrandName</h5>
-                    <h5>Category: <a asp-action="ProductsByCategory" asp-controller="Product" asp-route-categoryName="@Model.CategoryName">@Model.CategoryName</a></h5>
+                    <h5>
+                        Brand:
+                        <a class="text-decoration-none" asp-action="ProductsByBrand" asp-controller="Product" asp-route-brandName="@Model.BrandName">
+                           @Model.BrandName
+                        </a>
+                    </h5>
+                    <h5>
+                        Category:
+                        <a class="text-decoration-none" asp-action="ProductsByCategory" asp-controller="Product" asp-route-categoryName="@Model.CategoryName">
+                           @Model.CategoryName
+                        </a>
+                    </h5>
                 </div>
             </div>
         </div>

@@ -100,6 +100,20 @@ namespace EcommerceAPI.Controllers
             return BadRequest();
         }
 
+
+        [HttpGet]
+        public async Task<ActionResult> GetByBrand(string brandName)
+        {
+            List<Product> products = await _productService.GetByBrandAsync(brandName);
+            if (products != null)
+            {
+                if (products.Count > 0) return Json(_outmapper.Map<List<ProductDTO>>(products));
+                return NotFound();
+            }
+
+            return BadRequest();
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetByID(int id)
         {

@@ -1,41 +1,13 @@
 ﻿@model Ecommerce.DTO.DTOs.ProductDTO
 @{
-    List<string> images = Model.Images.Split(' ').ToList();
+    string image = Model.Images.Split(' ').ToList()[0];
     var count = ViewData["count"];
 }
-<link rel="stylesheet" href="/css/ProductPartial.css" />
 <div class="card col-3 m-3 text-center productCard">
-    @if(images != null){
+    @if(image != null){
         <!--Carousel as card image-->
         <div class="slide-wrapper card-img-top">
-            <div id="slide_@count" class="carousel slide" data-bs-interval="false">
-                <div class="carousel-indicators">
-                    @for (int i = 0; i < images.Count; i++)
-                    {
-                        <button type="button" data-bs-target="#slide_@count"
-                        data-bs-slide-to="@i" aria-current="true" aria-label="Slide @(i+1)" class="slide-btn bg-info @(i == 0?"active":"")">
-                        </button>
-                    }
-                </div>
-                <div class="carousel-inner">
-                    @foreach (string img in images)
-                    {
-                        <div class="carousel-item @(img == images.First()?"active":"")">
-                            <img src="@($"/Images/P{Model.Id}/{img}")" class="d-block w-100" alt="@Model.Name">
-                        </div>
-                    }
-                </div>
-                <div class="slide-control">
-                    <button class="carousel-control-prev" type="button" data-bs-target="#slide_@count" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#slide_@count" data-bs-slide="next">
-                        <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </div>
+            <img src="@($"/Images/P{Model.Id}/{image}")" class="d-block w-100" alt="@Model.Name">
         </div>
     }
     <div class="card-body">
@@ -70,7 +42,7 @@
         }
         else{
             <p class="card-text">
-                @Model.SalePrice
+                @Model.SalePrice$
             </p>
         }
         <div>

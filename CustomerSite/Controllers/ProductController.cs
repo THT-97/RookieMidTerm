@@ -42,6 +42,21 @@ namespace CustomerSite.Controllers
             return View(null);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ProductsByBrand(string brandName)
+        {
+            ViewData["Title"] = brandName;
+            var response = await _httpClient.GetAsync("Product/GetByBrand/?brandName=" + brandName);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                List<ProductDTO>? products = JsonConvert.DeserializeObject<List<ProductDTO>>(content);
+                return View(products);
+            }
+            ViewData["response"] = response.StatusCode;
+            return View(null);
+        }
+
         [HttpPost]
         public async Task<IActionResult> RateAsync(int productId, byte rate, string comment)
         {

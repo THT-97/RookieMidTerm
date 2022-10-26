@@ -1,14 +1,14 @@
 ﻿@using Ecommerce.DTO.DTOs
+@using Ecommerce.DTO.Enum
 @{
     ViewData["Title"] = "Home Page";
     List<CategoryDTO> categories = ViewBag.categories;
     List<BrandDTO> brands = ViewBag.brands;
     List<ProductDTO> highRatings = ViewBag.highRatings;
     List<ProductDTO> newProducts = ViewBag.newProducts;
-    int count = 0;
-    int limit = 6;
-    int pages = (int) Math.Ceiling((double)newProducts.Count / limit);
+    int count = 0, limit = 3;
 }
+<link rel="stylesheet" href="/css/ProductPartial.css" />
 <!--Banner Carousel-->
 <div class="slide-wrapper">
     <div id="bannerSlide" class="carousel slide" data-bs-interval="5000" data-bs-ride="true">
@@ -47,9 +47,12 @@
                 <div id="categories" class="collapse btn-group-vertical p-3 m-0">
                     @foreach (CategoryDTO category in categories)
                     {
-                        <a class="btn text-start" asp-action="ProductsByCategory" asp-controller="Product" asp-route-categoryName="@category.Name">
-                            <h6>@category.Name.ToUpper()</h6>
-                        </a>
+                        if(category.Status != (byte)CommonStatus.NotAvailable){
+                            <a class="btn text-start" asp-action="ProductsByCategory" asp-controller="Product" asp-route-categoryName="@category.Name">
+                                <h6>@category.Name.ToUpper()</h6>
+                            </a>
+                        }
+
                     }
                 </div>
             </div>
@@ -65,7 +68,12 @@
                 <div id="brands" class="collapse btn-group-vertical p-3 m-0">
                     @foreach (BrandDTO brand in brands)
                     {
-                        <a class="btn text-start" href="#"><h6>@brand.Name.ToUpper()</h6></a>
+                        if(brand.Status != (byte)CommonStatus.NotAvailable){
+                            <a class="btn text-start" asp-action="ProductsByBrand" asp-controller="Product" asp-route-brandName="@brand.Name">
+                                <h6>@brand.Name.ToUpper()</h6>
+                            </a>
+                        }
+
                     }
                 </div>
             </div>
@@ -75,9 +83,10 @@
 <div class="text-center col-10">
     @if (newProducts != null && newProducts.Count > 0)
     {
+        int newPages = (int)Math.Ceiling((double)newProducts.Count / limit);
         <h4 class="mt-3">New products</h4>
         <div class="row">
-            @foreach (ProductDTO product in newProducts)
+@*            @foreach (ProductDTO product in newProducts)
             {
                 if (product.Status == 1)
                 {
@@ -87,41 +96,59 @@
                     <partial view-data="ViewData" name="../Product/ProductPartialView" for="@product" />
                     count++;
                 }
-            }
+            }*@
         </div>
-        @*<!--Carousel for new products-->
-        <div class="slide-wrapper">
-            <div id="newSlide" class="carousel slide" data-bs-interval="5000" data-bs-ride="true">
+        <!--Carousel for new products-->
+        <div class="slide-wrapper bg-secondary">
+            <div id="newSlide" class="carousel slide" data-bs-interval="false">
                 <div class="carousel-inner">
-                    @for (var i = 0; i < pages; i++)
+                    @for (var i = 1; i <= newPages; i++)
                     {
-                        <div class="carousel-item @(i==0?"active":"")">
-                            @for (var j = i*pages+1; j <= i*pages+limit; j++)
+                        <div class="carousel-item @(i==1?"active":"")">
+                            <div class="row justify-content-center">
+                            @for (var j = (i - 1) * limit; (j < (i - 1) * limit + limit) && (j < newProducts.Count); j++)
                             {
-                                    
+                                if(newProducts[j].Status != (byte)CommonStatus.NotAvailable){
+                                    ViewData["count"] = count;
+                                    <partial view-data="ViewData" name="../Product/ProductPartialView" for="@newProducts[j]" />
+                                    count++;
+                                }
                             }
+                            </div>
                         </div>
                     }
                 </div>
-                <div class="slide-control">
-                    <button class="carousel-control-prev" type="button" data-bs-target="#newSlide" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#bewSlide" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
+                @if (newPages > 1)
+                {
+                    <div class="carousel-indicators" style="height:1%">
+                        @for (int i = 0; i < newPages; i++)
+                        {
+                            <button type="button" data-bs-target="#newSlide"
+                        data-bs-slide-to="@i" @(i==0?"aria-current=true":"") aria-label="new@(i+1)" class="slide-btn bg-info @(i == 0?"active":"")">
+                            </button>
+                        }
+                    </div>
+                    <div class="slide-control">
+                        <button class="carousel-control-prev" style="width:5%" type="button" data-bs-target="#newSlide" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" style="width:5%" type="button" data-bs-target="#newSlide" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                }
             </div>
-        </div>*@
+        </div>
         <hr />
     }
 
     @if (highRatings != null && highRatings.Count > 0)
     {
+        int highratingPages = (int)Math.Ceiling((double)highRatings.Count / limit);
         <h4>High ratings</h4>
-        <div class="row">
+        @*<div class="row">
             @foreach (ProductDTO product in highRatings)
             {
                 if (product.Status == 1)
@@ -133,6 +160,49 @@
                     count++;
                 }
             }
+        </div>*@
+        <!--Carousel for highrating products-->
+        <div class="slide-wrapper bg-secondary">
+            <div id="highratingSlide" class="carousel slide" data-bs-interval="0" data-bs-ride="true">
+                <div class="carousel-inner">
+                    @for (var i = 1; i <= highratingPages; i++)
+                    {
+                        <div class="carousel-item @(i==1?"active":"")">
+                            <div class="row justify-content-center">
+                                @for (var j = (i - 1) * limit; (j < (i - 1) * limit + limit) && (j < highRatings.Count); j++)
+                                {
+                                    if(highRatings[j].Status != (byte)CommonStatus.NotAvailable){
+                                        ViewData["count"] = count;
+                                        <partial view-data="ViewData" name="../Product/ProductPartialView" for="@highRatings[j]" />
+                                        count++;
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+                @if (highratingPages > 1)
+                {
+                    <div class="carousel-indicators" style="height:1%">
+                        @for (int i = 0; i < highratingPages; i++)
+                        {
+                            <button type="button" data-bs-target="#highratingSlide"
+                        data-bs-slide-to="@i" aria-current="true" aria-label="Slide @(i+1)" class="slide-btn bg-info @(i == 0?"active":"")">
+                            </button>
+                        }
+                    </div>
+                    <div class="slide-control">
+                        <button class="carousel-control-prev" style="width:5%" type="button" data-bs-target="#highratingSlide" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" style="width:5%" type="button" data-bs-target="#highratingSlide" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                }
+            </div>
         </div>
         <hr />
     }

@@ -1,4 +1,4 @@
-﻿namespace Ecommerce.Data.Enum
+﻿namespace Ecommerce.DTO.Enum
 {
     public enum CommonStatus
     {

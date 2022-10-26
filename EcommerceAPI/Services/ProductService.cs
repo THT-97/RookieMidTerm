@@ -1,7 +1,7 @@
 ﻿using Ecommerce.API.Services;
-using Ecommerce.Data.Enum;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
+using Ecommerce.DTO.Enum;
 using EcommerceAPI.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +52,14 @@ namespace EcommerceAPI.Services
                                           .ToListAsync();
         }
 
+        public async Task<List<Product>>? GetByBrandAsync(string brandName)
+        {
+            return await _context.Products.Where(p => p.Brand.Name == brandName)
+                                          .Include(p => p.Category)
+                                          .Include(p => p.Brand)
+                                          .ToListAsync();
+        }
+
         //get 30 newest products
         public async Task<List<Product>>? GetNewAsync()
         {
@@ -62,10 +70,11 @@ namespace EcommerceAPI.Services
                                           .ToListAsync();
         }
         
-        //get 30 products with highest rating
+        //get 30 products with highest rating (>3)
         public async Task<List<Product>>? GetHighRatingAsync()
         {
-            return await _context.Products.OrderByDescending(p => p.Rating)
+            return await _context.Products.Where(p => p.Rating > 3)
+                                          .OrderByDescending(p => p.Rating)
                                           .Take(30)
                                           .Include(p => p.Category)
                                           .Include(p => p.Brand)
