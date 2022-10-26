@@ -3,14 +3,17 @@ using Ecommerce.DTO.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using NuGet.Common;
 using System.Diagnostics;
 
 namespace CustomerSite.Controllers
 {
     public class HomeController : Controller
     {
-        private HttpClient _httpClient;   
-
+        private HttpClient _httpClient;
+        private HttpResponseMessage _response;
+        private string _content;
+        private string _token;
         public HomeController(IHttpClientFactory clientFactory)
         {
             _httpClient = clientFactory.CreateClient("client");
@@ -18,6 +21,12 @@ namespace CustomerSite.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (User.Identity.Name != null && HttpContext.Session.GetString("token")==null)
+            {
+                _response = await _httpClient.PostAsJsonAsync("Auth/Authenticate", User.Identity.Name);
+                _token = await _response.Content.ReadAsStringAsync();
+                HttpContext.Session.SetString("token", _token);
+            }
             List<ProductDTO> highRatings;
             List<ProductDTO> newProducts;
             List<CategoryDTO> categories;

@@ -22,10 +22,11 @@ builder.Services.AddDefaultIdentity<IdentityUser>(
         options.Password.RequireNonAlphanumeric = false;
     }
 ).AddEntityFrameworkStores<ApplicationDbContext>();
-
+//Add HttpClient
 builder.Services.AddHttpClient("client",
     options => { options.BaseAddress = new Uri(builder.Configuration["apiUrl"]); });
-
+//Add Session with idle timeout 1hr
+builder.Services.AddSession(options=>options.IdleTimeout = TimeSpan.FromHours(1));
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -46,7 +47,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
