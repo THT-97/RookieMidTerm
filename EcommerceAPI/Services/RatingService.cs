@@ -1,6 +1,6 @@
-﻿using Ecommerce.Data.Models;
+﻿using Ecommerce.API.Repositories;
+using Ecommerce.Data.Models;
 using EcommerceAPI.Data;
-using EcommerceAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

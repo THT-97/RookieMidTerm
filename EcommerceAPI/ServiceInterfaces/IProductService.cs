@@ -2,9 +2,9 @@
 using Ecommerce.DTO.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EcommerceAPI.Services
+namespace Ecommerce.API.Repositories
 {
-    public interface IProductRepository
+    public interface IProductService
     {
         public Task<List<Product>>? GetNewAsync();
         public Task<List<Product>>? GetByCategoryAsync(string categoryName);

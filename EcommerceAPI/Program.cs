@@ -1,4 +1,6 @@
+using Ecommerce.API.ServiceInterfaces;
 using EcommerceAPI.Data;
+using EcommerceAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -39,6 +41,8 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true
     };
 });
+//Add repositories
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

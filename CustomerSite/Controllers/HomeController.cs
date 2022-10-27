@@ -25,7 +25,8 @@ namespace CustomerSite.Controllers
             {
                 _response = await _httpClient.PostAsJsonAsync("Auth/Authenticate", User.Identity.Name);
                 _token = await _response.Content.ReadAsStringAsync();
-                HttpContext.Session.SetString("token", _token);
+                //HttpContext.Session.SetString("token", _token);
+                HttpContext.Response.Cookies.Append("token", _token, new CookieOptions() { Expires = DateTime.Now.AddHours(1) });
             }
             List<ProductDTO> highRatings;
             List<ProductDTO> newProducts;

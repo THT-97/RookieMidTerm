@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using Ecommerce.API.ServiceInterfaces;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
-using EcommerceAPI.Data;
 using EcommerceAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,14 +11,12 @@ namespace EcommerceAPI.Controllers
     [ApiController]
     public class CategoryController : Controller
     {
-        private readonly EcommerceDbContext _context;
-        private CategoryService _categoryService;
+        private ICategoryService _categoryService;
         private IMapper _mapper;
 
-        public CategoryController(EcommerceDbContext context)
+        public CategoryController(ICategoryService categoryService)
         {
-            _context = context;
-            _categoryService = new CategoryService(_context);
+            _categoryService = categoryService;
             _mapper = new MapperConfiguration(cfg => cfg.CreateMap<Category, CategoryDTO>()).CreateMapper();
         }
 

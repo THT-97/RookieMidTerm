@@ -1,11 +1,12 @@
-﻿using Ecommerce.Data.Models;
+﻿using Ecommerce.API.ServiceInterfaces;
+using Ecommerce.Data.Models;
 using EcommerceAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceAPI.Services
 {
-    public class CategoryService : ICRUDService<Category>, IDisposable
+    public class CategoryService : ICategoryService, IDisposable
     {
         private readonly EcommerceDbContext _context;
 

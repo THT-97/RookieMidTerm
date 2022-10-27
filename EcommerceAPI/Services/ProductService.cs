@@ -1,4 +1,5 @@
-﻿using Ecommerce.API.Services;
+﻿using Ecommerce.API.Repositories;
+using Ecommerce.API.Services;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
 using Ecommerce.DTO.Enum;
@@ -9,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceAPI.Services
 {
-    public class ProductService : ICRUDService<Product>, IProductRepository, IDisposable
+    public class ProductService : ICRUDService<Product>, IProductService, IDisposable
     {
         private readonly EcommerceDbContext _context;
         private RatingService _ratingService;

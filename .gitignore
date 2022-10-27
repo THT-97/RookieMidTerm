@@ -13,3 +13,5 @@ EcommerceClassLibrary/obj/
 /EcommerceClassLibrary/bin/Debug/net6.0
 Ecommerce.Data/bin/Debug/
 Ecommerce.Data/obj/Debug/
+Ecommerce.UnitTest/bin/Debug/
+Ecommerce.UnitTest/obj/Debug/
