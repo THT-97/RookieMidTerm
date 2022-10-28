@@ -23,10 +23,10 @@ namespace EcommerceAPI.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAll()
         {
-            List<Category> categories = await _categoryService.GetAllAsync();
+            List<Category>? categories = await _categoryService.GetAllAsync();
             if (categories != null)
             {
-                if(categories.Count > 0) return Json(_mapper.Map<List<CategoryDTO>>(categories));
+                if (categories.Count > 0) return Json(_mapper.Map<List<CategoryDTO>>(categories));
                 return NotFound();
             }
 

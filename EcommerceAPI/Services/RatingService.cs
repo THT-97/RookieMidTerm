@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.API.Services
 {
-    public class RatingService : ICRUDService<Rating>
+    public class RatingService : ICRUDService<Rating>, IAsyncDisposable
     {
         private readonly EcommerceDbContext _context;
 
@@ -50,6 +50,11 @@ namespace Ecommerce.API.Services
             throw new NotImplementedException();
         }
 
+        public Task<List<Rating>>? GetPage(int page, int limit)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<ActionResult> UpdateAsync(int id, Rating entry)
         {
             if (id != entry.Id) return new BadRequestResult();
@@ -59,6 +64,11 @@ namespace Ecommerce.API.Services
                 return new OkResult();
             }
             return new NotFoundResult();
+        }
+
+        ValueTask IAsyncDisposable.DisposeAsync()
+        {
+            return ((IAsyncDisposable)_context).DisposeAsync();
         }
     }
 }

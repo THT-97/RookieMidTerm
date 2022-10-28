@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceAPI.Services
 {
-    public class ProductService : ICRUDService<Product>, IProductService, IDisposable
+    public class ProductService : ICRUDService<Product>, IProductService, IAsyncDisposable
     {
         private readonly EcommerceDbContext _context;
         private RatingService _ratingService;
@@ -156,10 +156,14 @@ namespace EcommerceAPI.Services
             return new BadRequestResult();
         }
 
-        public void Dispose()
+        public Task<List<Product>>? GetPage(int page, int limit)
         {
-            _context.Dispose();
+            throw new NotImplementedException();
         }
 
+        public ValueTask DisposeAsync()
+        {
+            return ((IAsyncDisposable)_context).DisposeAsync();
+        }
     }
 }

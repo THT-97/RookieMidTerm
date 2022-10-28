@@ -3,7 +3,6 @@ using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
 using Ecommerce.DTO.Enum;
 using EcommerceAPI.Controllers;
-using EcommerceAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NuGet.Protocol;
@@ -12,15 +11,16 @@ namespace Ecommerce.API.UnitTest
 {
     public class CategoryControllerTest
     {
+        private readonly Mock<ICategoryService> _catServiceMoq;
         public CategoryControllerTest()
         {
-            
+            _catServiceMoq = new Mock<ICategoryService>();
         }
 
         [Fact]
         public async Task GetAll_Success()
         {
-            // Arrange
+            //ARRANGE
             List<Category> categories = new()
             {
                 new Category(){Id=1, Name="Cat 1", Description="Category 1", Status=(byte)CommonStatus.Available},
@@ -35,16 +35,21 @@ namespace Ecommerce.API.UnitTest
                 new CategoryDTO(){Name="Cat 3", Description="Category 3", Status=(byte)CommonStatus.Available},
             };
             
-            var catMoq = new Mock<ICategoryService>();
-            catMoq.Setup(c => c.GetAllAsync())
-                  .Returns(Task.FromResult(categories));
+            //Arranging Service test
+            _catServiceMoq.Setup(c => c.GetAllAsync())
+                         .ReturnsAsync(categories);
+            //Arranging Controller test
+            CategoryController catController = new CategoryController(_catServiceMoq.Object);
 
-            var catController = new CategoryController(catMoq.Object);
+            //ACT
+            List<Category> serviceResult = await _catServiceMoq.Object.GetAllAsync();
+            Assert.NotNull(serviceResult);
+            Assert.Equal(categories.ToJson(), serviceResult.ToJson());
 
-            //Act
-            List<Category>? result = await catMoq.Object.GetAllAsync();
-            Assert.NotNull(result);
-            Assert.Equal(categories, result);
+            JsonResult? controllerResult = await catController.GetAll() as JsonResult;
+            List<CategoryDTO> controllerDTO = (List<CategoryDTO>)controllerResult.Value;
+            Assert.NotNull(controllerResult);
+            Assert.Equal(controllerDTO.ToJson(), controllerDTO.ToJson());
         }
     }
 }

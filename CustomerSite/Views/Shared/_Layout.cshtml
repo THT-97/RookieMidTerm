@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+    string? token = Context.Session.GetString("token");
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -42,6 +45,11 @@
     <footer class="border-top footer text-muted bg-black bottom-0">
         <div class="container">
             &copy; @DateTime.Now.Year - Ecommerce - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            @if (token != null)
+            {
+                <p class="text-break">@token</p>
+                @*<p class="text-break">@token.Value</p>*@
+            }
         </div>
     </footer>
     <script src="~/js/site.js" asp-append-version="true"></script>

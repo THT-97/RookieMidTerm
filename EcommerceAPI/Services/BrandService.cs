@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceAPI.Services
 {
-    public class BrandService : ICRUDService<Brand>, IDisposable
+    public class BrandService : ICRUDService<Brand>, IAsyncDisposable
     {
         private readonly EcommerceDbContext _context;
 
@@ -63,9 +63,14 @@ namespace EcommerceAPI.Services
             return new NotFoundResult();
         }
 
-        public void Dispose()
+        public Task<List<Brand>>? GetPage(int page, int limit)
         {
-            _context.Dispose();
+            throw new NotImplementedException();
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return ((IAsyncDisposable)_context).DisposeAsync();
         }
     }
 }

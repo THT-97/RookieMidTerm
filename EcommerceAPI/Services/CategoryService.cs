@@ -63,9 +63,16 @@ namespace EcommerceAPI.Services
             return new NotFoundResult();
         }
 
+        public Task<List<Category>>? GetPage(int page, int limit)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Dispose()
         {
             _context.Dispose();
         }
+
+
     }
 }

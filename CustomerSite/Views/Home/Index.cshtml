@@ -7,8 +7,6 @@
     List<ProductDTO> highRatings = ViewBag.highRatings;
     List<ProductDTO> newProducts = ViewBag.newProducts;
     int count = 0, limit = 3;
-    //string token = Context.Session.GetString("token");
-    var token = Context.Request.Cookies.FirstOrDefault(c => c.Key == "token");
 }
 <link rel="stylesheet" href="/css/ProductPartial.css" />
 <!--Banner Carousel-->
@@ -205,9 +203,5 @@
             </div>
         </div>
         <hr />
-        @if(token.Key!=null){
-            @*<p class="text-break">@token</p>*@
-            <p class="text-break">@token.Value</p>
-        }
     }
 </div>

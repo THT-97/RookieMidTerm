@@ -11,9 +11,9 @@ namespace CustomerSite.Controllers
     public class HomeController : Controller
     {
         private HttpClient _httpClient;
-        private HttpResponseMessage _response;
-        private string _content;
-        private string _token;
+        private HttpResponseMessage? _response;
+        private string? _content;
+        private string? _token;
         public HomeController(IHttpClientFactory clientFactory)
         {
             _httpClient = clientFactory.CreateClient("client");
@@ -25,34 +25,39 @@ namespace CustomerSite.Controllers
             {
                 _response = await _httpClient.PostAsJsonAsync("Auth/Authenticate", User.Identity.Name);
                 _token = await _response.Content.ReadAsStringAsync();
-                //HttpContext.Session.SetString("token", _token);
-                HttpContext.Response.Cookies.Append("token", _token, new CookieOptions() { Expires = DateTime.Now.AddHours(1) });
+                HttpContext.Session.SetString("token", _token);
             }
-            List<ProductDTO> highRatings;
-            List<ProductDTO> newProducts;
-            List<CategoryDTO> categories;
-            List<BrandDTO> brands;
+            List<ProductDTO>? highRatings;
+            List<ProductDTO>? newProducts;
+            List<CategoryDTO>? categories;
+            List<BrandDTO>? brands;
+
             //Call API Controller to get list of categories
-            var response = await _httpClient.GetAsync("Category/GetAll");
-            var content = await response.Content.ReadAsStringAsync();
-            categories = JsonConvert.DeserializeObject<List<CategoryDTO>>(content);
+            _response = await _httpClient.GetAsync("Category/GetAll");
+            _content = await _response.Content.ReadAsStringAsync();
+            categories = JsonConvert.DeserializeObject<List<CategoryDTO>>(_content);
+
             //Call again to get brand
-            response = await _httpClient.GetAsync("Brand/GetAll");
-            content = await response.Content.ReadAsStringAsync();
-            brands = JsonConvert.DeserializeObject<List<BrandDTO>>(content);
+            _response = await _httpClient.GetAsync("Brand/GetAll");
+            _content = await _response.Content.ReadAsStringAsync();
+            brands = JsonConvert.DeserializeObject<List<BrandDTO>>(_content);
+
             //Call again to get list of all products
-            response = await _httpClient.GetAsync("Product/GetHighRatings");
-            content = await response.Content.ReadAsStringAsync();
-            highRatings = JsonConvert.DeserializeObject<List<ProductDTO>>(content);
+            _response = await _httpClient.GetAsync("Product/GetHighRatings");
+            _content = await _response.Content.ReadAsStringAsync();
+            highRatings = JsonConvert.DeserializeObject<List<ProductDTO>>(_content);
+
             //Call again to get new products
-            response = await _httpClient.GetAsync("Product/GetNew");
-            content = await response.Content.ReadAsStringAsync();
-            newProducts = JsonConvert.DeserializeObject<List<ProductDTO>>(content);
+            _response = await _httpClient.GetAsync("Product/GetNew");
+            _content = await _response.Content.ReadAsStringAsync();
+            newProducts = JsonConvert.DeserializeObject<List<ProductDTO>>(_content);
+
             //Transfer data to ViewBag
             ViewBag.categories = categories;
             ViewBag.brands = brands;
             ViewBag.highRatings = highRatings;
             ViewBag.newProducts = newProducts;
+
             return View();
         }
         [Authorize]
