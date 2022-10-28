@@ -1,10 +1,10 @@
-﻿using Ecommerce.API.Repositories;
+﻿using Ecommerce.API.Data;
+using Ecommerce.API.ServiceInterfaces;
 using Ecommerce.Data.Models;
-using EcommerceAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace EcommerceAPI.Services
+namespace Ecommerce.API.Services
 {
     public class BrandService : ICRUDService<Brand>, IAsyncDisposable
     {
@@ -63,7 +63,7 @@ namespace EcommerceAPI.Services
             return new NotFoundResult();
         }
 
-        public Task<List<Brand>>? GetPage(int page, int limit)
+        public Task<List<Brand>>? GetPageAsync(int page, int limit)
         {
             throw new NotImplementedException();
         }

@@ -1,12 +1,11 @@
-﻿using CustomerSite.Models;
+﻿using Ecommerce.CustomerSite.Models;
 using Ecommerce.DTO.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using NuGet.Common;
 using System.Diagnostics;
 
-namespace CustomerSite.Controllers
+namespace Ecommerce.CustomerSite.Controllers
 {
     public class HomeController : Controller
     {
@@ -21,7 +20,7 @@ namespace CustomerSite.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if (User.Identity.Name != null && HttpContext.Session.GetString("token")==null)
+            if (User.Identity.Name != null && HttpContext.Session.GetString("token") == null)
             {
                 _response = await _httpClient.PostAsJsonAsync("Auth/Authenticate", User.Identity.Name);
                 _token = await _response.Content.ReadAsStringAsync();

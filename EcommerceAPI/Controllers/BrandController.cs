@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
+using Ecommerce.API.Data;
+using Ecommerce.API.Services;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
-using EcommerceAPI.Data;
-using EcommerceAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EcommerceAPI.Controllers
+namespace Ecommerce.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]

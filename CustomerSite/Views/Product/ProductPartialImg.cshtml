@@ -1,12 +1,10 @@
 ﻿@model Ecommerce.DTO.DTOs.ProductDTO
 @{
     string image = Model.Images.Split(' ').ToList()[0];
-    var count = ViewData["count"];
 }
 <div class="card col-3 m-3 text-center productCard">
     @if(image != null){
-        <!--Carousel as card image-->
-        <div class="slide-wrapper card-img-top">
+        <div class="card-img-top">
             <img src="@($"/Images/P{Model.Id}/{image}")" class="d-block w-100" alt="@Model.Name">
         </div>
     }

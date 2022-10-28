@@ -2,10 +2,9 @@
 using Ecommerce.API.ServiceInterfaces;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
-using EcommerceAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EcommerceAPI.Controllers
+namespace Ecommerce.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
@@ -33,11 +32,18 @@ namespace EcommerceAPI.Controllers
             return BadRequest();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<ActionResult> GetByID(int id)
         {
             Category category = await _categoryService.GetByIDAsync(id);
             return category != null ? Json(_mapper.Map<CategoryDTO>(category)) : NotFound();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> CountProducts(string categoryName)
+        {
+            int count = await _categoryService.CountProductsAsync(categoryName);
+            return count != -1 ? Json(count) : NotFound();
         }
 
         [HttpPost]

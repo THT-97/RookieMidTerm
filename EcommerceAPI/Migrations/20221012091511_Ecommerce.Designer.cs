@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
-using EcommerceAPI.Data;
+using Ecommerce.API.Data;
 
 #nullable disable
 

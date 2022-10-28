@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace CustomerSite.Controllers
+namespace Ecommerce.CustomerSite.Controllers
 {
     public class ProductController : Controller
     {
@@ -28,14 +28,20 @@ namespace CustomerSite.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ProductsByCategory(string categoryName)
+        public async Task<IActionResult> ProductsByCategory(string categoryName, int page = 1, int limit = 6)
         {
             ViewData["Title"] = categoryName;
-            var response = await _httpClient.GetAsync("Product/GetByCategory/?categoryName=" + categoryName);
+            var response = await _httpClient.GetAsync($"Product/GetByCategory/?categoryName={categoryName}&page={page}&limit={limit}");
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
                 List<ProductDTO>? products = JsonConvert.DeserializeObject<List<ProductDTO>>(content);
+                response = await _httpClient.GetAsync($"Category/CountProducts/?categoryName={categoryName}");
+                int pages = await response.Content.ReadFromJsonAsync<int>();
+                pages = (int)Math.Ceiling((double)pages / limit);
+                ViewBag.pages = pages;
+                ViewBag.page = page;
+                ViewBag.limit = limit;
                 return View(products);
             }
             ViewData["response"] = response.StatusCode;
@@ -62,7 +68,7 @@ namespace CustomerSite.Controllers
         {
             if (User.Identity.Name != null)
             {
-                var response = await _httpClient.PostAsJsonAsync("Product/Rate", 
+                var response = await _httpClient.PostAsJsonAsync("Product/Rate",
                     new RatingDTO
                     {
                         ProductId = productId,

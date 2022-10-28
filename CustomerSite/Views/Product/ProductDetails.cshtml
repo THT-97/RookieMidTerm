@@ -54,20 +54,21 @@
                             </div>
                         }    
                     </div>
+
+                    <!--Ratings and comments-->
                     @if(ratings.Count > 0){
                         <hr />
                         <h5>Ratings:</h5>
-                        <!--Ratings-->
                         <div class="border border-secondary rounded ps-2">
                             @foreach(RatingDTO rating in ratings){
                                 <partial name="../Product/ProductRatingPartial" for="@rating" />
                             }
                         </div>
                     }
-
                 </div>
             }
 
+            <!--Product details-->
             <div class="col-6">
                 <h4>@Model.Name</h4>
                 <small>@Model.Description</small>
@@ -108,6 +109,8 @@
                         @Model.SalePrice
                     </h5>
                 }
+
+                <!--Options for Color and Size-->
                 <form id="options">
                     <h5 class="mt-3 mb-0">Colors:</h5>
                     @if (colors != null)
@@ -147,9 +150,10 @@
                         <button type="button" class="btn btn-outline-success">Add to cart</button>
                     </div>
                 </form>
+
+                <!--Rating form for logged in users-->
                 @if (User.Identity.Name != null)
                 {
-                    <!--Rating form-->
                     <form id="rating" class="position-relative h-25" asp-action="Rate" asp-controller="Product" asp-route-productId="@Model.Id" method="post">
                         <h5 class="mt-2 mb-0">Your rating:</h5>
                         <label id="one">
@@ -186,6 +190,8 @@
                         <button class="btn btn-outline-secondary" type="submit">Sumbit</button>
                     </form>
                 }
+
+                <!--Links to Brand and Category-->
                 <div class="mt-5">
                     <h5>
                         Brand:

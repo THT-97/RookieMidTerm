@@ -1,14 +1,13 @@
-﻿using Ecommerce.API.Repositories;
-using Ecommerce.API.Services;
+﻿using Ecommerce.API.Data;
+using Ecommerce.API.ServiceInterfaces;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
 using Ecommerce.DTO.Enum;
-using EcommerceAPI.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace EcommerceAPI.Services
+namespace Ecommerce.API.Services
 {
     public class ProductService : ICRUDService<Product>, IProductService, IAsyncDisposable
     {
@@ -40,14 +39,23 @@ namespace EcommerceAPI.Services
             return await _context.Products.Where(p => p.Id == id)
                                           .Include(p => p.Category)
                                           .Include(p => p.Brand)
-                                          .Include(p => p.Ratings.OrderByDescending(r=>r.Date))
+                                          .Include(p => p.Ratings.OrderByDescending(r => r.Date))
                                           .ThenInclude(r => r.User)
                                           .SingleOrDefaultAsync();
         }
-        
-        public async Task<List<Product>>? GetByCategoryAsync(string categoryName)
+
+        public async Task<List<Product>>? GetByCategoryAsync(string categoryName, int page=0, int limit=6)
         {
+            int count = await _context.Products.Where(p => p.Category.Name == categoryName).CountAsync();
+            if (page > 0) page--;
+            if (count < limit)
+            {
+                page = 0;
+                limit = count;
+            }
             return await _context.Products.Where(p => p.Category.Name == categoryName)
+                                          .Skip(page * limit)
+                                          .Take(limit)
                                           .Include(p => p.Category)
                                           .Include(p => p.Brand)
                                           .ToListAsync();
@@ -70,7 +78,7 @@ namespace EcommerceAPI.Services
                                           .Include(p => p.Brand)
                                           .ToListAsync();
         }
-        
+
         //get 30 products with highest rating (>3)
         public async Task<List<Product>>? GetHighRatingAsync()
         {
@@ -156,9 +164,19 @@ namespace EcommerceAPI.Services
             return new BadRequestResult();
         }
 
-        public Task<List<Product>>? GetPage(int page, int limit)
+        public async Task<List<Product>>? GetPageAsync(int page=0, int limit=6)
         {
-            throw new NotImplementedException();
+            int count = await CountAsync();
+            if (page > 0) page--;
+            if (count < limit)
+            {
+                page = 0;
+                limit = count;
+            }
+            List<Product>? products = await _context.Products.Skip(page * limit)
+                                                             .Take(limit)
+                                                             .ToListAsync();
+            return products;
         }
 
         public ValueTask DisposeAsync()

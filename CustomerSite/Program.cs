@@ -1,4 +1,4 @@
-using CustomerSite.Data;
+using Ecommerce.CustomerSite.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

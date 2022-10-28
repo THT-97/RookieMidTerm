@@ -2,12 +2,12 @@
 using Ecommerce.DTO.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Ecommerce.API.Repositories
+namespace Ecommerce.API.ServiceInterfaces
 {
     public interface IProductService
     {
         public Task<List<Product>>? GetNewAsync();
-        public Task<List<Product>>? GetByCategoryAsync(string categoryName);
+        public Task<List<Product>>? GetByCategoryAsync(string categoryName, int page, int limit);
         public Task<List<Product>>? GetByBrandAsync(string brandName);
         public Task<List<Product>>? GetHighRatingAsync();
         public Task<IActionResult>? RateAsync(RatingDTO productRate);

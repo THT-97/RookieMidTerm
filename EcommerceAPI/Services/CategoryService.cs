@@ -1,10 +1,10 @@
-﻿using Ecommerce.API.ServiceInterfaces;
+﻿using Ecommerce.API.Data;
+using Ecommerce.API.ServiceInterfaces;
 using Ecommerce.Data.Models;
-using EcommerceAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace EcommerceAPI.Services
+namespace Ecommerce.API.Services
 {
     public class CategoryService : ICategoryService, IDisposable
     {
@@ -54,7 +54,7 @@ namespace EcommerceAPI.Services
         public async Task<ActionResult> DeleteAsync(int id)
         {
             Category target = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
-            if(target != null)
+            if (target != null)
             {
                 _context.Categories.Remove(target);
                 await _context.SaveChangesAsync();
@@ -63,16 +63,21 @@ namespace EcommerceAPI.Services
             return new NotFoundResult();
         }
 
-        public Task<List<Category>>? GetPage(int page, int limit)
+        public Task<List<Category>>? GetPageAsync(int page, int limit)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<int> CountProductsAsync(string categoryName)
+        {
+            Category? category = await _context.Categories.Include(c => c.Products).FirstOrDefaultAsync(c => c.Name == categoryName);
+            if (category != null) return category.Products.Count;
+            return -1;
         }
 
         public void Dispose()
         {
             _context.Dispose();
         }
-
-
     }
 }

@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
+using Ecommerce.API.Data;
+using Ecommerce.API.Services;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
-using EcommerceAPI.Data;
-using EcommerceAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EcommerceAPI.Controllers
+namespace Ecommerce.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
@@ -25,7 +25,7 @@ namespace EcommerceAPI.Controllers
             {
                 //base mapping config
                 cfg.CreateMap<Product, ProductDTO>()
-                    //config for Category entity
+                   //config for Category entity
                    .ForMember(dto => dto.CategoryName, src => src.MapFrom(ent => ent.Category.Name))
                    //config for Brand entity
                    .ForMember(dto => dto.BrandName, src => src.MapFrom(ent => ent.Brand.Name));
@@ -48,6 +48,12 @@ namespace EcommerceAPI.Controllers
         }
 
         [HttpGet]
+        public async Task<int> Count()
+        {
+            return await _productService.CountAsync();
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GetAll()
         {
             List<Product> products = await _productService.GetAllAsync();
@@ -67,7 +73,7 @@ namespace EcommerceAPI.Controllers
             List<Product> products = await _productService.GetNewAsync();
             if (products != null)
             {
-                if(products.Count > 0) return Json(_outmapper.Map<List<ProductDTO>>(products));
+                if (products.Count > 0) return Json(_outmapper.Map<List<ProductDTO>>(products));
                 return NotFound();
             }
 
@@ -88,18 +94,17 @@ namespace EcommerceAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetByCategory(string categoryName)
+        public async Task<ActionResult> GetByCategory(string categoryName, int page=0, int limit=6)
         {
-            List<Product> products = await _productService.GetByCategoryAsync(categoryName);
+            List<Product> products = await _productService.GetByCategoryAsync(categoryName, page, limit);
             if (products != null)
             {
-                if(products.Count > 0) return Json(_outmapper.Map<List<ProductDTO>>(products));
+                if (products.Count > 0) return Json(_outmapper.Map<List<ProductDTO>>(products));
                 return NotFound();
             }
 
             return BadRequest();
         }
-
 
         [HttpGet]
         public async Task<ActionResult> GetByBrand(string brandName)
@@ -121,6 +126,20 @@ namespace EcommerceAPI.Controllers
             if (product != null) return Json(_outmapper.Map<ProductDTO>(product));
             return NotFound();
         }
+
+        [HttpGet]
+        public async Task<ActionResult> GetPage(int page=0, int limit=6)
+        {
+            List<Product> products = await _productService.GetPageAsync(page, limit);
+            if (products != null)
+            {
+                if (products.Count > 0) return Json(_outmapper.Map<List<ProductDTO>>(products));
+                return NotFound();
+            }
+
+            return BadRequest();
+        }
+
 
         [HttpPost]
         public async Task<ActionResult> Create(ProductDTO product)

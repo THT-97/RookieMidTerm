@@ -1,0 +1,85 @@
+﻿@model Ecommerce.DTO.DTOs.ProductDTO
+@{
+    List<string>? images = Model.Images.Split(' ').ToList();
+    var count = ViewData["count"];
+}
+<div class="card col-3 m-3 text-center productCard">
+    @if(images != null){
+        <div class="slide-wrapper card-img-top">
+            <!--Carousel-->
+            <div id="slide_@count" class="carousel slide" data-bs-ride="true" interval>
+                <div class="carousel-inner">
+                    @foreach (string img in images)
+                    {
+                        <div class="carousel-item @(img == images.First()?"active":"")">
+                            <img src="@($"/Images/P{Model.Id}/{img}")" class="d-block w-100" alt="@Model.Name">
+                        </div>
+                    }
+                </div>
+                @if (images.Count > 1)
+                {
+                    <div class="carousel-indicators" style="height:1%">
+                        @for (int i = 0; i < images.Count; i++)
+                        {
+                            <button type="button" data-bs-target="#slide_@count" data-bs-slide-to="@i"
+                        aria-current="true" aria-label="Slide @i" class="slide-btn bg-info @(i == 0?"active":"")">
+                            </button>
+                        }
+                    </div>
+                    <div class="slide-control">
+                        <button class="carousel-control-prev" type="button" data-bs-target="#slide_@count" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#slide_@count" data-bs-slide="next">
+                            <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    <div class="card-body">
+        <h6 class="card-title">@Model.Name - @Model.BrandName</h6>
+        <p id="rating" class="card-text m-0">
+            @if(Model.Rating > 0){
+                @for (var i = 1; i <= 5; i++)
+                {
+                    if (i <= Model.Rating)
+                    {
+                        <i class="fa fa-star text-warning"></i>
+                    }
+                    else if (i - Model.Rating < 1)
+                    {
+                        <i class="fa fa-star-half text-warning"></i>
+                    }
+                }
+                <span>(@string.Format("{0:f2}", Model.Rating))</span>
+            }
+            else
+            {
+                <i>(Be the first to rate)</i>
+            }
+        </p>
+        @if(Model.ListPrice!=Model.SalePrice){
+            <span id="ogPrice" class="card-text text-secondary m-2">
+                @Model.ListPrice$
+            </span>
+            <span id="dcPrice" class="card-text text-success">
+                @Model.SalePrice$
+            </span>
+        }
+        else{
+            <p class="card-text">
+                @Model.SalePrice$
+            </p>
+        }
+        <div>
+            <a class="btn btn-primary card-link" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.Id">
+                <small>Details</small>
+            </a>
+            <a href="#" class="btn btn-success"><small>Add to cart</small></a>
+        </div>
+    </div>
+</div>

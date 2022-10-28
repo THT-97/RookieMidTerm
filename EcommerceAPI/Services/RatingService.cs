@@ -1,6 +1,6 @@
-﻿using Ecommerce.API.Repositories;
+﻿using Ecommerce.API.Data;
+using Ecommerce.API.ServiceInterfaces;
 using Ecommerce.Data.Models;
-using EcommerceAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -51,6 +51,11 @@ namespace Ecommerce.API.Services
         }
 
         public Task<List<Rating>>? GetPage(int page, int limit)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Rating>>? GetPageAsync(int page, int limit)
         {
             throw new NotImplementedException();
         }
