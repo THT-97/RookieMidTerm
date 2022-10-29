@@ -11,11 +11,10 @@ namespace Ecommerce.API.UnitTest.Controllers
 {
     public class CategoryControllerTest
     {
-        private readonly Mock<ICategoryService> _catServiceMoq;
-        private CategoryController _catController;
+        private readonly Mock<ICategoryService> _categoryServiceMoq;
         public CategoryControllerTest()
         {
-            _catServiceMoq = new Mock<ICategoryService>();
+            _categoryServiceMoq = new Mock<ICategoryService>();
         }
 
         [Fact]
@@ -37,13 +36,12 @@ namespace Ecommerce.API.UnitTest.Controllers
             };
 
             //Arranging Service
-            _catServiceMoq.Setup(c => c.GetAllAsync())
-                         .ReturnsAsync(categories);
+            _categoryServiceMoq.Setup(c => c.GetAllAsync()).ReturnsAsync(categories);
             //Arranging Controller
-            _catController = new CategoryController(_catServiceMoq.Object);
+            CategoryController categoryController = new CategoryController(_categoryServiceMoq.Object);
 
             //ACT
-            JsonResult? controllerResult = await _catController.GetAll() as JsonResult;
+            JsonResult? controllerResult = await categoryController.GetAll() as JsonResult;
             List<CategoryDTO> controllerDTO = (List<CategoryDTO>)controllerResult.Value;
             Assert.NotNull(controllerResult);
             Assert.Equivalent(categoriesDTO, controllerDTO);
@@ -55,13 +53,12 @@ namespace Ecommerce.API.UnitTest.Controllers
             //ARRANGE
             List<Category> categories = new();
             //Arranging Service
-            _catServiceMoq.Setup(c => c.GetAllAsync())
-                         .ReturnsAsync(categories);
+            _categoryServiceMoq.Setup(c => c.GetAllAsync()).ReturnsAsync(categories);
             //Arranging Controller
-            _catController = new CategoryController(_catServiceMoq.Object);
+            CategoryController categoryController = new CategoryController(_categoryServiceMoq.Object);
 
             //ACT
-            ActionResult controllerResult = await _catController.GetAll();
+            ActionResult controllerResult = await categoryController.GetAll();
             Assert.IsType<NotFoundResult>(controllerResult);
         }
 
@@ -69,17 +66,16 @@ namespace Ecommerce.API.UnitTest.Controllers
         public async Task GetAll_BadRequest()
         {
             //ARRANGE
-            List<Category> categories = null;
+            List<Category>? categories = null;
             //Arranging Service
-            _catServiceMoq.Setup(c => c.GetAllAsync())
-                         .ReturnsAsync(categories);
+            _categoryServiceMoq.Setup(c => c.GetAllAsync()).ReturnsAsync(categories);
             //Arranging Controller
-            _catController = new CategoryController(_catServiceMoq.Object);
+            CategoryController categoryController = new CategoryController(_categoryServiceMoq.Object);
 
             //ACT
 
             //Controller test
-            ActionResult controllerResult = await _catController.GetAll();
+            ActionResult controllerResult = await categoryController.GetAll();
             Assert.IsType<BadRequestResult>(controllerResult);
         }
 
@@ -105,14 +101,13 @@ namespace Ecommerce.API.UnitTest.Controllers
             };
 
             //Arranging Service
-            _catServiceMoq.Setup(c => c.GetByIDAsync(id))
-                         .ReturnsAsync(categories.FirstOrDefault(c => c.Id == id));
+            _categoryServiceMoq.Setup(c => c.GetByIDAsync(id)).ReturnsAsync(categories.FirstOrDefault(c => c.Id == id));
             //Arranging Controller
-            _catController = new CategoryController(_catServiceMoq.Object);
+            CategoryController categoryController = new CategoryController(_categoryServiceMoq.Object);
 
             //ACT
             //Controller test
-            JsonResult? controllerResult = await _catController.GetByID(id) as JsonResult;
+            JsonResult? controllerResult = await categoryController.GetByID(id) as JsonResult;
             CategoryDTO controllerDTO = (CategoryDTO)controllerResult.Value;
             Assert.NotNull(controllerResult);
             Assert.Equivalent(categoriesDTO[id - 1], controllerDTO);
@@ -133,14 +128,13 @@ namespace Ecommerce.API.UnitTest.Controllers
             };
 
             //Arranging Service
-            _catServiceMoq.Setup(c => c.GetByIDAsync(id))
-                         .ReturnsAsync(categories.FirstOrDefault(c => c.Id == id));
+            _categoryServiceMoq.Setup(c => c.GetByIDAsync(id)).ReturnsAsync(categories.FirstOrDefault(c => c.Id == id));
             //Arranging Controller
-            _catController = new CategoryController(_catServiceMoq.Object);
+            CategoryController categoryController = new CategoryController(_categoryServiceMoq.Object);
 
             //ACT
             //Controller test
-            var controllerResult = await _catController.GetByID(id);
+            var controllerResult = await categoryController.GetByID(id);
             Assert.IsType<NotFoundResult>(controllerResult);
         }
 
@@ -161,14 +155,14 @@ namespace Ecommerce.API.UnitTest.Controllers
             categories[1].Products = new List<Product>() { new Product(), new Product(), new Product(), new Product() };
             categories[2].Products = new List<Product>() { new Product(), new Product() };
             //Arranging Service
-            _catServiceMoq.Setup(c => c.CountProductsAsync(categoryName))
+            _categoryServiceMoq.Setup(c => c.CountProductsAsync(categoryName))
                          .ReturnsAsync(categories.FirstOrDefault(c => c.Name == categoryName).Products.Count);
             //Arranging Controller
-            _catController = new CategoryController(_catServiceMoq.Object);
-
+            CategoryController categoryController = new CategoryController(_categoryServiceMoq.Object);
+            
             //ACT
             //Controller test
-            JsonResult? controllerResult = await _catController.CountProducts(categoryName) as JsonResult;
+            JsonResult? controllerResult = await categoryController.CountProducts(categoryName) as JsonResult;
             int count = (int) controllerResult.Value;
             Assert.NotNull(controllerResult);
             Assert.Equal(categories.FirstOrDefault(c => c.Name == categoryName).Products.Count, count);
