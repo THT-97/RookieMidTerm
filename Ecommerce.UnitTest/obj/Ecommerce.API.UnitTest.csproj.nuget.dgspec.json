@@ -97,8 +97,14 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
+              "D:\\LABS\\Intern\\NashTech\\MidTerm\\RookieMidTerm\\Ecommerce.Data\\Ecommerce.Data.csproj": {
+                "projectPath": "D:\\LABS\\Intern\\NashTech\\MidTerm\\RookieMidTerm\\Ecommerce.Data\\Ecommerce.Data.csproj"
+              },
               "D:\\LABS\\Intern\\NashTech\\MidTerm\\RookieMidTerm\\EcommerceAPI\\Ecommerce.API.csproj": {
                 "projectPath": "D:\\LABS\\Intern\\NashTech\\MidTerm\\RookieMidTerm\\EcommerceAPI\\Ecommerce.API.csproj"
+              },
+              "D:\\LABS\\Intern\\NashTech\\MidTerm\\RookieMidTerm\\EcommerceClassLibrary\\Ecommerce.DTO.csproj": {
+                "projectPath": "D:\\LABS\\Intern\\NashTech\\MidTerm\\RookieMidTerm\\EcommerceClassLibrary\\Ecommerce.DTO.csproj"
               }
             }
           }
