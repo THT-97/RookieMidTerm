@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Ecommerce.API.Data;
+using Ecommerce.API.ServiceInterfaces;
 using Ecommerce.API.Services;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
@@ -11,15 +12,13 @@ namespace Ecommerce.API.Controllers
     [ApiController]
     public class ProductController : Controller
     {
-        private readonly EcommerceDbContext _context;
-        private ProductService _productService;
+        private IProductService _productService;
         private IMapper _outmapper;
         private IMapper _inmapper;
 
-        public ProductController(EcommerceDbContext context)
+        public ProductController(IProductService productService)
         {
-            _context = context;
-            _productService = new ProductService(_context);
+            _productService = productService;
             //create mapper with custom config
             _outmapper = new MapperConfiguration(cfg =>
             {
@@ -42,8 +41,8 @@ namespace Ecommerce.API.Controllers
                 //base mapping config
                 cfg.CreateMap<ProductDTO, Product>()
                    //config for Category entity
-                   .ForMember(obj => obj.Category, src => src.MapFrom(dto => _context.Categories.FirstOrDefault(c => c.Name == dto.CategoryName)))
-                   .ForMember(obj => obj.Brand, src => src.MapFrom(dto => _context.Brands.FirstOrDefault(b => b.Name == dto.BrandName)));
+                   .ForMember(obj => obj.Category, src => src.MapFrom(dto => _productService.GetByIDAsync(dto.Id).Result.Category))
+                   .ForMember(obj => obj.Brand, src => src.MapFrom(dto => _productService.GetByIDAsync(dto.Id).Result.Brand));
             }).CreateMapper();
         }
 
@@ -76,7 +75,6 @@ namespace Ecommerce.API.Controllers
                 if (products.Count > 0) return Json(_outmapper.Map<List<ProductDTO>>(products));
                 return NotFound();
             }
-
             return BadRequest();
         }
 

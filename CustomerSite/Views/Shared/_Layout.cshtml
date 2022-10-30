@@ -18,7 +18,7 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow p-0 fixed-top">
             <div class="container-fluid">
                 <a class="navbar-brand w-25" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img class="w-25" src="~/Images/logo.jpg" />
+                    <img style="width:10%" src="~/Images/logo.jpg" />
                     CustomerSite
                 </a>
                 <div class="navbar w-50 justify-content-center">
@@ -50,7 +50,7 @@
             &copy; @DateTime.Now.Year - Ecommerce - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
             @if (token != null)
             {
-                <p class="text-break">@token</p>
+                <button class="btn btn-outline-info bs-tooltip-auto"  title="@token">Token</button>
                 @*<p class="text-break">@token.Value</p>*@
             }
         </div>

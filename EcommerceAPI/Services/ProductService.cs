@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.API.Services
 {
-    public class ProductService : ICRUDService<Product>, IProductService, IAsyncDisposable
+    public class ProductService : IProductService, IAsyncDisposable
     {
         private readonly EcommerceDbContext _context;
         private RatingService _ratingService;

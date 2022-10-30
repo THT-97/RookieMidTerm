@@ -43,6 +43,7 @@ builder.Services.AddAuthentication(options =>
 });
 //Add repositories
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
