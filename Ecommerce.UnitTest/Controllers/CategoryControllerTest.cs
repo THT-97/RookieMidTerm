@@ -27,7 +27,7 @@ namespace Ecommerce.API.UnitTest.Controllers
                 new Category(){Id=3, Name="Cat 3", Description="Category 3", Status=(byte)CommonStatus.Available},
             };
 
-            List<CategoryDTO> categoriesDTO = new()
+            List<CategoryDTO> expected = new()
             {
                 new CategoryDTO(){Name="Cat 1", Description="Category 1", Status=(byte)CommonStatus.Available},
                 new CategoryDTO(){Name="Cat 2", Description="Category 2", Status=(byte)CommonStatus.NotAvailable},
@@ -41,9 +41,9 @@ namespace Ecommerce.API.UnitTest.Controllers
 
             //ACT
             JsonResult? controllerResult = await categoryController.GetAll() as JsonResult;
-            List<CategoryDTO> controllerDTO = (List<CategoryDTO>)controllerResult.Value;
+            List<CategoryDTO> categoriesDTO = (List<CategoryDTO>)controllerResult.Value;
             Assert.NotNull(controllerResult);
-            Assert.Equivalent(categoriesDTO, controllerDTO);
+            Assert.Equivalent(expected, categoriesDTO);
         }
 
         [Fact]
@@ -92,7 +92,7 @@ namespace Ecommerce.API.UnitTest.Controllers
                 new Category(){Id=3, Name="Sandals", Description="Sandal products", Status=(byte)CommonStatus.Available},
             };
 
-            List<CategoryDTO> categoriesDTO = new()
+            List<CategoryDTO> expected = new()
             {
                 new CategoryDTO(){Name="Shoes", Description="Shoes products", Status=(byte)CommonStatus.Available},
                 new CategoryDTO(){Name="Boots", Description="Boots products", Status=(byte)CommonStatus.Available},
@@ -107,9 +107,9 @@ namespace Ecommerce.API.UnitTest.Controllers
             //ACT
             //Controller test
             JsonResult? controllerResult = await categoryController.GetByID(id) as JsonResult;
-            CategoryDTO controllerDTO = (CategoryDTO)controllerResult.Value;
+            CategoryDTO categoriesDTO = (CategoryDTO)controllerResult.Value;
             Assert.NotNull(controllerResult);
-            Assert.Equivalent(categoriesDTO[id - 1], controllerDTO);
+            Assert.Equivalent(expected[id - 1], categoriesDTO);
         }
 
         [Theory]

@@ -56,7 +56,7 @@ namespace Ecommerce.API.Controllers
         public async Task<ActionResult> GetAll()
         {
             List<Product> products = await _productService.GetAllAsync();
-            List<ProductDTO> productDTOs = _outmapper.Map<List<ProductDTO>>(products); ;
+            List<ProductDTO> productDTOs = _outmapper.Map<List<ProductDTO>>(products);
             if (products != null)
             {
                 if (productDTOs.Count > 0) return Json(productDTOs);
@@ -72,6 +72,7 @@ namespace Ecommerce.API.Controllers
             List<Product> products = await _productService.GetNewAsync();
             if (products != null)
             {
+                
                 if (products.Count > 0) return Json(_outmapper.Map<List<ProductDTO>>(products));
                 return NotFound();
             }

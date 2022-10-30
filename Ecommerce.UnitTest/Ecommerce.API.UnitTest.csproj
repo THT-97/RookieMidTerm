@@ -30,8 +30,4 @@
     <ProjectReference Include="..\EcommerceClassLibrary\Ecommerce.DTO.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>
