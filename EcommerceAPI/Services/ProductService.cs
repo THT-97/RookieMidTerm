@@ -5,7 +5,9 @@ using Ecommerce.DTO.DTOs;
 using Ecommerce.DTO.Enum;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace Ecommerce.API.Services
 {
@@ -27,9 +29,27 @@ namespace Ecommerce.API.Services
 
         public async Task<List<Product>>? GetAllAsync()
         {
-            List<Product> products = await _context.Products.Include(p => p.Brand)
+            List<Product> products = await _context.Products.OrderByDescending(p => p.CreatedDate)
+                                                            .Include(p => p.Brand)
+                                                            .Include(p => p.Category)     
+                                                            .ToListAsync();
+            return products;
+        }
+
+        public async Task<List<Product>>? GetPageAsync(int page=0, int limit = 6)
+        {
+            int count = await _context.Products.CountAsync();
+            if (page > 0) page--;
+            if (count < limit)
+            {
+                page = 0;
+                limit = count;
+            }
+            List<Product> products = await _context.Products.OrderByDescending(p => p.CreatedDate)
+                                                            .Skip(page * limit)
+                                                            .Take(limit)
+                                                            .Include(p => p.Brand)
                                                             .Include(p => p.Category)
-                                                            .OrderByDescending(p => p.CreatedDate)
                                                             .ToListAsync();
             return products;
         }
@@ -162,21 +182,6 @@ namespace Ecommerce.API.Services
                 catch { return new BadRequestResult(); }
             }
             return new BadRequestResult();
-        }
-
-        public async Task<List<Product>>? GetPageAsync(int page=0, int limit=6)
-        {
-            int count = await CountAsync();
-            if (page > 0) page--;
-            if (count < limit)
-            {
-                page = 0;
-                limit = count;
-            }
-            List<Product>? products = await _context.Products.Skip(page * limit)
-                                                             .Take(limit)
-                                                             .ToListAsync();
-            return products;
         }
 
         public ValueTask DisposeAsync()
