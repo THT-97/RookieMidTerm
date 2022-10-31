@@ -12,11 +12,12 @@ class Navbar extends Component{
                 <nav id='navbar'>
                     <ul>
                         <Link to="*"><li>
-                            <img className="w-25" src="https://localhost:7091/Images/logo.jpg"/>
+                            <img className="w-25" src="https://localhost:7091/Images/logo.jpg" alt="shop-logo"/>
                             AdminSite
                         </li></Link>
                     </ul>
                     <ul>
+                        <Link to="/Home"><li>Home</li></Link>
                         <Link to="*"><li>About</li></Link>
                     </ul>
                 </nav>

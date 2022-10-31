@@ -4,7 +4,13 @@
 @if(Model.Status!= (byte)CommonStatus.NotAvailable){
     <div class="mb-2">
         <p class="mb-0">
-            <b>@Model.UserEmail: </b>
+            <b>
+                @Model.UserEmail
+                @if (Model.UserEmail == User.Identity.Name)
+                {
+                   <span>&nbsp;(You)</span>
+                }:
+            </b>
             @for (var i = 1; i <= Model.Rate; i++)
             {
                 <i class="fa fa-star text-warning"></i>

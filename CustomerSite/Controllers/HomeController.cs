@@ -20,12 +20,16 @@ namespace Ecommerce.CustomerSite.Controllers
 
         public async Task<IActionResult> Index()
         {
+            //Get token after login
             if (User.Identity.Name != null && HttpContext.Session.GetString("token") == null)
             {
                 _response = await _httpClient.PostAsJsonAsync("Auth/Authenticate", User.Identity.Name);
                 _token = await _response.Content.ReadAsStringAsync();
                 HttpContext.Session.SetString("token", _token);
             }
+            //If not logged in, clear token
+            else if (User.Identity.Name == null) HttpContext.Session.Remove("token");
+            //Page contents
             List<ProductDTO>? highRatings;
             List<ProductDTO>? newProducts;
             List<CategoryDTO>? categories;
@@ -41,7 +45,7 @@ namespace Ecommerce.CustomerSite.Controllers
             _content = await _response.Content.ReadAsStringAsync();
             brands = JsonConvert.DeserializeObject<List<BrandDTO>>(_content);
 
-            //Call again to get list of all products
+            //Call again to get list of high rating products
             _response = await _httpClient.GetAsync("Product/GetHighRatings");
             _content = await _response.Content.ReadAsStringAsync();
             highRatings = JsonConvert.DeserializeObject<List<ProductDTO>>(_content);

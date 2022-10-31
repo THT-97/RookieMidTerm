@@ -86,7 +86,7 @@
                                 <i class="fa fa-star-half text-warning"></i>
                             }
                         }
-                        <span>(@string.Format("{0:f2}", Model.Rating))</span>
+                        <span>(@Math.Round((double)Model.Rating,2))</span>
                         <p class="m-0"><i>@Model.RatingCount Rate(s)</i></p>
                     }
                     else
