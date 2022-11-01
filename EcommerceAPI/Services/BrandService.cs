@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.API.Services
 {
-    public class BrandService : ICRUDService<Brand>, IAsyncDisposable
+    public class BrandService : IBrandService, IAsyncDisposable
     {
         private readonly EcommerceDbContext _context;
 
@@ -68,9 +68,16 @@ namespace Ecommerce.API.Services
             throw new NotImplementedException();
         }
 
-        public ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
-            return ((IAsyncDisposable)_context).DisposeAsync();
+            await _context.DisposeAsync();
+        }
+
+        public async Task<int> CountProductsAsync(string brandName)
+        {
+            Brand? brand = await _context.Brands.Include(b => b.Products).FirstOrDefaultAsync(b => b.Name == brandName);
+            if (brand != null) return brand.Products.Count;
+            return -1;
         }
     }
 }

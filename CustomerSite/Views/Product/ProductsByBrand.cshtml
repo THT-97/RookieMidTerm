@@ -1,16 +1,27 @@
 ﻿@using Ecommerce.DTO.DTOs
 @model List<ProductDTO>
-
 @{
-    var count = 0;
+    if (ViewBag.limit == null) ViewBag.limit = 2;
+    int count = 0;
 }
 <link href="~/css/productpartial.css" rel="stylesheet" />
 <div class="container mt-5 pb-5">
     <div class="row">
         @if (Model != null && Model.Count > 0)
         {
+            <!--Title-->
             <h4>@ViewData["Title"] products</h4>
             <hr/>
+
+            <!--Pagination form-->
+            <form asp-action="ProductsByBrand" asp-controller="Product" method="get">
+                <label for="limit">Products per page:</label>
+                <input name="limit" type="number" min="2" value="@ViewBag.limit" />
+                <input name="brandName" type="text" value="@ViewData["Title"]" hidden />
+                <button class="btn btn-sm btn-outline-info">Filter</button>
+            </form>
+
+            <!--Products display-->
             <div class="row">
                 @foreach (ProductDTO product in Model)
                 {
@@ -24,6 +35,29 @@
                     }
                 }
             </div>
+
+            <!--Page selection-->
+            @if (ViewBag.pages > 1)
+            {
+                <div>
+                    <b>Page: </b>
+                    @for (int i = 1; i <= ViewBag.pages; i++)
+                    {
+                        @if (i == ViewBag.page)
+                        {
+                            <b>@i</b>
+                        }
+                        else
+                        {
+                            <a class="border border-secondary text-decoration-none" asp-action="ProductsByBrand" asp-controller="Product"
+               asp-route-limit=@ViewBag.limit asp-route-page=@i asp-route-brandName=@ViewData["Title"]>
+                                @i
+                            </a>
+                        }
+
+                    }
+                </div>
+            }
         }
         else{@ViewData["response"]}
     </div>

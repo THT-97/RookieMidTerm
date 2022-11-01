@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.API.Services
 {
-    public class CategoryService : ICategoryService, IDisposable
+    public class CategoryService : ICategoryService, IAsyncDisposable
     {
         private readonly EcommerceDbContext _context;
 
@@ -75,9 +75,9 @@ namespace Ecommerce.API.Services
             return -1;
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
-            _context.Dispose();
+            await _context.DisposeAsync();
         }
     }
 }

@@ -28,12 +28,20 @@ namespace Ecommerce.API.Controllers
                    .ForMember(dto => dto.CategoryName, src => src.MapFrom(ent => ent.Category.Name))
                    //config for Brand entity
                    .ForMember(dto => dto.BrandName, src => src.MapFrom(ent => ent.Brand.Name));
+
                 //specific mapping config for Rating collection
                 cfg.CreateMap<Rating, RatingDTO>()
                    //config for rating points
                    .ForMember(dto => dto.Rate, src => src.MapFrom(ent => ent.Points))
                    //config for User entity
                    .ForMember(dto => dto.UserEmail, src => src.MapFrom(ent => ent.User.Email));
+
+                //config for DTO used by admin site
+                cfg.CreateMap<Product, ProductADTO>()
+                  //config for Category entity
+                  .ForMember(dto => dto.CategoryName, src => src.MapFrom(ent => ent.Category.Name))
+                  //config for Brand entity
+                  .ForMember(dto => dto.BrandName, src => src.MapFrom(ent => ent.Brand.Name));
             }).CreateMapper();
 
             _inmapper = new MapperConfiguration(cfg =>
@@ -106,9 +114,9 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetByBrand(string brandName)
+        public async Task<ActionResult> GetByBrand(string brandName, int page = 0, int limit = 6)
         {
-            List<Product> products = await _productService.GetByBrandAsync(brandName);
+            List<Product> products = await _productService.GetByBrandAsync(brandName, page, limit);
             if (products != null)
             {
                 if (products.Count > 0) return Json(_outmapper.Map<List<ProductDTO>>(products));
@@ -132,7 +140,7 @@ namespace Ecommerce.API.Controllers
             List<Product> products = await _productService.GetPageAsync(page, limit);
             if (products != null)
             {
-                if (products.Count > 0) return Json(_outmapper.Map<List<ProductDTO>>(products));
+                if (products.Count > 0) return Json(_outmapper.Map<List<ProductADTO>>(products));
                 return NotFound();
             }
 

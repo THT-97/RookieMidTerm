@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Ecommerce.API.Data;
+using Ecommerce.API.ServiceInterfaces;
 using Ecommerce.API.Services;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
@@ -11,14 +12,13 @@ namespace Ecommerce.API.Controllers
     [ApiController]
     public class BrandController : Controller
     {
-        private readonly EcommerceDbContext _context;
-        private BrandService _brandService;
+
+        private IBrandService _brandService;
         private IMapper _mapper;
 
-        public BrandController(EcommerceDbContext context)
+        public BrandController(IBrandService brandService)
         {
-            _context = context;
-            _brandService = new BrandService(_context);
+            _brandService = brandService;
             _mapper = new MapperConfiguration(cfg => cfg.CreateMap<Brand, BrandDTO>()).CreateMapper();
         }
 
@@ -40,6 +40,13 @@ namespace Ecommerce.API.Controllers
         {
             Brand brand = await _brandService.GetByIDAsync(id);
             return brand != null ? Json(_mapper.Map<BrandDTO>(brand)) : NotFound();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> CountProducts(string brandName)
+        {
+            int count = await _brandService.CountProductsAsync(brandName);
+            return count != -1 ? Json(count) : NotFound();
         }
 
         [HttpPost]

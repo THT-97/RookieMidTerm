@@ -49,14 +49,20 @@ namespace Ecommerce.CustomerSite.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ProductsByBrand(string brandName)
+        public async Task<IActionResult> ProductsByBrand(string brandName, int page = 1, int limit = 6)
         {
             ViewData["Title"] = brandName;
-            var response = await _httpClient.GetAsync("Product/GetByBrand/?brandName=" + brandName);
+            var response = await _httpClient.GetAsync($"Product/GetByBrand/?brandName={brandName}&page={page}&limit={limit}");
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
                 List<ProductDTO>? products = JsonConvert.DeserializeObject<List<ProductDTO>>(content);
+                response = await _httpClient.GetAsync($"Brand/CountProducts/?brandName={brandName}");
+                int pages = await response.Content.ReadFromJsonAsync<int>();
+                pages = (int)Math.Ceiling((double)pages / limit);
+                ViewBag.pages = pages;
+                ViewBag.page = page;
+                ViewBag.limit = limit;
                 return View(products);
             }
             ViewData["response"] = response.StatusCode;

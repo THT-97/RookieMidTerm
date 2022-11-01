@@ -81,9 +81,18 @@ namespace Ecommerce.API.Services
                                           .ToListAsync();
         }
 
-        public async Task<List<Product>>? GetByBrandAsync(string brandName)
+        public async Task<List<Product>>? GetByBrandAsync(string brandName, int page= 0, int limit = 6)
         {
+            int count = await _context.Products.Where(p => p.Brand.Name == brandName).CountAsync();
+            if (page > 0) page--;
+            if (count < limit)
+            {
+                page = 0;
+                limit = count;
+            }
             return await _context.Products.Where(p => p.Brand.Name == brandName)
+                                          .Skip(page * limit)
+                                          .Take(limit)
                                           .Include(p => p.Category)
                                           .Include(p => p.Brand)
                                           .ToListAsync();

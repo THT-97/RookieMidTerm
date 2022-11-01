@@ -1,29 +1,29 @@
-import './App.css';
-import Navbar from './components/Navbar';
+import "./App.css";
+import Navbar from "./components/Navbar";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Sidenav from "./components/Sidenav";
+import Users from "./components/Users";
+import Login from "./components/Login";
+import Home from "./components/Home";
+import Index from "./components/Product/Index";
 
-import { Component } from 'react';
-import Sidenav from './components/Sidenav';
-import { ProSidebarProvider } from 'react-pro-sidebar';
-import Home from './components/Home';
-
-class App extends Component {
-  render() {
-    return(
-      <div className="App">
-        <BrowserRouter>
-            <Navbar/>
-            <div className='row' style={{height:100+'vh'}}>
-              <Sidenav className='col-2'/>
-              <Routes>
-                <Route exact path="/Home" element={<Home />}/>
-                <Route exact path="*" element={<h1 className='col-8'>Nothing here</h1>}/>
-              </Routes>
-            </div>
-        </BrowserRouter>
-      </div>
-    );
-  }
-}
+const App = () => {
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Navbar />
+        <div className="row p-0 m-0" style={{ height: 100 + "vh" }}>
+          <Sidenav className="col-2 p-0 m-0" />
+          <Routes>
+            <Route exact path="/Login" element={<Login />} />
+            <Route exact path="/Users" element={<Users />} />
+            <Route exact path="/Home" element={<Home />} />
+            <Route exact path="/Product/Index" element={<Index />} />
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </div>
+  );
+};
 
 export default App;
