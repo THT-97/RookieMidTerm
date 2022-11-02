@@ -1,6 +1,7 @@
 ﻿using Ecommerce.API.Data;
 using Ecommerce.API.ServiceInterfaces;
 using Ecommerce.Data.Models;
+using Ecommerce.DTO.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -56,7 +57,13 @@ namespace Ecommerce.API.Services
             Category target = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
             if (target != null)
             {
-                _context.Categories.Remove(target);
+                target.Status = (byte)CommonStatus.NotAvailable;
+                List<Product>? products = await _context.Products.Where(p => p.Category.Id == target.Id).ToListAsync();
+                if (products != null)
+                {
+                    foreach (Product product in products) product.Status = (byte)CommonStatus.NotAvailable;
+                }
+                
                 await _context.SaveChangesAsync();
                 return new OkResult();
             }

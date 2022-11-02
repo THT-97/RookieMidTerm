@@ -135,6 +135,14 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> AdminGetByID(int id)
+        {
+            Product product = await _productService.GetByIDAsync(id);
+            if (product != null) return Json(_outmapper.Map<ProductADTO>(product));
+            return NotFound();
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GetPage(int page=0, int limit=6)
         {
             List<Product> products = await _productService.GetPageAsync(page, limit);

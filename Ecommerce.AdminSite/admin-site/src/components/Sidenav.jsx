@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, React } from "react";
 import {
   Sidebar,
   Menu,
@@ -51,14 +51,17 @@ const Sidenav = () => {
 
   return (
     <ProSidebarProvider>
-      <Sidebar className="bg-secondary h-100 p-0">
+      <Sidebar className="bg-secondary p-0">
         <Menu className="bg-secondary">
           <MenuItem className="bg-secondary text-white" href="/Users">
             USERS
           </MenuItem>
           <hr />
           <SubMenu className="bg-secondary text-white" label="PRODUCTS">
-            <MenuItem className="bg-secondary text-white" href="/Product/Index">
+            <MenuItem
+              className="bg-secondary text-white"
+              href="/Product/ProductIndex"
+            >
               All Products
             </MenuItem>
             <SubMenu

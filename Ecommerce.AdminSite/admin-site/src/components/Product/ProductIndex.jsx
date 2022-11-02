@@ -1,52 +1,54 @@
-import axios from "axios";
 import { useEffect, useState, React } from "react";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ProductService from "../../utility/ProductService";
-import Edit from "./Edit";
+import "font-awesome/css/font-awesome.min.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan, faEdit } from "@fortawesome/free-solid-svg-icons";
 
-function GetProducts(setProducts, setError, page = 0, limit = 6) {
-  return axios
-    .get(
-      `https://localhost:7171/api/Product/GetPage?page=${page}&limit=${limit}`
-    )
-    .then((response) => setProducts(response.data))
-    .catch((error) => setError(error.data));
-}
-
-function GetCount(setCount, setError) {
-  axios
-    .get(`https://localhost:7171/api/Product/Count`)
-    .then((response) => setCount(response.data))
-    .catch((error) => setError(error.data));
-}
-
-const Index = () => {
+const ProductIndex = () => {
   const [products, setProducts] = useState(null);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(6);
   const [count, setCount] = useState(0);
   const [pages, setPages] = useState(1);
-  const [, setError] = useState();
+  let table = [];
+  const pageMenu = [];
+  // On load
+  useEffect(() => {
+    ProductService.getProducts(1, 6).then((response) =>
+      setProducts(response.data)
+    );
+  }, []);
 
   // Effect when change limit
   useEffect(() => {
     setPages(Math.ceil(count / limit));
     setPage(1);
-    GetProducts(setProducts, setError, 1, limit);
-    GetCount(setCount, setError);
+    ProductService.getProducts(1, limit).then((response) =>
+      setProducts(response.data)
+    );
+    ProductService.getCount().then((response) => setCount(response.data));
   }, [count, limit]);
 
   // Effect when select page
   useEffect(() => {
-    ProductService.getProducts(page, limit)
-      .then((response) => setProducts(response.data))
-      .catch((error) => setError(error.data));
-    GetCount(setCount, setError);
+    ProductService.getProducts(page, limit).then((response) =>
+      setProducts(response.data)
+    );
+    ProductService.getCount().then((response) => setCount(response.data));
   }, [page, limit]);
 
-  let table = [];
-  const pageMenu = [];
-  const routes = [];
+  // Change limit function
+  function PageLimit(e) {
+    e.preventDefault();
+    setLimit(e.target.lim.value);
+  }
+
+  // Page select function
+  function ChangePage(p) {
+    setPage(p);
+  }
+
   if (products != null) {
     // Add products to table
     table = products.map((product) => (
@@ -58,21 +60,16 @@ const Index = () => {
         <td>{new Date(product.createdDate).toLocaleString()}</td>
         <td>{product.quantity}</td>
         <td>
-          <Link to="/Product/Edit">edit</Link>
+          <Link to={`/Product/productEdit/${product.id}`} tooltip="Edit">
+            <FontAwesomeIcon icon={faEdit} className="text-warning me-3" />
+          </Link>
+          <Link to="#">
+            <FontAwesomeIcon icon={faTrashCan} className="text-danger" />
+          </Link>
         </td>
       </tr>
     ));
-    // Create route for edit pages
-    products.forEach((product) => {
-      routes.push(
-        <Route
-          key={product.id}
-          exact
-          path="./Edit"
-          element={<Edit id={product.id} />}
-        />
-      );
-    });
+
     // Update page menu
     if (pages > 1) {
       for (let index = 1; index <= pages; index++) {
@@ -86,18 +83,6 @@ const Index = () => {
       }
     }
   }
-
-  // Change limit function
-  function PageLimit(e) {
-    e.preventDefault();
-    setLimit(e.target.lim.value);
-  }
-
-  // Page select function
-  function ChangePage(p) {
-    setPage(p);
-  }
-
   return (
     <div className="col-9 p-0 m-0">
       <h1>Product list</h1>
@@ -127,10 +112,8 @@ const Index = () => {
           {table}
         </tbody>
       </table>
-      {/* Add routes */}
-      <Routes>{routes}</Routes>
     </div>
   );
 };
 
-export default Index;
+export default ProductIndex;

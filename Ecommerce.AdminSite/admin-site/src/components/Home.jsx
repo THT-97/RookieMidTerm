@@ -1,3 +1,5 @@
+import React from "react";
+
 const Home = () => {
   return <h1 className="col-8">Welcome to Admin site</h1>;
 };
