@@ -79,5 +79,10 @@ namespace Ecommerce.API.Services
             if (brand != null) return brand.Products.Count;
             return -1;
         }
+
+        public async Task<Brand?> GetByNameAsync(string brandName)
+        {
+            return await _context.Brands.FirstOrDefaultAsync(b => b.Name.Contains(brandName));
+        }
     }
 }

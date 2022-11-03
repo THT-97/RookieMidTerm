@@ -82,9 +82,15 @@ namespace Ecommerce.API.Services
             return -1;
         }
 
+        public async Task<Category?> GetByNameAsync(string categoryName)
+        {
+            return await _context.Categories.FirstOrDefaultAsync(c => c.Name.Contains(categoryName));
+        }
+
         public async ValueTask DisposeAsync()
         {
             await _context.DisposeAsync();
         }
+
     }
 }

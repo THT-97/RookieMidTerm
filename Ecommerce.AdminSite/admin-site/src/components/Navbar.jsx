@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 const Navbar = () => {
   return (
     <div className="ReactApp">
@@ -8,7 +9,7 @@ const Navbar = () => {
           <Link to="/Home">
             <li>
               <img
-                style={{ width: "15%" }}
+                style={{ width: "10%" }}
                 src="https://localhost:7091/Images/logo.jpg"
                 alt="shop-logo"
               />

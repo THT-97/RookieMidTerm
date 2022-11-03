@@ -5,26 +5,41 @@ import ProductService from "../../utility/ProductService";
 const ProductEdit = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const stc = require("string-to-color");
   let colors = [];
+  let sizes = [];
+  let sizeInputs;
   let colorInputs;
+  // Get product by id
   useEffect(() => {
     ProductService.getByID(id).then((response) => setProduct(response.data));
   }, [id]);
 
+  // When product is loaded
   if (product != null) {
+    // Get colors and size
     colors = product.colors.split(" ");
-    console.log(colors);
+    sizes = product.sizes.split(" ");
+    // Create inputs
     colorInputs = colors.map((color) => (
-      <tr key={color}>
-        <td></td>
-        <td>
-          <input type="color" defaultValue={stc(color)} />
-        </td>
-      </tr>
+      <span key={color} className="me-3">
+        <input name="colors" type="color" defaultValue={color} />
+      </span>
+    ));
+    sizeInputs = sizes.map((size) => (
+      <span key={size} className="me-3">
+        <select defaultValue={size} name="sizes">
+          <option value="XS">XS</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+          <option value="XXL">XXL</option>
+        </select>
+      </span>
     ));
   }
 
+  // Edit form on submit
   function EditProduct(f) {
     f.preventDefault();
     const entity = {
@@ -36,8 +51,18 @@ const ProductEdit = () => {
         ? f.target.saleprice.value > product.listPrice
           ? f.target.price.value
           : f.target.saleprice.value
-        : product.salePrice
+        : product.salePrice,
+      quantity: f.target.quantity.value,
+      colors: Array.from(f.target.colors).reduce((total, color) => {
+        return total ? `${total} ${color.value}` : color.value;
+      }, null),
+      sizes: Array.from(f.target.sizes).reduce((total, size) => {
+        return total ? `${total} ${size.value}` : size.value;
+      }, null),
+      categoryName: f.target.category.value,
+      brandName: f.target.brand.value
     };
+
     console.log(entity);
   }
 
@@ -45,6 +70,7 @@ const ProductEdit = () => {
     <div className="col-8">
       <h1>Edit product</h1>
       <hr />
+      {/* Edit Form */}
       <form onSubmit={EditProduct}>
         {product ? (
           <table className="table">
@@ -115,7 +141,7 @@ const ProductEdit = () => {
                     required
                     className="input"
                     type="number"
-                    min={0}
+                    min={10}
                     name="quantity"
                     defaultValue={product.quantity}
                   />
@@ -150,6 +176,14 @@ const ProductEdit = () => {
                 </td>
               </tr>
               <tr>
+                <td>Colors</td>
+                <td>{colorInputs}</td>
+              </tr>
+              <tr>
+                <td>Sizes</td>
+                <td>{sizeInputs}</td>
+              </tr>
+              <tr>
                 <td>
                   <label htmlFor="name">Description</label>
                 </td>
@@ -164,11 +198,6 @@ const ProductEdit = () => {
                 </td>
               </tr>
               <tr>
-                <td>Colors</td>
-              </tr>
-              {colorInputs}
-              <tr>
-                <td></td>
                 <td></td>
                 <td>
                   <button className="btn btn-warning" type="submit">

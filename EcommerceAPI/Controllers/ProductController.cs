@@ -13,12 +13,16 @@ namespace Ecommerce.API.Controllers
     public class ProductController : Controller
     {
         private IProductService _productService;
+        private ICategoryService _categoryService;
+        private IBrandService _brandService;
         private IMapper _outmapper;
         private IMapper _inmapper;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, ICategoryService categoryService, IBrandService brandService)
         {
             _productService = productService;
+            _categoryService = categoryService;
+            _brandService = brandService;
             //create mapper with custom config
             _outmapper = new MapperConfiguration(cfg =>
             {
@@ -49,8 +53,8 @@ namespace Ecommerce.API.Controllers
                 //base mapping config
                 cfg.CreateMap<ProductDTO, Product>()
                    //config for Category entity
-                   .ForMember(obj => obj.Category, src => src.MapFrom(dto => _productService.GetByIDAsync(dto.Id).Result.Category))
-                   .ForMember(obj => obj.Brand, src => src.MapFrom(dto => _productService.GetByIDAsync(dto.Id).Result.Brand));
+                   .ForMember(obj => obj.Category, src => src.MapFrom(dto => _categoryService.GetByNameAsync(dto.CategoryName).Result))
+                   .ForMember(obj => obj.Brand, src => src.MapFrom(dto => _brandService.GetByNameAsync(dto.BrandName).Result));
             }).CreateMapper();
         }
 

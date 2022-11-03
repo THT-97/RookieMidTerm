@@ -11,9 +11,13 @@ namespace Ecommerce.API.UnitTest.Controllers
     public class ProductControllerTest
     {
         private readonly Mock<IProductService> _productServiceMoq;
+        private readonly Mock<IBrandService> _brandServiceMoq;
+        private readonly Mock<ICategoryService> _categoryServiceMoq;
         public ProductControllerTest()
         {
             _productServiceMoq = new Mock<IProductService>();
+            _brandServiceMoq = new Mock<IBrandService>();
+            _categoryServiceMoq = new Mock<ICategoryService>();
         }
 
         [Fact]
@@ -41,7 +45,9 @@ namespace Ecommerce.API.UnitTest.Controllers
                                                     .Take(30)
                                                     .ToList());
             //Arranging Controller
-            ProductController productController = new ProductController(_productServiceMoq.Object);
+            ProductController productController = new ProductController(_productServiceMoq.Object,
+                                                                        _categoryServiceMoq.Object,
+                                                                        _brandServiceMoq.Object);
 
             //ACT
             JsonResult? result = await productController.GetNew() as JsonResult;
@@ -61,7 +67,9 @@ namespace Ecommerce.API.UnitTest.Controllers
             //Arranging Service
             _productServiceMoq.Setup(p => p.GetNewAsync()).ReturnsAsync(products);
             //Arranging Controller
-            ProductController productController = new ProductController(_productServiceMoq.Object);
+            ProductController productController = new ProductController(_productServiceMoq.Object,
+                                                                        _categoryServiceMoq.Object,
+                                                                        _brandServiceMoq.Object);
 
             //ACT
             ActionResult result = await productController.GetNew();
@@ -77,7 +85,9 @@ namespace Ecommerce.API.UnitTest.Controllers
             //Arranging Service
             _productServiceMoq.Setup(p => p.GetNewAsync()).ReturnsAsync(products);
             //Arranging Controller
-            ProductController productController = new ProductController(_productServiceMoq.Object);
+            ProductController productController = new ProductController(_productServiceMoq.Object,
+                                                                        _categoryServiceMoq.Object,
+                                                                        _brandServiceMoq.Object);
 
             //ACT
             ActionResult result = await productController.GetNew();
@@ -106,7 +116,9 @@ namespace Ecommerce.API.UnitTest.Controllers
                                                     .Take(30)
                                                     .ToList());
             //Arranging Controller
-            ProductController productController = new ProductController(_productServiceMoq.Object);
+            ProductController productController = new ProductController(_productServiceMoq.Object,
+                                                                        _categoryServiceMoq.Object,
+                                                                        _brandServiceMoq.Object);
 
             //ACT
             JsonResult? result = await productController.GetHighRatings() as JsonResult;
@@ -136,7 +148,9 @@ namespace Ecommerce.API.UnitTest.Controllers
                                                     .Take(30)
                                                     .ToList());
             //Arranging Controller
-            ProductController productController = new ProductController(_productServiceMoq.Object);
+            ProductController productController = new ProductController(_productServiceMoq.Object,
+                                                                        _categoryServiceMoq.Object,
+                                                                        _brandServiceMoq.Object);
 
             //ACT
             ActionResult? result = await productController.GetHighRatings();
@@ -152,7 +166,9 @@ namespace Ecommerce.API.UnitTest.Controllers
             //Arranging Service
             _productServiceMoq.Setup(p => p.GetHighRatingAsync()).ReturnsAsync(products);
             //Arranging Controller
-            ProductController productController = new ProductController(_productServiceMoq.Object);
+            ProductController productController = new ProductController(_productServiceMoq.Object,
+                                                                        _categoryServiceMoq.Object,
+                                                                        _brandServiceMoq.Object);
 
             //ACT
             ActionResult? result = await productController.GetHighRatings();
@@ -184,7 +200,9 @@ namespace Ecommerce.API.UnitTest.Controllers
             //Arranging Service
             _productServiceMoq.Setup(p => p.GetAllAsync()).ReturnsAsync(products);
             //Arranging Controller
-            ProductController productController = new ProductController(_productServiceMoq.Object);
+            ProductController productController = new ProductController(_productServiceMoq.Object,
+                                                                        _categoryServiceMoq.Object,
+                                                                        _brandServiceMoq.Object);
 
             //ACT
             JsonResult? result = await productController.GetAll() as JsonResult;
@@ -245,7 +263,9 @@ namespace Ecommerce.API.UnitTest.Controllers
                                                     .Take(realLimit)
                                                     .ToList());
             //Arranging Controller
-            ProductController productController = new ProductController(_productServiceMoq.Object);
+            ProductController productController = new ProductController(_productServiceMoq.Object,
+                                                                        _categoryServiceMoq.Object,
+                                                                        _brandServiceMoq.Object);
 
             //ACT
             JsonResult? result = await productController.GetByCategory(categoryName, page, limit) as JsonResult;
@@ -297,7 +317,9 @@ namespace Ecommerce.API.UnitTest.Controllers
             _productServiceMoq.Setup(p => p.GetByCategoryAsync(categoryName, page, limit))
                               .ReturnsAsync(new List<Product>());
             //Arranging Controller
-            ProductController productController = new ProductController(_productServiceMoq.Object);
+            ProductController productController = new ProductController(_productServiceMoq.Object,
+                                                                        _categoryServiceMoq.Object,
+                                                                        _brandServiceMoq.Object);
 
             //ACT
             ActionResult? result = await productController.GetByCategory(categoryName, page, limit);

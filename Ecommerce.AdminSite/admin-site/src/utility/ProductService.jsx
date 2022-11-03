@@ -1,6 +1,6 @@
 import axios from "axios";
 const ProductService = {
-  getProducts(page = 0, limit = 6) {
+  getPage(page = 0, limit = 6) {
     return axios.get(
       `https://localhost:7171/api/Product/GetPage?page=${page}&limit=${limit}`
     );
@@ -14,6 +14,10 @@ const ProductService = {
     return axios.get(
       `https://localhost:7171/api/Product/AdminGetByID?id=${id}`
     );
+  },
+
+  create(entity) {
+    return axios.post("https://localhost:7171/api/Product/Create", entity);
   }
 };
 

@@ -8,6 +8,7 @@ import Home from "./components/Home";
 import ProductIndex from "./components/Product/ProductIndex";
 import ProductEdit from "./components/Product/ProductEdit";
 import React from "react";
+import ProductAdd from "./components/Product/ProductAdd";
 
 const App = () => {
   return (
@@ -17,15 +18,14 @@ const App = () => {
         <div className="row p-0 m-0" style={{ height: 100 + "vh" }}>
           <Sidenav className="col-2 p-0 m-0" />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route index element={<Home />} />
             <Route path="/Home" element={<Home />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Users" element={<Users />} />
+            {/* Routes for product */}
             <Route path="/Product/ProductIndex" element={<ProductIndex />} />
-            <Route
-              path="/Product/ProductEdit/:id"
-              element={<ProductEdit id={this} />}
-            />
+            <Route path="/Product/ProductAdd" element={<ProductAdd />} />
+            <Route path="/Product/ProductEdit/:id" element={<ProductEdit />} />
           </Routes>
         </div>
       </BrowserRouter>
