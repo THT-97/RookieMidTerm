@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import BrandService from "../../utility/BrandService";
 import CategoryService from "../../utility/CategoryService";
-import ProductService from "../../utility/ProductService";
+import Uploader from "../../utility/Uploader";
+// import ProductService from "../../utility/ProductService";
 
 const ProductAdd = () => {
   const [categories, setCategories] = useState([]);
@@ -46,6 +47,7 @@ const ProductAdd = () => {
 
   async function CreateProduct(f) {
     f.preventDefault();
+    const files = Array.from(f.target.images.files);
     const entity = {
       Name: f.target.name.value,
       Colors: f.target.colors.value,
@@ -57,7 +59,9 @@ const ProductAdd = () => {
           ? f.target.price.value
           : f.target.saleprice.value
         : f.target.price.value,
-      Images: null,
+      Images: files.reduce((total, img) => {
+        return total ? `${total} ${img.name}` : img.name;
+      }, null),
       Quantity: f.target.quantity.value,
       Rating: 0,
       RatingCount: 0,
@@ -66,10 +70,12 @@ const ProductAdd = () => {
       BrandName: f.target.brand.value,
       Ratings: []
     };
+
     console.log(entity);
-    await ProductService.create(entity)
-      .then((response) => console.log(response))
-      .catch((error) => console.log(error));
+    console.log(Uploader.upload(files[0], `${entity.Name}_${entity.Colors}`));
+    // await ProductService.create(entity)
+    //   .then((response) => console.log(response))
+    //   .catch((error) => console.log(error));
   }
   return (
     <div className="col-8">
@@ -90,6 +96,21 @@ const ProductAdd = () => {
                   type="text"
                   name="name"
                   placeholder="Product name..."
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label htmlFor="img">Upload Image</label>
+              </td>
+              <td>
+                <input
+                  id="img"
+                  type="file"
+                  name="images"
+                  accept="image/*"
+                  title="Upload Image"
+                  multiple
                 />
               </td>
             </tr>

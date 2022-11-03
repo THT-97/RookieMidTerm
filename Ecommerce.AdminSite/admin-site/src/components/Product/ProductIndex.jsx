@@ -63,10 +63,18 @@ const ProductIndex = () => {
         <td>{product.quantity}</td>
         <td>
           <Link to={`/Product/productEdit/${product.id}`}>
-            <FontAwesomeIcon icon={faEdit} className="text-warning me-3" />
+            <FontAwesomeIcon
+              icon={faEdit}
+              title="Edit"
+              className="text-warning me-3"
+            />
           </Link>
           <Link to="#">
-            <FontAwesomeIcon icon={faTrashCan} className="text-danger" />
+            <FontAwesomeIcon
+              icon={faTrashCan}
+              title="Delete"
+              className="text-danger"
+            />
           </Link>
         </td>
       </tr>
@@ -105,7 +113,11 @@ const ProductIndex = () => {
         <input name="lim" type="number" min="2" defaultValue={limit} />
         <button className="btn btn-sm btn-outline-info">Filter</button>
       </form>
-      <Link to="/Product/ProductAdd" className="text-primary d-flex ms-5">
+      <Link
+        to="/Product/ProductAdd"
+        title="Add new product"
+        className="text-primary d-flex ms-5"
+      >
         <h2>
           <FontAwesomeIcon icon={faPlusCircle}></FontAwesomeIcon>
         </h2>

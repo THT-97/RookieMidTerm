@@ -9,8 +9,10 @@ const Navbar = () => {
           <Link to="/Home">
             <li>
               <img
+                className="me-2"
                 style={{ width: "10%" }}
-                src={require("../../../CustomerSite/wwwroot/Images/logo.jpg")}
+                src="https://localhost:7091/Images/logo.jpg"
+                alt="shop-logo"
               />
               AdminSite
             </li>
