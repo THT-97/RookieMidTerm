@@ -5,9 +5,7 @@ using Ecommerce.DTO.DTOs;
 using Ecommerce.DTO.Enum;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace Ecommerce.API.Services
 {

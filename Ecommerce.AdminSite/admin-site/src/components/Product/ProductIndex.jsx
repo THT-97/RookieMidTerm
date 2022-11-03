@@ -62,7 +62,7 @@ const ProductIndex = () => {
         <td>{new Date(product.createdDate).toLocaleString()}</td>
         <td>{product.quantity}</td>
         <td>
-          <Link to={`/Product/productEdit/${product.id}`} tooltip="Edit">
+          <Link to={`/Product/productEdit/${product.id}`}>
             <FontAwesomeIcon icon={faEdit} className="text-warning me-3" />
           </Link>
           <Link to="#">

@@ -4,15 +4,15 @@
 @{
     ViewData["Title"] = "ProductDetails";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    List<string> images = new();
-    List<string> sizes = new();
-    List<string> colors = new();
+    List<string>? images = new();
+    List<string>? sizes = new();
+    List<string>? colors = new();
     List<RatingDTO> ratings = new();
     if(Model != null){
-        images = Model.Images.Split(' ').ToList();
-        sizes = Model.Sizes.Split(' ').ToList();
-        colors = Model.Colors.Split(' ').ToList();
-        ratings = Model.Ratings.ToList();
+        if(Model.Images != null) images = Model.Images.Split(' ').ToList();
+        if(Model.Sizes != null)sizes = Model.Sizes.Split(' ').ToList();
+        if(Model.Colors != null)colors = Model.Colors.Split(' ').ToList();
+        if (Model.Ratings != null) ratings = Model.Ratings.ToList();
     }
 }
 <link href="~/css/productdetails.css" rel="stylesheet" />
@@ -106,7 +106,7 @@
                 else
                 {
                     <h5>
-                        @Model.SalePrice
+                        @Model.SalePrice$
                     </h5>
                 }
 

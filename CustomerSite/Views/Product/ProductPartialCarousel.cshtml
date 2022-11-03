@@ -1,6 +1,9 @@
 ﻿@model Ecommerce.DTO.DTOs.ProductDTO
 @{
-    List<string>? images = Model.Images.Split(' ').ToList();
+    List<string>? images = null;
+    if(Model.Images != null){
+        images = Model.Images.Split(' ').ToList();
+    }
     var count = ViewData["count"];
 }
 <div class="card col-3 m-3 text-center productCard">

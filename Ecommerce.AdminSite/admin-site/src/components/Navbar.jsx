@@ -10,8 +10,7 @@ const Navbar = () => {
             <li>
               <img
                 style={{ width: "10%" }}
-                src="https://localhost:7091/Images/logo.jpg"
-                alt="shop-logo"
+                src={require("../../../CustomerSite/wwwroot/Images/logo.jpg")}
               />
               AdminSite
             </li>

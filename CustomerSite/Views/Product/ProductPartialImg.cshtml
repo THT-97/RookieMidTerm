@@ -1,6 +1,10 @@
 ﻿@model Ecommerce.DTO.DTOs.ProductDTO
 @{
-    string image = Model.Images.Split(' ').ToList()[0];
+    string? image = null;
+    if (Model.Images != null)
+    {
+      image =  Model.Images.Split(' ').ToList()[0];
+    }
 }
 <div class="card col-3 m-3 text-center productCard">
     @if(image != null){
