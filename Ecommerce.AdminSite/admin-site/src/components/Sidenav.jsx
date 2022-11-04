@@ -50,7 +50,7 @@ const Sidenav = () => {
   }
 
   return (
-    <ProSidebarProvider>
+    <ProSidebarProvider className="bg-secondary">
       <Sidebar className="bg-secondary p-0">
         <Menu className="bg-secondary">
           <MenuItem className="bg-secondary text-white" href="/Users">
