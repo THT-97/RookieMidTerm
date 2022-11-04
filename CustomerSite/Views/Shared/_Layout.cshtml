@@ -17,9 +17,12 @@
     <header id="header">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow p-0 fixed-top">
             <div class="container-fluid">
-                <a class="navbar-brand w-25" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img style="width:10%" src="~/Images/logo.jpg" />
-                    CustomerSite
+                <a class="navbar-brand d-flex w-25" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img style="width:15%" src="~/Images/logo.jpg" />
+                    <div class="m-0 border border-2 border-danger">
+                        <h6 class="text-danger m-0">Nash</h6>
+                        <h6 class="text-danger m-0">Shoes.</h6>
+                    </div>
                 </a>
                 <div class="navbar w-50 justify-content-center">
                     <input class="input w-50" name="search" type="text" placeholder="Search"/>

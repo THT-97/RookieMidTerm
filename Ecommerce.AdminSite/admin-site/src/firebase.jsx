@@ -17,3 +17,5 @@ const firebaseConfig = {
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 export const storage = getStorage(app);
+export const commonUrl =
+  "https://firebasestorage.googleapis.com/v0/b/ecommerce-images-c6324.appspot.com/o/images%";

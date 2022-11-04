@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import BrandService from "../../utility/BrandService";
 import CategoryService from "../../utility/CategoryService";
 import Uploader from "../../utility/Uploader";
-// import ProductService from "../../utility/ProductService";
+import ProductService from "../../utility/ProductService";
 
 const ProductAdd = () => {
   const [categories, setCategories] = useState([]);
@@ -45,37 +45,44 @@ const ProductAdd = () => {
     ));
   }
 
+  // Submit function
   async function CreateProduct(f) {
     f.preventDefault();
+    // Get files from form
     const files = Array.from(f.target.images.files);
-    const entity = {
-      Name: f.target.name.value,
-      Colors: f.target.colors.value,
-      Sizes: f.target.sizes.value,
-      Description: f.target.description.value,
-      ListPrice: f.target.price.value,
-      SalePrice: f.target.saleprice.value
-        ? f.target.saleprice.value > f.target.price.value
-          ? f.target.price.value
-          : f.target.saleprice.value
-        : f.target.price.value,
-      Images: files.reduce((total, img) => {
-        return total ? `${total} ${img.name}` : img.name;
-      }, null),
-      Quantity: f.target.quantity.value,
-      Rating: 0,
-      RatingCount: 0,
-      Status: 0,
-      CategoryName: f.target.category.value,
-      BrandName: f.target.brand.value,
-      Ratings: []
-    };
+    // Call uploader to upload files and get urls
+    const filenames = await Uploader.upload(files);
+    // Force submit function to wait for Uploader
+    Promise.resolve().then(() => {
+      console.log("filenames: " + filenames);
+      const entity = {
+        Name: f.target.name.value,
+        Colors: f.target.colors.value,
+        Sizes: f.target.sizes.value,
+        Description: f.target.description.value,
+        ListPrice: f.target.price.value,
+        SalePrice: f.target.saleprice.value
+          ? f.target.saleprice.value > f.target.price.value
+            ? f.target.price.value
+            : f.target.saleprice.value
+          : f.target.price.value,
+        Images: filenames,
+        Quantity: f.target.quantity.value,
+        Rating: 0,
+        RatingCount: 0,
+        Status: 0,
+        CategoryName: f.target.category.value,
+        BrandName: f.target.brand.value,
+        Ratings: []
+      };
 
-    console.log(entity);
-    console.log(Uploader.upload(files[0], `${entity.Name}_${entity.Colors}`));
-    // await ProductService.create(entity)
-    //   .then((response) => console.log(response))
-    //   .catch((error) => console.log(error));
+      console.log(entity);
+      console.log(filenames);
+      ProductService.create(entity)
+        .then((response) => console.log(response))
+        .catch((error) => console.log(error));
+      Promise.resolve().then(alert("Product created"));
+    });
   }
   return (
     <div className="col-8">

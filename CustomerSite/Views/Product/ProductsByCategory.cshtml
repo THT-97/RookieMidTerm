@@ -45,12 +45,14 @@
                     {
                         @if (i == ViewBag.page)
                         {
-                            <b>@i</b>
+                            <b class="me-1">@i</b>
                         }
                         else
                         {
-                            <a class="border border-secondary text-decoration-none" asp-action="ProductsByCategory" asp-controller="Product"
-               asp-route-limit=@ViewBag.limit asp-route-page=@i asp-route-categoryName=@ViewData["Title"]>
+                            <a class="border border-secondary text-center text-decoration-none me-1"
+                            asp-action="ProductsByCategory" asp-controller="Product"
+                            asp-route-limit=@ViewBag.limit asp-route-page=@i 
+                            asp-route-categoryName=@ViewData["Title"]>
                                 @i
                             </a>
                         }
