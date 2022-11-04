@@ -122,7 +122,6 @@ namespace Ecommerce.API.Services
             Product? dup = await _context.Products.FirstOrDefaultAsync(p => p.Name == entry.Name
                                                                             && p.Category.Name == entry.Category.Name
                                                                             && p.Brand.Name == entry.Brand.Name);
-            if (dup != null) return await UpdateAsync(dup.Id, entry);
             try
             {
                 entry.CreatedDate = DateTime.Now;

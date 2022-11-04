@@ -1,15 +1,17 @@
 ﻿@model Ecommerce.DTO.DTOs.ProductDTO
 @{
     string? image = null;
+    string filebase = null;
     if (Model.Images != null)
     {
       image =  Model.Images.Split(' ').ToList()[0];
+      filebase = "https://firebasestorage.googleapis.com/v0/b/ecommerce-images-c6324.appspot.com/o/images%";
     }
 }
 <div class="card col-3 m-3 text-center productCard">
     @if(image != null){
         <div class="card-img-top">
-            <img src="@($"/Images/P{Model.Id}/{image}")" class="d-block w-100" alt="@Model.Name">
+            <img src="@($"{filebase}{image}")" class="d-block w-100" alt="@Model.Name">
         </div>
     }
     <div class="card-body">

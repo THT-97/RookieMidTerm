@@ -1,8 +1,10 @@
 ﻿@model Ecommerce.DTO.DTOs.ProductDTO
 @{
     List<string>? images = null;
+    string filebase = null;
     if(Model.Images != null){
         images = Model.Images.Split(' ').ToList();
+        filebase = "https://firebasestorage.googleapis.com/v0/b/ecommerce-images-c6324.appspot.com/o/images%";
     }
     var count = ViewData["count"];
 }
@@ -15,7 +17,7 @@
                     @foreach (string img in images)
                     {
                         <div class="carousel-item @(img == images.First()?"active":"")">
-                            <img src="@($"/Images/P{Model.Id}/{img}")" class="d-block w-100" alt="@Model.Name">
+                            <img src="@($"{filebase}{img}")" class="d-block w-100" alt="@Model.Name">
                         </div>
                     }
                 </div>

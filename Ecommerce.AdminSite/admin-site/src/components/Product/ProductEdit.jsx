@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { useParams } from "react-router-dom";
+import { commonUrl } from "../../firebase";
 import ProductService from "../../utility/ProductService";
 
 const ProductEdit = () => {
@@ -7,15 +10,21 @@ const ProductEdit = () => {
   const [product, setProduct] = useState(null);
   let colors = [];
   let sizes = [];
+  let slideImages;
   let sizeInputs;
   let colorInputs;
   // Get product by id
   useEffect(() => {
     ProductService.getByID(id).then((response) => setProduct(response.data));
   }, [id]);
-
   // When product is loaded
   if (product != null) {
+    // Get images
+    product.images
+      ? (slideImages = product.images
+          .split(" ")
+          .map((image) => <img src={`${commonUrl}${image}`} key={image} />))
+      : (slideImages = <p>No image</p>);
     // Get colors and size
     colors = product.colors.split(" ");
     sizes = product.sizes.split(" ");
@@ -67,11 +76,20 @@ const ProductEdit = () => {
   }
 
   return (
-    <div className="col-8">
+    <div className="col-8 row">
       <h1>Edit product</h1>
       <hr />
+      {/* Image carousel */}
+      <Carousel
+        className="col-4 p-1 bg-secondary"
+        dynamicHeight={true}
+        showThumbs={false}
+        infiniteLoop={true}
+      >
+        {slideImages}
+      </Carousel>
       {/* Edit Form */}
-      <form onSubmit={EditProduct}>
+      <form onSubmit={EditProduct} className="col-8">
         {product ? (
           <table className="table">
             <tbody>
