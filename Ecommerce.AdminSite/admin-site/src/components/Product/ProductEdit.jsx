@@ -80,14 +80,17 @@ const ProductEdit = () => {
       <h1>Edit product</h1>
       <hr />
       {/* Image carousel */}
-      <Carousel
-        className="col-4 p-1 bg-secondary"
-        dynamicHeight={true}
-        showThumbs={false}
-        infiniteLoop={true}
-      >
-        {slideImages}
-      </Carousel>
+      <div className="col-4 p-0 m-0">
+        <Carousel
+          className="p-1 bg-secondary"
+          dynamicHeight={true}
+          showThumbs={false}
+          infiniteLoop={true}
+        >
+          {slideImages}
+        </Carousel>
+      </div>
+
       {/* Edit Form */}
       <form onSubmit={EditProduct} className="col-8">
         {product ? (

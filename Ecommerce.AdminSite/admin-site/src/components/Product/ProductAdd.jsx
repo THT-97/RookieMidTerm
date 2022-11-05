@@ -3,14 +3,24 @@ import BrandService from "../../utility/BrandService";
 import CategoryService from "../../utility/CategoryService";
 import Uploader from "../../utility/Uploader";
 import ProductService from "../../utility/ProductService";
+import { Button } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 
 const ProductAdd = () => {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
-  let categoryOptions;
-  let brandOptions;
-  const sizeInputs = [
-    <select key="s1" defaultValue="M" name="sizes">
+  const [colorInputs, setColorInputs] = useState([
+    <input
+      key="c0"
+      name="colors"
+      className="me-1"
+      type="color"
+      defaultValue="#ffffff"
+    ></input>
+  ]);
+  const [sizeInputs, setSizeInputs] = useState([
+    <select key="s0" defaultValue="M" name="sizes" className="me-1">
       <option value="XS">XS</option>
       <option value="S">S</option>
       <option value="M">M</option>
@@ -18,12 +28,11 @@ const ProductAdd = () => {
       <option value="XL">XL</option>
       <option value="XXL">XXL</option>
     </select>
-  ];
+  ]);
+  let categoryOptions;
+  let brandOptions;
 
-  const colorInputs = [
-    <input key="c1" name="colors" type="color" defaultValue="#ffffff"></input>
-  ];
-
+  // Load categories and brands menu options
   useEffect(() => {
     CategoryService.getAll().then((response) => setCategories(response.data));
     BrandService.getAll().then((response) => setBrands(response.data));
@@ -44,7 +53,54 @@ const ProductAdd = () => {
       </option>
     ));
   }
-
+  // Addcolor function
+  function AddColor() {
+    if (colorInputs.length < 6) {
+      setColorInputs((prevInputs) => [
+        ...prevInputs,
+        <input
+          key={`c${colorInputs.length}`}
+          name="colors"
+          className="me-1"
+          type="color"
+          defaultValue="#ffffff"
+        ></input>
+      ]);
+    }
+  }
+  // Popcolor function
+  function PopColor() {
+    if (colorInputs.length > 1) {
+      setColorInputs(colorInputs.slice(0, colorInputs.length - 1));
+    }
+  }
+  // Addsize function
+  function AddSize() {
+    if (sizeInputs.length < 6) {
+      setSizeInputs((prevInputs) => [
+        ...prevInputs,
+        <select
+          key={`s${sizeInputs.length}`}
+          defaultValue="M"
+          name="sizes"
+          className="me-1"
+        >
+          <option value="XS">XS</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+          <option value="XXL">XXL</option>
+        </select>
+      ]);
+    }
+  }
+  // Popsize function
+  function PopSize() {
+    if (sizeInputs.length > 1) {
+      setSizeInputs(sizeInputs.slice(0, sizeInputs.length - 1));
+    }
+  }
   // Submit function
   async function CreateProduct(f) {
     f.preventDefault();
@@ -54,11 +110,30 @@ const ProductAdd = () => {
     const filenames = await Uploader.upload(files);
     // Force submit function to wait for Uploader
     Promise.resolve().then(() => {
-      console.log("filenames: " + filenames);
+      // console.log("filenames: " + filenames);
       const entity = {
         Name: f.target.name.value,
-        Colors: f.target.colors.value,
-        Sizes: f.target.sizes.value,
+        // create a set of unique colors
+        // then iterate the set into an array and reduce to a string with specific format
+        Colors:
+          Array.from(f.target.colors).length > 1
+            ? [
+                ...new Set(
+                  Array.from(f.target.colors).map((color) => color.value)
+                )
+              ].reduce((total, color) => {
+                return total ? `${total} ${color}` : color;
+              }, null)
+            : f.target.colors.value,
+        // similar operation for sizes
+        Sizes:
+          Array.from(f.target.sizes).length > 1
+            ? [
+                ...new Set(Array.from(f.target.sizes).map((size) => size.value))
+              ].reduce((total, size) => {
+                return total ? `${total} ${size}` : size;
+              }, null)
+            : f.target.sizes.value,
         Description: f.target.description.value,
         ListPrice: f.target.price.value,
         SalePrice: f.target.saleprice.value
@@ -184,11 +259,39 @@ const ProductAdd = () => {
               </td>
             </tr>
             <tr>
-              <td>Colors</td>
+              <td>
+                Colors{" "}
+                <Button variant="none" size="sm" onClick={AddColor}>
+                  <FontAwesomeIcon
+                    className="text-primary"
+                    icon={faPlusCircle}
+                  ></FontAwesomeIcon>
+                </Button>
+                <Button variant="none" size="sm" onClick={PopColor}>
+                  <FontAwesomeIcon
+                    className="text-secondary"
+                    icon={faMinusCircle}
+                  ></FontAwesomeIcon>
+                </Button>
+              </td>
               <td>{colorInputs}</td>
             </tr>
             <tr>
-              <td>Sizes</td>
+              <td>
+                Sizes
+                <Button variant="none" size="sm" onClick={AddSize}>
+                  <FontAwesomeIcon
+                    className="text-primary m-0"
+                    icon={faPlusCircle}
+                  ></FontAwesomeIcon>
+                </Button>
+                <Button variant="none" size="sm" onClick={PopSize}>
+                  <FontAwesomeIcon
+                    className="text-secondary"
+                    icon={faMinusCircle}
+                  ></FontAwesomeIcon>
+                </Button>
+              </td>
               <td>{sizeInputs}</td>
             </tr>
             <tr>

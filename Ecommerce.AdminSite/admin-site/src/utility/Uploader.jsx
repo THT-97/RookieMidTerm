@@ -3,7 +3,6 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 const Uploader = {
   async upload(files) {
-    console.log(files);
     if (files == null) return;
     let storageRef;
     let urls;

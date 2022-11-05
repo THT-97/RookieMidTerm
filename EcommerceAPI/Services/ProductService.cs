@@ -119,12 +119,10 @@ namespace Ecommerce.API.Services
 
         public async Task<ActionResult> CreateAsync(Product entry)
         {
-            Product? dup = await _context.Products.FirstOrDefaultAsync(p => p.Name == entry.Name
-                                                                            && p.Category.Name == entry.Category.Name
-                                                                            && p.Brand.Name == entry.Brand.Name);
             try
             {
                 entry.CreatedDate = DateTime.Now;
+                entry.UpdatedDate = null;
                 entry.Status = (byte)CommonStatus.Available;
                 await _context.Products.AddAsync(entry);
                 await _context.SaveChangesAsync();
