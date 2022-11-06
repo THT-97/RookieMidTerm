@@ -55,12 +55,12 @@ const ProductIndex = () => {
     // Add products to table
     table = products.map((product) => (
       <tr key={product.id}>
-        <td>{product.id}</td>
         <td>{product.name}</td>
         <td>{product.listPrice}$</td>
         <td>{product.salePrice}$</td>
         <td>{new Date(product.createdDate).toLocaleString()}</td>
         <td>{product.quantity}</td>
+        <td>{product.status}</td>
         <td>
           <Link to={`/Product/productEdit/${product.id}`}>
             <FontAwesomeIcon
@@ -127,12 +127,12 @@ const ProductIndex = () => {
       <table className="table table-striped table-hover">
         <thead>
           <tr>
-            <th>Id</th>
             <th>Name</th>
             <th>Price</th>
             <th>Sale price</th>
             <th>Date created</th>
             <th>In stock</th>
+            <th>Status</th>
             <th></th>
           </tr>
         </thead>

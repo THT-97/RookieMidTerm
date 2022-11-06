@@ -171,6 +171,17 @@ namespace Ecommerce.API.Controllers
             return BadRequest();
         }
 
+        [HttpPut]
+        public async Task<ActionResult> Update(int id, ProductDTO product)
+        {
+            if (ModelState.IsValid)
+            {
+                return await _productService.UpdateAsync(id, _inmapper.Map<Product>(product));
+            }
+
+            return BadRequest();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Rate(RatingDTO rating)
         {

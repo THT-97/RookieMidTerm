@@ -133,7 +133,22 @@ namespace Ecommerce.API.Services
 
         public async Task<ActionResult> UpdateAsync(int id, Product entry)
         {
-            throw new NotImplementedException();
+            if (id != entry.Id) return new BadRequestResult();
+            if (!_context.Products.Any(p => p.Id == id)) return new NotFoundResult();
+            try
+            {
+                //Assign updatedDate
+                entry.UpdatedDate = DateTime.Now;
+                //Attach entry to context and set its state to modified so it will be updated
+                _context.Products.Attach(entry);
+                _context.Entry(entry).State = EntityState.Modified;
+                //Specify that Id and createdDate are not modified so they won't be changed
+                _context.Entry(entry).Property(p => p.Id).IsModified = false;
+                _context.Entry(entry).Property(p => p.CreatedDate).IsModified = false;
+                await _context.SaveChangesAsync();
+                return new OkResult();
+            }
+            catch { return new BadRequestResult(); }
         }
 
         public Task<ActionResult> DeleteAsync(int id)

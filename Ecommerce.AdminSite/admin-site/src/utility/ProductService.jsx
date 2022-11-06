@@ -18,6 +18,13 @@ const ProductService = {
 
   create(entity) {
     return axios.post("https://localhost:7171/api/Product/Create", entity);
+  },
+
+  edit(id, entity) {
+    return axios.put(
+      `https://localhost:7171/api/Product/Update?id=${id}`,
+      entity
+    );
   }
 };
 

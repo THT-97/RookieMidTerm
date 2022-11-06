@@ -11,7 +11,7 @@
 <div class="card col-3 m-3 text-center productCard">
     @if(image != null){
         <div class="card-img-top">
-            <img src="@($"{filebase}{image}")" class="d-block w-100" alt="@Model.Name">
+            <img src="@filebase@image" class="d-block w-100" alt="@Model.Name">
         </div>
     }
     <div class="card-body">

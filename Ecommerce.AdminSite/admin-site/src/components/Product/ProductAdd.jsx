@@ -20,7 +20,7 @@ const ProductAdd = () => {
     ></input>
   ]);
   const [sizeInputs, setSizeInputs] = useState([
-    <select key="s0" defaultValue="M" name="sizes" className="me-1">
+    <select key="s0" name="sizes" className="me-1" defaultValue="M">
       <option value="XS">XS</option>
       <option value="S">S</option>
       <option value="M">M</option>
@@ -37,7 +37,7 @@ const ProductAdd = () => {
     CategoryService.getAll().then((response) => setCategories(response.data));
     BrandService.getAll().then((response) => setBrands(response.data));
   }, []);
-
+  // When categories and brands are loaded
   if (categories != null) {
     categoryOptions = categories.map((category) => (
       <option key={category.name} value={category.name}>
@@ -79,18 +79,25 @@ const ProductAdd = () => {
     if (sizeInputs.length < 6) {
       setSizeInputs((prevInputs) => [
         ...prevInputs,
-        <select
-          key={`s${sizeInputs.length}`}
-          defaultValue="M"
-          name="sizes"
-          className="me-1"
-        >
-          <option value="XS">XS</option>
-          <option value="S">S</option>
-          <option value="M">M</option>
-          <option value="L">L</option>
-          <option value="XL">XL</option>
-          <option value="XXL">XXL</option>
+        <select key={`s${sizeInputs.length}`} name="sizes" className="me-1">
+          <option key="xs" value="XS">
+            XS
+          </option>
+          <option key="s" value="S">
+            S
+          </option>
+          <option key="m" value="M">
+            M
+          </option>
+          <option key="l" value="L">
+            L
+          </option>
+          <option key="xl" value="XL">
+            XL
+          </option>
+          <option key="xxl" value="XXL">
+            XXL
+          </option>
         </select>
       ]);
     }
@@ -104,60 +111,69 @@ const ProductAdd = () => {
   // Submit function
   async function CreateProduct(f) {
     f.preventDefault();
-    // Get files from form
-    const files = Array.from(f.target.images.files);
-    // Call uploader to upload files and get urls
-    const filenames = await Uploader.upload(files);
-    // Force submit function to wait for Uploader
-    Promise.resolve().then(() => {
-      // console.log("filenames: " + filenames);
-      const entity = {
-        Name: f.target.name.value,
-        // create a set of unique colors
-        // then iterate the set into an array and reduce to a string with specific format
-        Colors:
-          Array.from(f.target.colors).length > 1
-            ? [
-                ...new Set(
-                  Array.from(f.target.colors).map((color) => color.value)
-                )
-              ].reduce((total, color) => {
-                return total ? `${total} ${color}` : color;
-              }, null)
-            : f.target.colors.value,
-        // similar operation for sizes
-        Sizes:
-          Array.from(f.target.sizes).length > 1
-            ? [
-                ...new Set(Array.from(f.target.sizes).map((size) => size.value))
-              ].reduce((total, size) => {
-                return total ? `${total} ${size}` : size;
-              }, null)
-            : f.target.sizes.value,
-        Description: f.target.description.value,
-        ListPrice: f.target.price.value,
-        SalePrice: f.target.saleprice.value
-          ? f.target.saleprice.value > f.target.price.value
+    if (confirm("Create new product?")) {
+      // Get files from form
+      const files = Array.from(f.target.images.files);
+      // Call uploader to upload files and get urls
+      const filenames = await Uploader.upload(files);
+      // Force submit function to wait for Uploader
+      Promise.resolve().then(() => {
+        // console.log("filenames: " + filenames);
+        const entity = {
+          Name: f.target.name.value,
+          // create a set of unique colors
+          // then iterate the set as an array and reduce to a string with specific format
+          Colors:
+            Array.from(f.target.colors).length > 1
+              ? [
+                  ...new Set(
+                    Array.from(f.target.colors).map((color) => color.value)
+                  )
+                ].reduce((total, color) => {
+                  return total ? `${total} ${color}` : color;
+                }, null)
+              : f.target.colors.value,
+          // similar operation for sizes
+          Sizes:
+            // type check in case array.from makes an array of options instead of array of selects
+            f.target.sizes.type !== "select-one" &&
+            // check array of selects length and create string from set
+            Array.from(f.target.sizes).length > 1
+              ? [
+                  ...new Set(
+                    Array.from(f.target.sizes).map((size) => size.value)
+                  )
+                ].reduce((total, size) => {
+                  return total ? `${total} ${size}` : size;
+                }, null)
+              : f.target.sizes.value,
+          Description: f.target.description.value,
+          ListPrice: f.target.price.value
             ? f.target.price.value
-            : f.target.saleprice.value
-          : f.target.price.value,
-        Images: filenames,
-        Quantity: f.target.quantity.value,
-        Rating: 0,
-        RatingCount: 0,
-        Status: 0,
-        CategoryName: f.target.category.value,
-        BrandName: f.target.brand.value,
-        Ratings: []
-      };
+            : f.target.price.defaultValue,
+          // sale price will not be more than list price
+          SalePrice: f.target.saleprice.value
+            ? f.target.saleprice.value > f.target.price.value
+              ? f.target.price.value
+              : f.target.saleprice.value
+            : f.target.price.value,
+          Images: filenames,
+          Quantity: f.target.quantity.value,
+          Rating: 0,
+          RatingCount: 0,
+          Status: 0,
+          CategoryName: f.target.category.value,
+          BrandName: f.target.brand.value
+        };
 
-      console.log(entity);
-      console.log(filenames);
-      ProductService.create(entity)
-        .then((response) => console.log(response))
-        .catch((error) => console.log(error));
-      Promise.resolve().then(alert("Product created"));
-    });
+        // console.log(entity);
+        // console.log(filenames);
+        // console.log(Array.from([f.target.sizes]));
+        ProductService.create(entity)
+          .then(() => alert("Product created"))
+          .catch((error) => alert(`Error${error}`));
+      });
+    }
   }
   return (
     <div className="col-8">
