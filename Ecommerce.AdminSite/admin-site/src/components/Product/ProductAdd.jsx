@@ -121,6 +121,9 @@ const ProductAdd = () => {
         // console.log("filenames: " + filenames);
         const entity = {
           Name: f.target.name.value,
+          Description: f.target.description.value,
+          ListPrice: f.target.price.value,
+
           // create a set of unique colors
           // then iterate the set as an array and reduce to a string with specific format
           Colors:
@@ -133,6 +136,7 @@ const ProductAdd = () => {
                   return total ? `${total} ${color}` : color;
                 }, null)
               : f.target.colors.value,
+
           // similar operation for sizes
           Sizes:
             // type check in case array.from makes an array of options instead of array of selects
@@ -147,21 +151,16 @@ const ProductAdd = () => {
                   return total ? `${total} ${size}` : size;
                 }, null)
               : f.target.sizes.value,
-          Description: f.target.description.value,
-          ListPrice: f.target.price.value
-            ? f.target.price.value
-            : f.target.price.defaultValue,
+
           // sale price will not be more than list price
           SalePrice: f.target.saleprice.value
             ? f.target.saleprice.value > f.target.price.value
               ? f.target.price.value
               : f.target.saleprice.value
             : f.target.price.value,
+
           Images: filenames,
           Quantity: f.target.quantity.value,
-          Rating: 0,
-          RatingCount: 0,
-          Status: 0,
           CategoryName: f.target.category.value,
           BrandName: f.target.brand.value
         };
@@ -170,13 +169,16 @@ const ProductAdd = () => {
         // console.log(filenames);
         // console.log(Array.from([f.target.sizes]));
         ProductService.create(entity)
-          .then(() => alert("Product created"))
+          .then(() => {
+            alert("Product created");
+            window.location.href = "../ProductIndex";
+          })
           .catch((error) => alert(`Error${error}`));
       });
     }
   }
   return (
-    <div className="col-8">
+    <div className="col-8 ms-5">
       <h1>Create product</h1>
       <hr />
       {/* Create Form */}
@@ -312,7 +314,7 @@ const ProductAdd = () => {
             </tr>
             <tr>
               <td>
-                <label htmlFor="name">Description</label>
+                <label htmlFor="description">Description</label>
               </td>
               <td>
                 <textarea

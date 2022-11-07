@@ -110,7 +110,8 @@
                             <div class="row justify-content-center">
                             @for (var j = (i - 1) * limit; (j < (i - 1) * limit + limit) && (j < newProducts.Count); j++)
                             {
-                                if(newProducts[j].Status != (byte)CommonStatus.NotAvailable){
+                                if(newProducts[j].Status != (byte)CommonStatus.NotAvailable 
+                                   && newProducts[j].Status != (byte)ProductStatus.Suspended){
                                     <partial name="../Product/ProductPartialImg" for="@newProducts[j]" />
                                 }
                             }
@@ -171,7 +172,9 @@
                             <div class="row justify-content-center">
                                 @for (var j = (i - 1) * limit; (j < (i - 1) * limit + limit) && (j < highRatings.Count); j++)
                                 {
-                                    if(highRatings[j].Status != (byte)CommonStatus.NotAvailable){
+                                    if(highRatings[j].Status != (byte)CommonStatus.NotAvailable
+                                       && highRatings[j].Status != (byte)ProductStatus.Suspended)
+                                    {
                                         <partial view-data="ViewData" name="../Product/ProductPartialImg" for="@highRatings[j]" />
                                     }
                                 }

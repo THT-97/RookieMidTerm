@@ -8,7 +8,12 @@ import CategoryService from "../../utility/CategoryService";
 import ProductService from "../../utility/ProductService";
 import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMinusCircle,
+  faPlusCircle,
+  faXmarkCircle
+} from "@fortawesome/free-solid-svg-icons";
+import Uploader from "../../utility/Uploader";
 
 const ProductEdit = () => {
   const { id } = useParams();
@@ -18,6 +23,8 @@ const ProductEdit = () => {
   const [sizeInputs, setSizeInputs] = useState([]);
   const [colorInputs, setColorInputs] = useState([]);
   const [slideImages, setSlideImages] = useState([]);
+  const [oldImages, setOldImages] = useState([]);
+  const [oldImagesInputs, setOldImagesInputs] = useState([]);
   let categoryOptions;
   let brandOptions;
   // Get product by id then get categories and brands
@@ -31,15 +38,18 @@ const ProductEdit = () => {
     // When product is loaded
     let colors = [];
     let sizes = [];
+    // Load old images and add to carousel
     if (product != null) {
       // Get images
-      product.images
-        ? setSlideImages(
-            product.images
-              .split(" ")
-              .map((image) => <img src={`${commonUrl}${image}`} key={image} />)
-          )
-        : setSlideImages(<p>No image</p>);
+      if (product.images != null) {
+        setOldImages(product.images.split(" "));
+        setSlideImages(
+          product.images
+            .split(" ")
+            .map((image) => <img src={`${commonUrl}${image}`} key={image} />)
+        );
+      } else setSlideImages(<p>No image</p>);
+
       // Get colors and size
       colors = product.colors.split(" ");
       sizes = product.sizes.split(" ");
@@ -67,6 +77,28 @@ const ProductEdit = () => {
       );
     }
   }, [product]);
+
+  // Add old image thumbnails (removable)
+  useEffect(() => {
+    setOldImagesInputs(
+      <div className="row mt-2">
+        {oldImages.map((image) => (
+          <div key={image} className="col-4">
+            <img className="w-100" src={`${commonUrl}${image}`} />
+            <Button
+              variant="none"
+              size="sm"
+              className="m-0"
+              onClick={() => setOldImages(oldImages.filter((i) => i !== image))}
+            >
+              <FontAwesomeIcon icon={faXmarkCircle}></FontAwesomeIcon>
+            </Button>
+          </div>
+        ))}
+      </div>
+    );
+  }, [oldImages]);
+
   // When categories and brands are loaded
   if (categories != null) {
     categoryOptions = categories.map((category) => (
@@ -83,6 +115,7 @@ const ProductEdit = () => {
       </option>
     ));
   }
+
   // Addcolor function
   function AddColor() {
     if (colorInputs.length < 6) {
@@ -140,79 +173,110 @@ const ProductEdit = () => {
   }
 
   // Edit form on submit
-  function EditProduct(f) {
+  async function EditProduct(f) {
     f.preventDefault();
     if (confirm("Edit product?")) {
-      const entity = {
-        id,
-        name: f.target.name.value,
-        description: f.target.description.value,
-        listPrice: f.target.price.value
-          ? f.target.price.value
-          : product.listPrice,
-        // sale price will not be more than list price
-        salePrice: f.target.saleprice.value
-          ? f.target.saleprice.value > f.target.price.value
-            ? f.target.price.value
-            : f.target.saleprice.value
-          : product.salePrice,
-        quantity: f.target.quantity.value,
-        // check for specific statuses: 0=disabled, 3=suspended, 2=out of stock
-        status:
-          product.status === 0
-            ? 0
-            : product.status === 3
-            ? 3
-            : f.target.quantity.value <= 0
-            ? 2
-            : 1,
-        // create a set of unique colors
-        // then iterate the set as an array and reduce to a string with specific format
-        colors:
-          Array.from(f.target.colors).length > 1
-            ? [
-                ...new Set(
-                  Array.from(f.target.colors).map((color) => color.value)
-                )
-              ].reduce((total, color) => {
-                return total ? `${total} ${color}` : color;
-              }, null)
-            : f.target.colors.value,
-        // type check in case array.from makes an array of options instead of array of selects
-        sizes:
-          f.target.sizes.type !== "select-one" &&
-          // check array of selects length and create string from set
-          Array.from(f.target.sizes).length > 1
-            ? [
-                ...new Set(Array.from(f.target.sizes).map((size) => size.value))
-              ].reduce((total, size) => {
-                return total ? `${total} ${size}` : size;
-              }, null)
-            : f.target.sizes.value,
-        categoryName: f.target.category.value,
-        brandName: f.target.brand.value
-      };
-      console.log(entity);
-      ProductService.edit(id, entity)
-        .then(() => alert("Product updated"))
-        .catch((error) => alert(`Error${error}`));
+      // Get files from form
+      const files = Array.from(f.target.images.files);
+      // Call uploader to upload files and get urls
+      const filenames = await Uploader.upload(files);
+      // Force submit function to wait for Uploader
+      Promise.resolve().then(() => {
+        const entity = {
+          id: product.id,
+          name: f.target.name.value,
+          images:
+            oldImages.reduce((total, img) => {
+              return total ? `${total} ${img}` : img;
+            }, null) +
+            " " +
+            filenames,
+          description: f.target.description.value,
+          listPrice: f.target.price.value,
+
+          // sale price will not be more than list price
+          salePrice: f.target.saleprice.value
+            ? f.target.saleprice.value > f.target.price.value
+              ? f.target.price.value
+              : f.target.saleprice.value
+            : product.salePrice,
+
+          quantity: f.target.quantity.value,
+
+          status: f.target.status.value
+            ? // check if product is out of stock
+              f.target.quantity.value <= 0
+              ? 2
+              : f.target.status.value
+            : product.status,
+
+          // create a set of unique colors
+          // then iterate the set as an array and reduce to a string with specific format
+          colors:
+            Array.from(f.target.colors).length > 1
+              ? [
+                  ...new Set(
+                    Array.from(f.target.colors).map((color) => color.value)
+                  )
+                ].reduce((total, color) => {
+                  return total ? `${total} ${color}` : color;
+                }, null)
+              : f.target.colors.value,
+
+          // type check in case array.from makes an array of options instead of array of selects
+          sizes:
+            f.target.sizes.type !== "select-one" &&
+            // check array of selects length and create string from set
+            Array.from(f.target.sizes).length > 1
+              ? [
+                  ...new Set(
+                    Array.from(f.target.sizes).map((size) => size.value)
+                  )
+                ].reduce((total, size) => {
+                  return total ? `${total} ${size}` : size;
+                }, null)
+              : f.target.sizes.value,
+
+          categoryName: f.target.category.value,
+          brandName: f.target.brand.value
+        };
+        console.log(entity);
+        ProductService.edit(id, entity)
+          .then(() => {
+            alert("Product updated");
+            window.location.href = "../ProductIndex";
+          })
+          .catch((error) => alert(`Error${error}`));
+      });
     }
   }
 
   return (
-    <div className="col-8 row">
+    <div className="col-8 row ms-5">
       <h1>Edit product</h1>
       <hr />
-      {/* Image carousel */}
+      {/* Image carousel and thumbnails for old images */}
       <div className="col-4 p-0 m-0">
-        <Carousel
-          className="p-1 bg-secondary"
-          dynamicHeight={true}
-          showThumbs={false}
-          infiniteLoop={true}
-        >
-          {slideImages}
-        </Carousel>
+        {product ? (
+          product.images ? (
+            <div>
+              {/* // Image carousel */}
+              <Carousel
+                className="p-1 bg-secondary"
+                dynamicHeight={true}
+                showThumbs={false}
+                infiniteLoop={true}
+              >
+                {slideImages}
+              </Carousel>
+              {oldImagesInputs}
+            </div>
+          ) : (
+            "No images"
+          )
+        ) : (
+          ""
+        )}
       </div>
 
       {/* Edit Form */}
@@ -231,6 +295,21 @@ const ProductEdit = () => {
                     type="text"
                     name="name"
                     defaultValue={product.name}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label htmlFor="images">Images</label>
+                </td>
+                <td>
+                  <input
+                    id="img"
+                    type="file"
+                    name="images"
+                    accept="image/*"
+                    title="Upload Image"
+                    multiple
                   />
                 </td>
               </tr>
@@ -350,7 +429,7 @@ const ProductEdit = () => {
               </tr>
               <tr>
                 <td>
-                  <label htmlFor="name">Description</label>
+                  <label htmlFor="description">Description</label>
                 </td>
                 <td>
                   <textarea
@@ -360,6 +439,27 @@ const ProductEdit = () => {
                     maxLength={255}
                     defaultValue={product.description}
                   />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label htmlFor="status">Status</label>
+                </td>
+                <td>
+                  <select name="status" defaultValue={product.status}>
+                    <option key="0" value="0">
+                      Not Available
+                    </option>
+                    <option key="1" value="1">
+                      Available
+                    </option>
+                    <option key="2" value="2">
+                      Out of stock
+                    </option>
+                    <option key="3" value="3">
+                      Suspended
+                    </option>
+                  </select>
                 </td>
               </tr>
               <tr>

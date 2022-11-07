@@ -58,9 +58,22 @@ const ProductIndex = () => {
         <td>{product.name}</td>
         <td>{product.listPrice}$</td>
         <td>{product.salePrice}$</td>
-        <td>{new Date(product.createdDate).toLocaleString()}</td>
+        <td>{new Date(product.createdDate).toLocaleDateString()}</td>
+        <td>
+          {product.updatedDate
+            ? new Date(product.updatedDate).toLocaleDateString()
+            : "Not yet"}
+        </td>
         <td>{product.quantity}</td>
-        <td>{product.status}</td>
+        <td>
+          {product.status === 0
+            ? "Not available"
+            : product.status === 3
+            ? "Suspended"
+            : product.status === 1
+            ? "Available"
+            : "Out of stock"}
+        </td>
         <td>
           <Link to={`/Product/productEdit/${product.id}`}>
             <FontAwesomeIcon
@@ -104,7 +117,7 @@ const ProductIndex = () => {
     }
   }
   return (
-    <div className="col-9 p-0 m-0">
+    <div className="col-9 p-0 ms-3">
       <h1>Product list</h1>
       <hr />
       {/* Pagination form */}
@@ -130,7 +143,8 @@ const ProductIndex = () => {
             <th>Name</th>
             <th>Price</th>
             <th>Sale price</th>
-            <th>Date created</th>
+            <th>Created on</th>
+            <th>Updated on</th>
             <th>In stock</th>
             <th>Status</th>
             <th></th>

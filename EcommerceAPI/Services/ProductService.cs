@@ -151,9 +151,16 @@ namespace Ecommerce.API.Services
             catch { return new BadRequestResult(); }
         }
 
-        public Task<ActionResult> DeleteAsync(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            Product? product = await _context.Products.SingleOrDefaultAsync(p => p.Id == id);
+            if(product == null) return new NotFoundResult();
+            try {
+                product.Status = (byte)CommonStatus.NotAvailable;
+                await _context.SaveChangesAsync();
+                return new OkResult();
+            }
+            catch { return new BadRequestResult(); }
         }
 
         public async Task<IActionResult>? RateAsync(RatingDTO rating)

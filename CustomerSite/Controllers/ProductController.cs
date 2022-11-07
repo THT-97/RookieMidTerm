@@ -1,6 +1,8 @@
 ﻿using Ecommerce.DTO.DTOs;
+using Ecommerce.DTO.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace Ecommerce.CustomerSite.Controllers
 {
@@ -21,10 +23,16 @@ namespace Ecommerce.CustomerSite.Controllers
             {
                 var content = await response.Content.ReadAsStringAsync();
                 ProductDTO? product = JsonConvert.DeserializeObject<ProductDTO>(content);
-                return View(product);
+                if (product.Status != (byte)CommonStatus.NotAvailable
+                    && product.Status != (byte)ProductStatus.Suspended)
+                {
+                    return View(product);
+                }
+                ViewData["response"] = HttpStatusCode.Forbidden;
+                return View();
             }
             ViewData["response"] = response.StatusCode;
-            return View(null);
+            return View();
         }
 
         [HttpGet]
@@ -45,7 +53,7 @@ namespace Ecommerce.CustomerSite.Controllers
                 return View(products);
             }
             ViewData["response"] = response.StatusCode;
-            return View(null);
+            return View();
         }
 
         [HttpGet]
@@ -66,7 +74,7 @@ namespace Ecommerce.CustomerSite.Controllers
                 return View(products);
             }
             ViewData["response"] = response.StatusCode;
-            return View(null);
+            return View();
         }
 
         [HttpPost]
