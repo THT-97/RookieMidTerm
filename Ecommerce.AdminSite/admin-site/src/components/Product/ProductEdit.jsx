@@ -182,15 +182,20 @@ const ProductEdit = () => {
       const filenames = await Uploader.upload(files);
       // Force submit function to wait for Uploader
       Promise.resolve().then(() => {
+        console.log(`imgs: ${oldImages}`);
         const entity = {
           id: product.id,
           name: f.target.name.value,
           images:
-            oldImages.reduce((total, img) => {
-              return total ? `${total} ${img}` : img;
-            }, null) +
-            " " +
-            filenames,
+            oldImages == null && filenames == null
+              ? null
+              : oldImages.reduce((total, img) => {
+                  return total ? `${total} ${img}` : img;
+                }, "") +
+                " " +
+                filenames
+              ? filenames
+              : "",
           description: f.target.description.value,
           listPrice: f.target.price.value,
 

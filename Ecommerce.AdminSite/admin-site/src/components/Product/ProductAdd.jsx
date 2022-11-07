@@ -173,7 +173,7 @@ const ProductAdd = () => {
             alert("Product created");
             window.location.href = "../ProductIndex";
           })
-          .catch((error) => alert(`Error${error}`));
+          .catch((error) => alert(`Error: ${error}`));
       });
     }
   }

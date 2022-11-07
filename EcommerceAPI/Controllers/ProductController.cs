@@ -182,6 +182,12 @@ namespace Ecommerce.API.Controllers
             return BadRequest();
         }
 
+        [HttpDelete]
+        public async Task<ActionResult> Delete(int id)
+        {
+            return await _productService.DeleteAsync(id);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Rate(RatingDTO rating)
         {

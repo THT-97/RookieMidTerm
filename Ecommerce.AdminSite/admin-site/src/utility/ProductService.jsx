@@ -25,6 +25,10 @@ const ProductService = {
       `https://localhost:7171/api/Product/Update?id=${id}`,
       entity
     );
+  },
+
+  delete(id) {
+    return axios.delete(`https://localhost:7171/api/Product/Delete?id=${id}`);
   }
 };
 

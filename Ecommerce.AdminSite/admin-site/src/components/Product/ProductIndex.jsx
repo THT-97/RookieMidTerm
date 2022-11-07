@@ -51,10 +51,23 @@ const ProductIndex = () => {
     setPage(p);
   }
 
+  // Delete function
+  function Disable(id) {
+    if (confirm(`Disable product #${id}?`)) {
+      ProductService.delete(id)
+        .then(alert("Product disabled"))
+        .catch((error) => alert(error));
+    }
+    ProductService.getPage(page, limit).then((response) =>
+      setProducts(response.data)
+    );
+  }
+
   if (products != null) {
     // Add products to table
     table = products.map((product) => (
       <tr key={product.id}>
+        <td>{product.id}</td>
         <td>{product.name}</td>
         <td>{product.listPrice}$</td>
         <td>{product.salePrice}$</td>
@@ -87,6 +100,7 @@ const ProductIndex = () => {
               icon={faTrashCan}
               title="Delete"
               className="text-danger"
+              onClick={() => Disable(product.id)}
             />
           </Link>
         </td>
@@ -140,6 +154,7 @@ const ProductIndex = () => {
       <table className="table table-striped table-hover">
         <thead>
           <tr>
+            <th>Id</th>
             <th>Name</th>
             <th>Price</th>
             <th>Sale price</th>
