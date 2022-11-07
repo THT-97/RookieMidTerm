@@ -17,6 +17,7 @@ const ProductIndex = () => {
   const [pages, setPages] = useState(1);
   let table = [];
   const pageMenu = [];
+
   // On load
   useEffect(() => {
     ProductService.getPage(1, 6).then((response) => setProducts(response.data));

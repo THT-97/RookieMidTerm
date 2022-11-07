@@ -1,7 +1,13 @@
 import axios from "axios";
 const CategoryService = {
-  getAll() {
-    return axios.get("https://localhost:7171/api/Category/GetAll");
+  getPage(page = 0, limit = 6) {
+    return axios.get(
+      `https://localhost:7171/api/Category/GetPage?page=${page}&limit=${limit}`
+    );
+  },
+
+  getCount() {
+    return axios.get(`https://localhost:7171/api/Category/Count`);
   },
 
   create(entity) {

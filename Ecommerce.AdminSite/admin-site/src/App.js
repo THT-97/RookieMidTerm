@@ -9,6 +9,7 @@ import ProductIndex from "./components/Product/ProductIndex";
 import ProductEdit from "./components/Product/ProductEdit";
 import React from "react";
 import ProductAdd from "./components/Product/ProductAdd";
+import CategoryIndex from "./components/Category/CategoryIndex";
 
 const App = () => {
   return (
@@ -26,6 +27,8 @@ const App = () => {
             <Route path="/Product/ProductIndex" element={<ProductIndex />} />
             <Route path="/Product/ProductAdd" element={<ProductAdd />} />
             <Route path="/Product/ProductEdit/:id" element={<ProductEdit />} />
+            {/* Routes for category */}
+            <Route path="/Category/CategoryIndex" element={<CategoryIndex />} />
           </Routes>
         </div>
       </BrowserRouter>

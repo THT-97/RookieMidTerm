@@ -70,9 +70,20 @@ namespace Ecommerce.API.Services
             return new NotFoundResult();
         }
 
-        public Task<List<Category>>? GetPageAsync(int page, int limit)
+        public async Task<List<Category>>? GetPageAsync(int page, int limit)
         {
-            throw new NotImplementedException();
+            int count = await _context.Categories.CountAsync();
+            if (page > 0) page--;
+            if (count < limit)
+            {
+                page = 0;
+                limit = count;
+            }
+            List<Category>? categories = await _context.Categories
+                                                            .Skip(page * limit)
+                                                            .Take(limit)
+                                                            .ToListAsync();
+            return categories;
         }
 
         public async Task<int> CountProductsAsync(string categoryName)

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Ecommerce.API.ServiceInterfaces;
+using Ecommerce.API.Services;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -33,10 +34,29 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpGet]
+        public async Task<int> Count()
+        {
+            return await _categoryService.CountAsync();
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GetByID(int id)
         {
             Category category = await _categoryService.GetByIDAsync(id);
             return category != null ? Json(_mapper.Map<CategoryDTO>(category)) : NotFound();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetPage(int page = 0, int limit = 6)
+        {
+            List<Category> categories = await _categoryService.GetPageAsync(page, limit);
+            if (categories != null)
+            {
+                if (categories.Count > 0) return Json(_mapper.Map<List<CategoryDTO>>(categories));
+                return NotFound();
+            }
+
+            return BadRequest();
         }
 
         [HttpGet]
