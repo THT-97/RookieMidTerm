@@ -68,11 +68,6 @@ namespace Ecommerce.API.Services
             throw new NotImplementedException();
         }
 
-        public async ValueTask DisposeAsync()
-        {
-            await _context.DisposeAsync();
-        }
-
         public async Task<int> CountProductsAsync(string brandName)
         {
             Brand? brand = await _context.Brands.Include(b => b.Products).FirstOrDefaultAsync(b => b.Name == brandName);
@@ -83,6 +78,11 @@ namespace Ecommerce.API.Services
         public async Task<Brand?> GetByNameAsync(string brandName)
         {
             return await _context.Brands.FirstOrDefaultAsync(b => b.Name.Contains(brandName));
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await _context.DisposeAsync();
         }
     }
 }

@@ -32,44 +32,6 @@ namespace Ecommerce.API.Services
                                             .SingleOrDefaultAsync();
         }
 
-        public async Task<ActionResult> CreateAsync(Category entry)
-        {
-            if (await _context.Categories.AnyAsync(c => c.Name.ToLower() == entry.Name.ToLower()))
-            {
-                return new BadRequestResult();
-            }
-            _context.Categories.Add(entry);
-            await _context.SaveChangesAsync();
-            return new OkResult();
-        }
-
-        public async Task<ActionResult> UpdateAsync(int id, Category entry)
-        {
-            if (id != entry.Id) return new BadRequestResult();
-            if (!_context.Categories.Any(c => c.Id == id)) return new NotFoundResult();
-            _context.Categories.Update(entry);
-            await _context.SaveChangesAsync();
-            return new OkResult();
-        }
-
-        public async Task<ActionResult> DeleteAsync(int id)
-        {
-            Category target = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
-            if (target != null)
-            {
-                target.Status = (byte)CommonStatus.NotAvailable;
-                List<Product>? products = await _context.Products.Where(p => p.Category.Id == target.Id).ToListAsync();
-                if (products != null)
-                {
-                    foreach (Product product in products) product.Status = (byte)CommonStatus.NotAvailable;
-                }
-                
-                await _context.SaveChangesAsync();
-                return new OkResult();
-            }
-            return new NotFoundResult();
-        }
-
         public async Task<List<Category>>? GetPageAsync(int page, int limit)
         {
             int count = await _context.Categories.CountAsync();
@@ -95,7 +57,53 @@ namespace Ecommerce.API.Services
 
         public async Task<Category?> GetByNameAsync(string categoryName)
         {
-            return await _context.Categories.FirstOrDefaultAsync(c => c.Name.Contains(categoryName));
+            return await _context.Categories.FirstOrDefaultAsync(c => c.Name.ToLower() == categoryName.ToLower());
+        }
+
+        public async Task<ActionResult> CreateAsync(Category entry)
+        {
+            if (await _context.Categories.AnyAsync(c => c.Name.ToLower() == entry.Name.ToLower()))
+            {
+                return new BadRequestResult();
+            }
+            entry.Status = (byte)CommonStatus.Available;
+            _context.Categories.Add(entry);
+            await _context.SaveChangesAsync();
+            return new OkResult();
+        }
+
+        public async Task<ActionResult> UpdateAsync(int id, Category entry)
+        {
+            if (id != entry.Id) return new BadRequestResult();
+            if (!_context.Categories.Any(c => c.Id == id)) return new NotFoundResult();
+            try
+            {
+                _context.Categories.Attach(entry);
+                _context.Entry(entry).State = EntityState.Modified;
+                //Specify that Id is not modified so it won't be changed
+                _context.Entry(entry).Property(c => c.Id).IsModified = false;
+                await _context.SaveChangesAsync();
+                return new OkResult();
+            }
+            catch { return new BadRequestResult(); }
+        }
+
+        public async Task<ActionResult> DeleteAsync(int id)
+        {
+            Category target = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+            if (target != null)
+            {
+                target.Status = (byte)CommonStatus.NotAvailable;
+                List<Product>? products = await _context.Products.Where(p => p.Category.Id == target.Id).ToListAsync();
+                if (products != null)
+                {
+                    foreach (Product product in products) product.Status = (byte)CommonStatus.NotAvailable;
+                }
+                
+                await _context.SaveChangesAsync();
+                return new OkResult();
+            }
+            return new NotFoundResult();
         }
 
         public async ValueTask DisposeAsync()

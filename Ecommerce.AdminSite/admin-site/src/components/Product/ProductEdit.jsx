@@ -175,6 +175,11 @@ const ProductEdit = () => {
   // Edit form on submit
   async function EditProduct(f) {
     f.preventDefault();
+    console.log(
+      `${f.target.saleprice.value} < ${f.target.price.value} ${
+        parseFloat(f.target.saleprice.value) < parseFloat(f.target.price.value)
+      }`
+    );
     if (confirm("Edit product?")) {
       // Get files from form
       const files = Array.from(f.target.images.files);
@@ -182,38 +187,30 @@ const ProductEdit = () => {
       const filenames = await Uploader.upload(files);
       // Force submit function to wait for Uploader
       Promise.resolve().then(() => {
-        console.log(`imgs: ${oldImages}`);
+        console.log(`imgs: ${oldImages} ${filenames}`);
         const entity = {
           id: product.id,
           name: f.target.name.value,
-          images:
-            oldImages == null && filenames == null
-              ? null
-              : oldImages.reduce((total, img) => {
-                  return total ? `${total} ${img}` : img;
-                }, "") +
-                " " +
-                filenames
-              ? filenames
-              : "",
+
+          images: `${oldImages.reduce((total, img) => {
+            return total ? `${total} ${img}` : img;
+          }, "")} ${filenames || ""}`.trim(),
+
           description: f.target.description.value,
           listPrice: f.target.price.value,
 
           // sale price will not be more than list price
           salePrice: f.target.saleprice.value
-            ? f.target.saleprice.value > f.target.price.value
+            ? parseFloat(f.target.saleprice.value) >
+              parseFloat(f.target.price.value)
               ? f.target.price.value
               : f.target.saleprice.value
             : product.salePrice,
 
           quantity: f.target.quantity.value,
 
-          status: f.target.status.value
-            ? // check if product is out of stock
-              f.target.quantity.value <= 0
-              ? 2
-              : f.target.status.value
-            : product.status,
+          // check if product is out of stock
+          status: f.target.quantity.value <= 0 ? 2 : f.target.status.value,
 
           // create a set of unique colors
           // then iterate the set as an array and reduce to a string with specific format
@@ -285,15 +282,15 @@ const ProductEdit = () => {
       </div>
 
       {/* Edit Form */}
-      <form onSubmit={EditProduct} className="col-8">
-        {product ? (
+      {product ? (
+        <form onSubmit={EditProduct} className="col-8">
           <table className="table">
             <tbody>
               <tr>
-                <td>
+                <td className="text-end">
                   <label htmlFor="name">Product name</label>
                 </td>
-                <td>
+                <td className="d-flex justify-content-start">
                   <input
                     required
                     className="input"
@@ -304,10 +301,10 @@ const ProductEdit = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="text-end">
                   <label htmlFor="images">Images</label>
                 </td>
-                <td>
+                <td className="d-flex justify-content-start">
                   <input
                     id="img"
                     type="file"
@@ -319,22 +316,24 @@ const ProductEdit = () => {
                 </td>
               </tr>
               <tr>
-                <td>Created date</td>
-                <td>{new Date(product.createdDate).toLocaleString()}</td>
+                <td className="text-end">Created date</td>
+                <td className="d-flex justify-content-start">
+                  {new Date(product.createdDate).toLocaleString()}
+                </td>
               </tr>
               <tr>
-                <td>Updated date</td>
-                <td>
+                <td className="text-end">Updated date</td>
+                <td className="d-flex justify-content-start">
                   {product.updatedDate
                     ? new Date(product.updatedDate).toLocaleString()
                     : "Not yet"}
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="text-end">
                   <label htmlFor="price">Price</label>
                 </td>
-                <td>
+                <td className="d-flex justify-content-start">
                   <input
                     required
                     className="input"
@@ -347,10 +346,10 @@ const ProductEdit = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="text-end">
                   <label htmlFor="saleprice">Sale Price</label>
                 </td>
-                <td>
+                <td className="d-flex justify-content-start">
                   <input
                     className="input"
                     type="number"
@@ -362,10 +361,10 @@ const ProductEdit = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="text-end">
                   <label htmlFor="quantity">Quantity</label>
                 </td>
-                <td>
+                <td className="d-flex justify-content-start">
                   <input
                     required
                     className="input"
@@ -377,28 +376,28 @@ const ProductEdit = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="text-end">
                   <label htmlFor="category">Category</label>
                 </td>
-                <td>
+                <td className="d-flex justify-content-start">
                   <select name="category" defaultValue={product.categoryName}>
                     {categoryOptions}
                   </select>
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="text-end">
                   <label htmlFor="brand">Brand</label>
                 </td>
-                <td>
+                <td className="d-flex justify-content-start">
                   <select name="brand" defaultValue={product.brandName}>
                     {brandOptions}
                   </select>
                 </td>
               </tr>
               <tr>
-                <td>
-                  Colors{" "}
+                <td className="text-end">
+                  Colors
                   <Button variant="none" size="sm" onClick={AddColor}>
                     <FontAwesomeIcon
                       className="text-primary"
@@ -412,10 +411,10 @@ const ProductEdit = () => {
                     ></FontAwesomeIcon>
                   </Button>
                 </td>
-                <td>{colorInputs}</td>
+                <td className="d-flex justify-content-start">{colorInputs}</td>
               </tr>
               <tr>
-                <td>
+                <td className="text-end">
                   Sizes
                   <Button variant="none" size="sm" onClick={AddSize}>
                     <FontAwesomeIcon
@@ -430,27 +429,27 @@ const ProductEdit = () => {
                     ></FontAwesomeIcon>
                   </Button>
                 </td>
-                <td>{sizeInputs}</td>
+                <td className="d-flex justify-content-start">{sizeInputs}</td>
               </tr>
               <tr>
-                <td>
+                <td className="text-end">
                   <label htmlFor="description">Description</label>
                 </td>
-                <td>
+                <td className="d-flex justify-content-start">
                   <textarea
                     name="description"
-                    rows={3}
+                    rows={4}
                     cols={50}
-                    maxLength={255}
+                    maxLength={1000}
                     defaultValue={product.description}
                   />
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="text-end">
                   <label htmlFor="status">Status</label>
                 </td>
-                <td>
+                <td className="d-flex justify-content-start">
                   <select name="status" defaultValue={product.status}>
                     <option key="0" value="0">
                       Not Available
@@ -477,10 +476,10 @@ const ProductEdit = () => {
               </tr>
             </tbody>
           </table>
-        ) : (
-          <p>Loading...</p>
-        )}
-      </form>
+        </form>
+      ) : (
+        <h4 className="text-info">Loading...</h4>
+      )}
     </div>
   );
 };

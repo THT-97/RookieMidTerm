@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Ecommerce.API.ServiceInterfaces;
-using Ecommerce.API.Services;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +16,8 @@ namespace Ecommerce.API.Controllers
         public CategoryController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
-            _mapper = new MapperConfiguration(cfg => cfg.CreateMap<Category, CategoryDTO>()).CreateMapper();
+            _mapper = new MapperConfiguration(cfg => cfg.CreateMap<Category, CategoryDTO>()
+                                                           .ReverseMap()).CreateMapper();
         }
 
         [HttpGet]
@@ -47,9 +47,16 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> GetByName(string name)
+        {
+            Category? category = await _categoryService.GetByNameAsync(name);
+            return category != null ? Json(_mapper.Map<List<CategoryDTO>>(category)) : NotFound();
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GetPage(int page = 0, int limit = 6)
         {
-            List<Category> categories = await _categoryService.GetPageAsync(page, limit);
+            List<Category>? categories = await _categoryService.GetPageAsync(page, limit);
             if (categories != null)
             {
                 if (categories.Count > 0) return Json(_mapper.Map<List<CategoryDTO>>(categories));
@@ -67,16 +74,16 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(Category category)
+        public async Task<ActionResult> Create(CategoryDTO category)
         {
-            if (ModelState.IsValid) return await _categoryService.CreateAsync(category);
+            if (ModelState.IsValid) return await _categoryService.CreateAsync(_mapper.Map<Category>(category));
             return BadRequest();
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, Category category)
+        [HttpPut()]
+        public async Task<ActionResult> Update(int id, CategoryDTO category)
         {
-            return await _categoryService.UpdateAsync(id, category);
+            return await _categoryService.UpdateAsync(id, _mapper.Map<Category>(category));
         }
 
         [HttpDelete]

@@ -6,7 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTrashCan,
   faEdit,
-  faPlusCircle
+  faPlusCircle,
+  faInfoCircle
 } from "@fortawesome/free-solid-svg-icons";
 
 const ProductIndex = () => {
@@ -89,6 +90,13 @@ const ProductIndex = () => {
             : "Out of stock"}
         </td>
         <td>
+          <Link to={`/Product/productDetails/${product.id}`}>
+            <FontAwesomeIcon
+              icon={faInfoCircle}
+              title="Details"
+              className="text-info me-3"
+            />
+          </Link>
           <Link to={`/Product/productEdit/${product.id}`}>
             <FontAwesomeIcon
               icon={faEdit}

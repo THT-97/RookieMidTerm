@@ -1,7 +1,8 @@
 import {
   faPlusCircle,
   faEdit,
-  faTrashCan
+  faTrashCan,
+  faInfoCircle
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
@@ -52,15 +53,35 @@ const CategoryIndex = () => {
     setPage(p);
   }
 
+  // Delete function
+  function Disable(id) {
+    if (confirm(`Disable category #${id}?`)) {
+      CategoryService.delete(id)
+        .then(alert("Category disabled"))
+        .catch((error) => alert(error));
+    }
+    CategoryService.getPage(page, limit).then((response) =>
+      setCategories(response.data)
+    );
+  }
+
   if (categories != null) {
     // Add categories to table
     table = categories.map((category) => (
       <tr key={category.name}>
+        <td>{category.id}</td>
         <td>{category.name}</td>
-        <td>{category.description}$</td>
+        <td>{category.description}</td>
         <td>{category.status === 0 ? "Not available" : "Available"}</td>
         <td>
-          <Link to="#">
+          <Link to={`/Category/CategoryDetails/${category.id}`}>
+            <FontAwesomeIcon
+              icon={faInfoCircle}
+              title="Details"
+              className="text-info me-3"
+            />
+          </Link>
+          <Link to={`/Category/CategoryEdit/${category.id}`}>
             <FontAwesomeIcon
               icon={faEdit}
               title="Edit"
@@ -72,7 +93,7 @@ const CategoryIndex = () => {
               icon={faTrashCan}
               title="Delete"
               className="text-danger"
-              onClick={() => {}}
+              onClick={() => Disable(category.id)}
             />
           </Link>
         </td>
@@ -102,6 +123,7 @@ const CategoryIndex = () => {
         );
     }
   }
+
   return (
     <div className="col-9 p-0 ms-3">
       <h1>Category list</h1>
@@ -113,7 +135,7 @@ const CategoryIndex = () => {
         <button className="btn btn-sm btn-outline-info">Filter</button>
       </form>
       <Link
-        to="#"
+        to="/Category/CategoryAdd"
         title="Add new category"
         className="text-primary d-flex ms-5"
       >
@@ -127,6 +149,7 @@ const CategoryIndex = () => {
       <table className="table table-striped table-hover">
         <thead>
           <tr>
+            <th>Id</th>
             <th>Name</th>
             <th>Description</th>
             <th>Status</th>

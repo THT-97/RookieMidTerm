@@ -124,6 +124,14 @@ const ProductAdd = () => {
           Description: f.target.description.value,
           ListPrice: f.target.price.value,
 
+          // sale price will not be more than list price
+          SalePrice: f.target.saleprice.value
+            ? parseFloat(f.target.saleprice.value) >
+              parseFloat(f.target.price.value)
+              ? f.target.price.value
+              : f.target.saleprice.value
+            : f.target.price.value,
+
           // create a set of unique colors
           // then iterate the set as an array and reduce to a string with specific format
           Colors:
@@ -152,13 +160,6 @@ const ProductAdd = () => {
                 }, null)
               : f.target.sizes.value,
 
-          // sale price will not be more than list price
-          SalePrice: f.target.saleprice.value
-            ? f.target.saleprice.value > f.target.price.value
-              ? f.target.price.value
-              : f.target.saleprice.value
-            : f.target.price.value,
-
           Images: filenames,
           Quantity: f.target.quantity.value,
           CategoryName: f.target.category.value,
@@ -171,7 +172,7 @@ const ProductAdd = () => {
         ProductService.create(entity)
           .then(() => {
             alert("Product created");
-            window.location.href = "../ProductIndex";
+            window.location.href = "./ProductIndex";
           })
           .catch((error) => alert(`Error: ${error}`));
       });
