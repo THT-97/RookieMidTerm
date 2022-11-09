@@ -7,7 +7,8 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import ProductIndex from "./components/Product/ProductIndex";
 import ProductEdit from "./components/Product/ProductEdit";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import ProductAdd from "./components/Product/ProductAdd";
 import CategoryIndex from "./components/Category/CategoryIndex";
 import CategoryEdit from "./components/Category/CategoryEdit.jsx";
@@ -16,6 +17,11 @@ import ProductDetails from "./components/Product/ProductDetails";
 import CategoryDetails from "./components/Category/CategoryDetails";
 
 const App = () => {
+  const [token, setToken] = useState(null);
+  useEffect(() => {
+    setToken(Cookies.get("token"));
+  }, []);
+  console.log({ token });
   return (
     <div className="App">
       <BrowserRouter>
@@ -24,7 +30,6 @@ const App = () => {
           <Sidenav className="col-2 p-0 m-0" />
           <Routes>
             <Route index element={<Home />} />
-            <Route path="/Home" element={<Home />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Users" element={<Users />} />
             {/* Routes for product */}

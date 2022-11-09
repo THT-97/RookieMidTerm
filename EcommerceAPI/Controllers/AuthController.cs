@@ -15,17 +15,25 @@ namespace Ecommerce.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly EcommerceDbContext _context;
+        private readonly ApplicationDbContext _accountContext;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<IdentityUser> _userManager;
         private PasswordHasher<LoginDTO> _hasher;
         private readonly IConfiguration _config;
-        public AuthController(EcommerceDbContext context, IConfiguration config)
+        public AuthController(EcommerceDbContext context, IConfiguration config, ApplicationDbContext accountContext,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _accountContext = accountContext;
+            _roleManager = roleManager;
+            _userManager = userManager;
             _hasher = new();
             _config = config;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Authenticate([FromBody]string? identity)
+        public async Task<IActionResult> Authenticate(string? identity)
         {
             if (identity != null)
             {
@@ -58,22 +66,37 @@ namespace Ecommerce.API.Controllers
                     var stringToken = tokenHandler.WriteToken(token);
                     return Ok(stringToken);
                 }
-                return Unauthorized();
+                return Unauthorized(identity);
             }
-            return Unauthorized();
+            return Unauthorized(identity);
         }
 
         [HttpPost]
         public async Task<IActionResult> SignIn(LoginDTO login)
         {
-            IdentityUser? user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == login.username);
+            IdentityUser? user = await _userManager.FindByEmailAsync(login.username);
+            if(user == null) return Unauthorized(login);
             if (_hasher.VerifyHashedPassword(login, user.PasswordHash, login.password)
                 == PasswordVerificationResult.Success)
             {
                 return await Authenticate(login.username);
             }
 
-            return BadRequest();
+            return Unauthorized(login);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetRoles(string username)
+        {
+            //Find user
+            IdentityUser? user = await _userManager.FindByEmailAsync(username);
+            if(user != null)
+            {
+                // Get roles of the user
+                var roles = await _userManager.GetRolesAsync(user);
+                return Ok(roles);
+            }
+            return NotFound();
         }
     }
 }

@@ -2,6 +2,7 @@ using Ecommerce.API.Data;
 using Ecommerce.API.ServiceInterfaces;
 using Ecommerce.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -19,8 +20,12 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 //Add DbContext
 builder.Services.AddDbContext<EcommerceDbContext>(options =>
     options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString));
 //Add AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                        .AddEntityFrameworkStores<ApplicationDbContext>();
 //Add JwtBearer Authentication
 builder.Services.AddAuthentication(options =>
 {

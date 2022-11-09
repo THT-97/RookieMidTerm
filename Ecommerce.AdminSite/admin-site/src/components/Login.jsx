@@ -1,8 +1,30 @@
 import React from "react";
+import Cookies from "js-cookie";
+import LoginService from "../utility/LoginService";
 
 const Login = () => {
-  function Submit(f) {
+  async function Submit(f) {
     f.preventDefault();
+    const login = {
+      username: f.target.username.value,
+      password: f.target.password.value
+    };
+    console.log(login);
+    await LoginService.signIn(login)
+      .then(async (response) => {
+        await LoginService.getRole(login.username)
+          .then((subr) => {
+            // console.log(subr.data.toString());
+            if (subr.data.toString() === "SysAdmin") {
+              Cookies.set("role", response.data);
+              Cookies.set("token", response.data);
+              Cookies.set("username", login.username);
+              window.location.href = "/";
+            } else alert("Unauthorized");
+          })
+          .catch((error) => alert(error));
+      })
+      .catch((error) => alert(error));
   }
   return (
     <div className="col-8 text-center p-5">
@@ -20,7 +42,7 @@ const Login = () => {
                   required
                   className="input"
                   type="text"
-                  name="name"
+                  name="username"
                   placeholder="Username..."
                 />
               </td>

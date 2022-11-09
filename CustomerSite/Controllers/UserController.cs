@@ -38,8 +38,10 @@ namespace Ecommerce.CustomerSite.Controllers
         {
             Response.Cookies.Delete("Username");
             Response.Cookies.Delete("Token");
-            if(prevPage != null) return Redirect(prevPage);
-            return RedirectToAction("Index", "Home", null);
+            if(prevPage == null || prevPage == "https://localhost:7091/User/SignIn")
+                return RedirectToAction("Index", "Home", null);
+            return Redirect(prevPage);
+            
         }
     }
 }
