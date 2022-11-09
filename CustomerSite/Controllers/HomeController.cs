@@ -21,15 +21,6 @@ namespace Ecommerce.CustomerSite.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //Get token after login
-            if (User.Identity.Name != null && HttpContext.Session.GetString("token") == null)
-            {
-                _response = await _httpClient.PostAsJsonAsync("Auth/Authenticate", User.Identity.Name);
-                _token = await _response.Content.ReadAsStringAsync();
-                HttpContext.Session.SetString("token", _token);
-            }
-            //If not logged in, clear token
-            else if (User.Identity.Name == null) HttpContext.Session.Remove("token");
             //Page contents
             List<ProductDTO>? highRatings;
             List<ProductDTO>? newProducts;

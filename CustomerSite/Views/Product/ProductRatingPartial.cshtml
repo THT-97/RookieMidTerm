@@ -1,12 +1,14 @@
 ﻿@using Ecommerce.DTO.Enum
 @model Ecommerce.DTO.DTOs.RatingDTO
-
+@{
+    string? username = Context.Request.Cookies["Username"];
+}
 @if(Model.Status!= (byte)CommonStatus.NotAvailable){
     <div class="mb-2">
         <p class="mb-0">
             <b>
                 @Model.UserEmail
-                @if (Model.UserEmail == User.Identity.Name)
+                @if (Model.UserEmail == username)
                 {
                    <span>&nbsp;(You)</span>
                 }:

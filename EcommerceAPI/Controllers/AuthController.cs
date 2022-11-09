@@ -70,7 +70,7 @@ namespace Ecommerce.API.Controllers
             if (_hasher.VerifyHashedPassword(login, user.PasswordHash, login.password)
                 == PasswordVerificationResult.Success)
             {
-                return Ok();
+                return await Authenticate(login.username);
             }
 
             return BadRequest();

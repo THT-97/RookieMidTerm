@@ -1,18 +1,22 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
-
+@{
+    string? username = Context.Request.Cookies["Username"];
+    string? token = Context.Request.Cookies["Token"];
+    string prevPage = Context.Request.Headers["Referer"].ToString();
+}
 <div class="navbar-nav col-6">
-@if (SignInManager.IsSignedIn(User))
+    @if ( username != null && token != null)
 {
     <div class="dropdown nav-item">
         <a class="nav-link text-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="text-end fa fa-user" aria-hidden="true"></i>
         </a>
         <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item btn btn-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity?.Name</a></li>
+            @*<li><a class="dropdown-item btn btn-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@username</a></li>*@
+                <li><b class="dropdown-item">@username</b></li>
+                <li><button class="btn bs-tooltip-auto" title="@token">Token</button></li>
             <li>
-                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <form class="form-inline" asp-controller="User" asp-action="SignOut" asp-route-prevPage="@prevPage">
                     <button type="submit" class="nav-link btn btn-link text-dark dropdown-item">Logout</button>
                 </form>
             </li>
