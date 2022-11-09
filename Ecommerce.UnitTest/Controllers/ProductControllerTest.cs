@@ -3,8 +3,10 @@ using Ecommerce.API.ServiceInterfaces;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Moq;
 using NuGet.Protocol;
+using System.Collections.Generic;
 
 namespace Ecommerce.API.UnitTest.Controllers
 {
@@ -208,9 +210,28 @@ namespace Ecommerce.API.UnitTest.Controllers
             JsonResult? result = await productController.GetAll() as JsonResult;
             List<ProductDTO>? productDTO = (List<ProductDTO>?)result.Value;
             Assert.NotNull(result);
-            Assert.NotNull(productDTO);
             Assert.NotEmpty(productDTO);
             Assert.Equivalent(expected, productDTO);
+        }
+
+        [Fact]
+        public async Task GetAll_NotFound()
+        {
+            //ARRANGE
+            //List of products
+            List<Product> products = new();
+
+            //Arranging Service
+            _productServiceMoq.Setup(p => p.GetAllAsync()).ReturnsAsync(products);
+            //Arranging Controller
+            ProductController productController = new ProductController(_productServiceMoq.Object,
+                                                                        _categoryServiceMoq.Object,
+                                                                        _brandServiceMoq.Object);
+
+            //ACT
+            ActionResult result = await productController.GetAll();
+            Assert.NotNull(result);
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Theory]
@@ -275,8 +296,7 @@ namespace Ecommerce.API.UnitTest.Controllers
             Assert.NotEmpty(productDTO);
             Assert.Equivalent(expected.Where(p => p.CategoryName == categoryName)
                                       .Skip(realPage * realLimit)
-                                      .Take(realLimit)
-                                      .ToJson(), productDTO.ToJson());
+                                      .Take(realLimit), productDTO);
         }
 
         [Theory]
@@ -325,6 +345,54 @@ namespace Ecommerce.API.UnitTest.Controllers
             ActionResult? result = await productController.GetByCategory(categoryName, page, limit);
             Assert.NotNull(result);
             Assert.IsType<NotFoundResult>(result);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        [InlineData(4)]
+        [InlineData(5)]
+        public async Task AdminGetByID_Success(int id)
+        {
+            //ARRANGE
+            //list of categories
+            List<Category> categories = new()
+            {
+                new Category {Name = "Category 1"},
+                new Category {Name = "Category 2"}
+            };
+            //list of products
+            List<Product> products = new()
+            {
+                new Product(){Id = 1, Name = "Product 1", Category = categories[0], Ratings = new List<Rating>()},
+                new Product(){Id = 2, Name = "Product 2", Category = categories[0], Ratings = new List<Rating>()},
+                new Product(){Id = 3, Name = "Product 3", Category = categories[0], Ratings = new List<Rating>()},
+                new Product(){Id = 4, Name = "Product 4", Category = categories[1], Ratings = new List<Rating>()},
+                new Product(){Id = 5, Name = "Product 5", Category = categories[1], Ratings = new List<Rating>()}
+            };
+
+            //expected DTOs
+            List<ProductADTO> expected = new()
+            {
+                new ProductADTO(){Id = 1, Name = "Product 1", CategoryName = categories[0].Name},
+                new ProductADTO(){Id = 2, Name = "Product 2", CategoryName = categories[0].Name},
+                new ProductADTO(){Id = 3, Name = "Product 3", CategoryName = categories[0].Name},
+                new ProductADTO(){Id = 4, Name = "Product 4", CategoryName = categories[1].Name},
+                new ProductADTO(){Id = 5, Name = "Product 5", CategoryName = categories[1].Name}
+            };
+            _productServiceMoq.Setup(p => p.GetByIDAsync(id)).ReturnsAsync(products.FirstOrDefault(p => p.Id == id));
+            //Arranging Controller
+            ProductController productController = new ProductController(_productServiceMoq.Object,
+                                                                        _categoryServiceMoq.Object,
+                                                                        _brandServiceMoq.Object);
+
+            //ACT
+            JsonResult? result = await productController.AdminGetByID(id) as JsonResult;
+            ProductADTO? productADTO = (ProductADTO?)result.Value;
+            Assert.NotNull(result);
+            Assert.Equivalent(expected.SingleOrDefault(p => p.Id == id),
+                              productADTO);
         }
     }
 }

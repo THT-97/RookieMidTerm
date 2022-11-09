@@ -23,7 +23,8 @@ else
 {
     <div class="nav-item btn-group">
         <a class="btn btn-outline-info" asp-area="Identity" asp-page="/Account/Register">Register</a>
-        <a class="btn btn-outline-primary" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        @*<a class="btn btn-outline-primary" asp-area="Identity" asp-page="/Account/Login">Login</a>*@
+        <a class="btn btn-outline-primary" asp-controller="User" asp-action="SignIn">Login</a>
     </div>
 }
 </div>

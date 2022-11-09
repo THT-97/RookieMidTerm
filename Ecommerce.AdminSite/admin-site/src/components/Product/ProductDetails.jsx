@@ -103,6 +103,12 @@ const ProductDetails = () => {
                 <td className="d-flex justify-content-start">{product.name}</td>
               </tr>
               <tr>
+                <td className="text-end">Rating</td>
+                <td className="d-flex justify-content-start">
+                  {product.rating} ({product.ratingCount} Rates)
+                </td>
+              </tr>
+              <tr>
                 <td className="text-end">Created date</td>
                 <td className="d-flex justify-content-start">
                   {new Date(product.createdDate).toLocaleString()}

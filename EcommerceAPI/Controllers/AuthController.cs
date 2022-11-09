@@ -1,4 +1,6 @@
 ﻿using Ecommerce.API.Data;
+using Ecommerce.DTO.DTOs;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,10 +15,12 @@ namespace Ecommerce.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly EcommerceDbContext _context;
+        private PasswordHasher<LoginDTO> _hasher;
         private readonly IConfiguration _config;
         public AuthController(EcommerceDbContext context, IConfiguration config)
         {
             _context = context;
+            _hasher = new();
             _config = config;
         }
 
@@ -57,6 +61,19 @@ namespace Ecommerce.API.Controllers
                 return Unauthorized();
             }
             return Unauthorized();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignIn(LoginDTO login)
+        {
+            IdentityUser? user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == login.username);
+            if (_hasher.VerifyHashedPassword(login, user.PasswordHash, login.password)
+                == PasswordVerificationResult.Success)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
     }
 }

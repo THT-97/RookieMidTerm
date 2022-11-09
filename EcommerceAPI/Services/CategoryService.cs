@@ -50,7 +50,7 @@ namespace Ecommerce.API.Services
 
         public async Task<int> CountProductsAsync(string categoryName)
         {
-            Category? category = await _context.Categories.Include(c => c.Products).FirstOrDefaultAsync(c => c.Name == categoryName);
+            Category? category = await _context.Categories.Include(c => c.Products).FirstOrDefaultAsync(c => c.Name == categoryName.Trim());
             if (category != null) return category.Products.Count;
             return -1;
         }

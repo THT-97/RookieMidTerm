@@ -70,7 +70,7 @@ namespace Ecommerce.API.Controllers
         public async Task<ActionResult> CountProducts(string categoryName)
         {
             int count = await _categoryService.CountProductsAsync(categoryName);
-            return count != -1 ? Json(count) : NotFound();
+            return count > -1 ? Json(count) : NotFound();
         }
 
         [HttpPost]
