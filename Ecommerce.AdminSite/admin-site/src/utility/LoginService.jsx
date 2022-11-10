@@ -1,7 +1,7 @@
 import axios from "axios";
 const LoginService = {
   signIn(login) {
-    return axios.post("https://localhost:7171/api/Auth/SignIn", login);
+    return axios.post("https://localhost:7171/api/Auth/AdminSignIn", login);
   },
 
   getRole(username) {

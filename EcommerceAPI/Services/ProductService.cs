@@ -3,6 +3,7 @@ using Ecommerce.API.ServiceInterfaces;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
 using Ecommerce.DTO.Enum;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -163,6 +164,7 @@ namespace Ecommerce.API.Services
             catch { return new BadRequestResult(); }
         }
 
+        
         public async Task<IActionResult>? RateAsync(RatingDTO rating)
         {
             Product? product = await _context.Products.FirstOrDefaultAsync(p => p.Id == rating.ProductId);

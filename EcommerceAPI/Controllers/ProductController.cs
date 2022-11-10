@@ -2,7 +2,9 @@
 using Ecommerce.API.ServiceInterfaces;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace Ecommerce.API.Controllers
 {
@@ -63,6 +65,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "SysAdmin")]
         public async Task<ActionResult> GetAll()
         {
             List<Product> products = await _productService.GetAllAsync();
@@ -137,6 +140,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "SysAdmin")]
         public async Task<ActionResult> AdminGetByID(int id)
         {
             Product product = await _productService.GetByIDAsync(id);
@@ -145,6 +149,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "SysAdmin")]
         public async Task<ActionResult> GetPage(int page=0, int limit=6)
         {
             List<Product> products = await _productService.GetPageAsync(page, limit);
@@ -159,6 +164,7 @@ namespace Ecommerce.API.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "SysAdmin")]
         public async Task<ActionResult> Create(ProductDTO product)
         {
             if (ModelState.IsValid)
@@ -170,6 +176,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "SysAdmin")]
         public async Task<ActionResult> Update(int id, ProductDTO product)
         {
             if (ModelState.IsValid)
@@ -181,12 +188,14 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = "SysAdmin")]
         public async Task<ActionResult> Delete(int id)
         {
             return await _productService.DeleteAsync(id);
         }
 
         [HttpPost]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Rate(RatingDTO rating)
         {
             try

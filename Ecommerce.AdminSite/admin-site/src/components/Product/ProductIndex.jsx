@@ -80,6 +80,7 @@ const ProductIndex = () => {
             : "Not yet"}
         </td>
         <td>{product.quantity}</td>
+        <td>{product.categoryName}</td>
         <td>
           {product.status === 0
             ? "Not available"
@@ -170,6 +171,7 @@ const ProductIndex = () => {
             <th>Created on</th>
             <th>Updated on</th>
             <th>In stock</th>
+            <th>Category</th>
             <th>Status</th>
             <th></th>
           </tr>

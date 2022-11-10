@@ -2,7 +2,9 @@
 using Ecommerce.API.ServiceInterfaces;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace Ecommerce.API.Controllers
 {
@@ -74,6 +76,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "SysAdmin")]
         public async Task<ActionResult> Create(CategoryDTO category)
         {
             if (ModelState.IsValid) return await _categoryService.CreateAsync(_mapper.Map<Category>(category));
@@ -81,12 +84,14 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpPut()]
+        [Authorize(Roles = "SysAdmin")]
         public async Task<ActionResult> Update(int id, CategoryDTO category)
         {
             return await _categoryService.UpdateAsync(id, _mapper.Map<Category>(category));
         }
 
         [HttpDelete]
+        [Authorize(Roles = "SysAdmin")]
         public async Task<ActionResult> Delete(int id)
         {
             return await _categoryService.DeleteAsync(id);

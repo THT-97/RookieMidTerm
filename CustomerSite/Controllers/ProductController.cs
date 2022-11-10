@@ -3,6 +3,7 @@ using Ecommerce.DTO.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net;
+using System.Net.Http.Headers;
 
 namespace Ecommerce.CustomerSite.Controllers
 {
@@ -80,13 +81,14 @@ namespace Ecommerce.CustomerSite.Controllers
         [HttpPost]
         public async Task<IActionResult> RateAsync(int productId, byte rate, string comment)
         {
-            if (User.Identity.Name != null)
+            if (Request.Cookies["UserName"] != null)
             {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Request.Cookies["Token"]);
                 var response = await _httpClient.PostAsJsonAsync("Product/Rate",
                     new RatingDTO
                     {
                         ProductId = productId,
-                        UserEmail = User.Identity.Name,
+                        UserEmail = Request.Cookies["UserName"],
                         Rate = rate,
                         Date = DateTime.Now,
                         Comment = comment

@@ -60,10 +60,16 @@ namespace Ecommerce.API.Controllers
                         (new SymmetricSecurityKey(key),
                         SecurityAlgorithms.HmacSha512Signature)
                     };
+                    IList<string> roles = await _userManager.GetRolesAsync(user);
+                    foreach (string role in roles)
+                    {
+                        tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
+                    }
                     var tokenHandler = new JwtSecurityTokenHandler();
                     var token = tokenHandler.CreateToken(tokenDescriptor);
                     var jwtToken = tokenHandler.WriteToken(token);
                     var stringToken = tokenHandler.WriteToken(token);
+                    
                     return Ok(stringToken);
                 }
                 return Unauthorized(identity);
@@ -76,6 +82,21 @@ namespace Ecommerce.API.Controllers
         {
             IdentityUser? user = await _userManager.FindByEmailAsync(login.username);
             if(user == null) return Unauthorized(login);
+            if (_hasher.VerifyHashedPassword(login, user.PasswordHash, login.password)
+                == PasswordVerificationResult.Success)
+            {
+                return await Authenticate(login.username);
+            }
+
+            return Unauthorized(login);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AdminSignIn(LoginDTO login)
+        {
+            IdentityUser? user = await _userManager.FindByEmailAsync(login.username);
+            var roles = await _userManager.GetRolesAsync(user);
+            if (user == null || !roles.Contains("SysAdmin")) return Unauthorized(login);
             if (_hasher.VerifyHashedPassword(login, user.PasswordHash, login.password)
                 == PasswordVerificationResult.Success)
             {
