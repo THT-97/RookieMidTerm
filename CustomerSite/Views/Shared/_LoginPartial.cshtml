@@ -14,9 +14,8 @@
         <ul class="dropdown-menu dropdown-menu-end">
             @*<li><a class="dropdown-item btn btn-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@username</a></li>*@
                 <li><b class="dropdown-item">@username</b></li>
-                <li><button class="btn bs-tooltip-auto" title="@token">Token</button></li>
             <li>
-                    <form class="form-inline" asp-controller="User" asp-action="SignOut" asp-route-prevPage="@prevPage">
+                <form class="form-inline" asp-controller="User" asp-action="SignOut" asp-route-prevPage="@prevPage">
                     <button type="submit" class="nav-link btn btn-link text-dark dropdown-item">Logout</button>
                 </form>
             </li>
@@ -26,7 +25,7 @@
 else
 {
     <div class="nav-item btn-group">
-        <a class="btn btn-outline-info" asp-area="Identity" asp-page="/Account/Register">Register</a>
+            <a class="btn btn-outline-info" asp-controller="User" asp-action="Register">Register</a>
         @*<a class="btn btn-outline-primary" asp-area="Identity" asp-page="/Account/Login">Login</a>*@
         <a class="btn btn-outline-primary" asp-controller="User" asp-action="SignIn">Login</a>
     </div>

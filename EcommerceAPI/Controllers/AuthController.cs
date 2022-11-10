@@ -78,6 +78,27 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> Register(LoginDTO login)
+        {
+            IdentityUser? user = await _userManager.FindByEmailAsync(login.username);
+            if (user != null) return new BadRequestResult();
+            try
+            {
+                user = new IdentityUser()
+                {
+                    UserName = login.username,
+                    Email = login.username,
+                    PasswordHash = _hasher.HashPassword(login, login.password)
+                };
+                await _userManager.CreateAsync(user);
+                await _userManager.AddToRoleAsync(user, "User");
+                return Ok();
+            }
+
+            catch { return BadRequest(); }
+        }
+
+        [HttpPost]
         public async Task<IActionResult> SignIn(LoginDTO login)
         {
             IdentityUser? user = await _userManager.FindByEmailAsync(login.username);
