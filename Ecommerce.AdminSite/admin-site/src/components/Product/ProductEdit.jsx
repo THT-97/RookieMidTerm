@@ -199,7 +199,7 @@ const ProductEdit = () => {
           description: f.target.description.value,
           listPrice: f.target.price.value,
 
-          // sale price will not be more than list price
+          // sale price will not be higher than list price
           salePrice: f.target.saleprice.value
             ? parseFloat(f.target.saleprice.value) >
               parseFloat(f.target.price.value)
@@ -369,7 +369,7 @@ const ProductEdit = () => {
                     required
                     className="input"
                     type="number"
-                    min={10}
+                    min={0}
                     name="quantity"
                     defaultValue={product.quantity}
                   />

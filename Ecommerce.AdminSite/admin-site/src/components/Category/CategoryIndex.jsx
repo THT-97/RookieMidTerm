@@ -57,12 +57,14 @@ const CategoryIndex = () => {
   function Disable(id) {
     if (confirm(`Disable category #${id}?`)) {
       CategoryService.delete(id)
-        .then(alert("Category disabled"))
+        .then(() => {
+          alert("Category disabled");
+          CategoryService.getPage(page, limit).then((response) =>
+            setCategories(response.data)
+          );
+        })
         .catch((error) => alert(error));
     }
-    CategoryService.getPage(page, limit).then((response) =>
-      setCategories(response.data)
-    );
   }
 
   if (categories != null) {

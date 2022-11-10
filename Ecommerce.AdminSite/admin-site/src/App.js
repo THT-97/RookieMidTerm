@@ -7,8 +7,7 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import ProductIndex from "./components/Product/ProductIndex";
 import ProductEdit from "./components/Product/ProductEdit";
-import React, { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import React from "react";
 import ProductAdd from "./components/Product/ProductAdd";
 import CategoryIndex from "./components/Category/CategoryIndex";
 import CategoryEdit from "./components/Category/CategoryEdit.jsx";
@@ -17,11 +16,11 @@ import ProductDetails from "./components/Product/ProductDetails";
 import CategoryDetails from "./components/Category/CategoryDetails";
 
 const App = () => {
-  const [token, setToken] = useState(null);
-  useEffect(() => {
-    setToken(Cookies.get("token"));
-  }, []);
-  console.log({ token });
+  // const [token, setToken] = useState(null);
+  // useEffect(() => {
+  //   setToken(Cookies.get("token"));
+  // }, []);
+  // console.log({ token });
   return (
     <div className="App">
       <BrowserRouter>

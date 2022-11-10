@@ -124,7 +124,7 @@ const ProductAdd = () => {
           Description: f.target.description.value,
           ListPrice: f.target.price.value,
 
-          // sale price will not be more than list price
+          // sale price will not be higher than list price
           SalePrice: f.target.saleprice.value
             ? parseFloat(f.target.saleprice.value) >
               parseFloat(f.target.price.value)

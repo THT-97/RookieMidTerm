@@ -57,12 +57,14 @@ const ProductIndex = () => {
   function Disable(id) {
     if (confirm(`Disable product #${id}?`)) {
       ProductService.delete(id)
-        .then(alert("Product disabled"))
+        .then(() => {
+          alert("Product disabled");
+          ProductService.getPage(page, limit).then((response) =>
+            setProducts(response.data)
+          );
+        })
         .catch((error) => alert(error));
     }
-    ProductService.getPage(page, limit).then((response) =>
-      setProducts(response.data)
-    );
   }
 
   if (products != null) {

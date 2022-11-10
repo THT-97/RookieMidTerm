@@ -6,7 +6,7 @@ import { commonUrl } from "../firebase";
 const Navbar = () => {
   const [username, setUsername] = useState(null);
   useEffect(() => {
-    console.log(Cookies.get("username"));
+    // console.log(Cookies.get("username"));
     if (
       Cookies.get("username") === undefined &&
       Cookies.get("role") !== "SysAdmin" &&

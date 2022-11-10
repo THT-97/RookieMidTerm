@@ -1,5 +1,8 @@
 import axios from "axios";
+import AxiosClient from "./AxiosClient";
 const CategoryService = {
+  // Normal axios instance is used for normal requests
+  // AxiosClient is used for authorized requests
   getAll() {
     return axios.get(`https://localhost:7171/api/Category/GetAll`);
   },
@@ -18,18 +21,15 @@ const CategoryService = {
   },
 
   create(entity) {
-    return axios.post("https://localhost:7171/api/Category/Create", entity);
+    return AxiosClient.post("Category/Create", entity);
   },
 
   edit(id, entity) {
-    return axios.put(
-      `https://localhost:7171/api/Category/Update?id=${id}`,
-      entity
-    );
+    return AxiosClient.put(`Category/Update?id=${id}`, entity);
   },
 
   delete(id) {
-    return axios.delete(`https://localhost:7171/api/Category/Delete?id=${id}`);
+    return AxiosClient.delete(`Category/Delete?id=${id}`);
   }
 };
 export default CategoryService;
