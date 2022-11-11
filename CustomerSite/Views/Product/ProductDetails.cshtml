@@ -6,6 +6,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     string? username = Context.Request.Cookies["Username"];
     string? token = Context.Request.Cookies["Token"];
+    string? roles = Context.Request.Cookies["Roles"];
     List<string>? images = new();
     List<string>? sizes = new();
     List<string>? colors = new();
@@ -159,7 +160,7 @@
                 </form>
 
                 <!--Rating form for logged in users-->
-                @if (username != null && token != null)
+                @if (username != null && token != null && !roles.Contains("Admin"))
                 {
                     <form id="rating" class="position-relative h-25" asp-action="Rate" asp-controller="Product" asp-route-productId="@Model.Id" method="post">
                         <h5 class="mt-2 mb-0">Your rating:</h5>

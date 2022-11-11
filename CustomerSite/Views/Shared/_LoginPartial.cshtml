@@ -16,7 +16,7 @@
                 <li><b class="dropdown-item">@username</b></li>
             <li>
                 <form class="form-inline" asp-controller="User" asp-action="SignOut" asp-route-prevPage="@prevPage">
-                    <button type="submit" class="nav-link btn btn-link text-dark dropdown-item">Logout</button>
+                    <button type="submit" class="nav-link btn btn-link text-dark dropdown-item">Sign Out</button>
                 </form>
             </li>
         </ul>
@@ -27,7 +27,7 @@ else
     <div class="nav-item btn-group">
             <a class="btn btn-outline-info" asp-controller="User" asp-action="Register">Register</a>
         @*<a class="btn btn-outline-primary" asp-area="Identity" asp-page="/Account/Login">Login</a>*@
-        <a class="btn btn-outline-primary" asp-controller="User" asp-action="SignIn">Login</a>
+        <a class="btn btn-outline-primary" asp-controller="User" asp-action="SignIn">Sign In</a>
     </div>
 }
 </div>

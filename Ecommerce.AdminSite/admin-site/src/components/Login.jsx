@@ -22,7 +22,7 @@ const Login = () => {
               window.location.href = "/";
             } else alert("Unauthorized");
           })
-          .catch((error) => alert(error));
+          .catch(alert("Unauthorized"));
       })
       .catch((error) => alert(error));
   }
@@ -30,9 +30,12 @@ const Login = () => {
     <div className="col-8 text-center p-5">
       <h1>ADMIN SIGN IN</h1>
       <hr />
-      <form onSubmit={Submit}>
-        <table className="d-flex justify-content-center">
-          <tbody>
+      <form
+        className="h-50 pt-2 d-flex justify-content-center"
+        onSubmit={Submit}
+      >
+        <table className="w-50 h-100 d-flex justify-content-center shadow rounded">
+          <tbody className="m-4">
             <tr>
               <td>
                 <label htmlFor="username">Username</label>
@@ -40,7 +43,7 @@ const Login = () => {
               <td>
                 <input
                   required
-                  className="input"
+                  className="input form-control shadow rounded"
                   type="text"
                   name="username"
                   placeholder="Username..."
@@ -54,6 +57,7 @@ const Login = () => {
               <td>
                 <input
                   required
+                  className="input form-control"
                   type="password"
                   name="password"
                   placeholder="Password..."
