@@ -53,7 +53,7 @@ namespace Ecommerce.API.UnitTest.Controllers
 
             //ACT
             JsonResult? result = await productController.GetNew() as JsonResult;
-            List<ProductDTO>? productDTO = (List<ProductDTO>?)result.Value;
+            List<ProductDTO>? productDTO = (List<ProductDTO>?)result?.Value;
             Assert.NotNull(result);
             Assert.NotNull(productDTO);
             Assert.NotEmpty(productDTO);
@@ -83,7 +83,7 @@ namespace Ecommerce.API.UnitTest.Controllers
         {
             //ARRANGE
             //list of more than 30 products
-            List<Product> products = null;
+            List<Product>? products = null;
             //Arranging Service
             _productServiceMoq.Setup(p => p.GetNewAsync()).ReturnsAsync(products);
             //Arranging Controller
@@ -124,7 +124,7 @@ namespace Ecommerce.API.UnitTest.Controllers
 
             //ACT
             JsonResult? result = await productController.GetHighRatings() as JsonResult;
-            List<ProductDTO>? productDTO = (List<ProductDTO>?)result.Value;
+            List<ProductDTO>? productDTO = (List<ProductDTO>?)result?.Value;
             Assert.NotNull(result);
             Assert.NotNull(productDTO);
             Assert.NotEmpty(productDTO);
@@ -208,9 +208,9 @@ namespace Ecommerce.API.UnitTest.Controllers
 
             //ACT
             JsonResult? result = await productController.GetAll() as JsonResult;
-            List<ProductDTO>? productDTO = (List<ProductDTO>?)result.Value;
+            List<ProductDTO>? productDTO = (List<ProductDTO>?)result?.Value;
             Assert.NotNull(result);
-            Assert.NotEmpty(productDTO);
+            Assert.NotNull(productDTO);
             Assert.Equivalent(expected, productDTO);
         }
 
@@ -290,7 +290,7 @@ namespace Ecommerce.API.UnitTest.Controllers
 
             //ACT
             JsonResult? result = await productController.GetByCategory(categoryName, page, limit) as JsonResult;
-            List<ProductDTO>? productDTO = (List<ProductDTO>?)result.Value;
+            List<ProductDTO>? productDTO = (List<ProductDTO>?)result?.Value;
             Assert.NotNull(result);
             Assert.NotNull(productDTO);
             Assert.NotEmpty(productDTO);
@@ -389,9 +389,9 @@ namespace Ecommerce.API.UnitTest.Controllers
 
             //ACT
             JsonResult? result = await productController.AdminGetByID(id) as JsonResult;
-            ProductADTO? productADTO = (ProductADTO?)result.Value;
+            ProductADTO? productADTO = (ProductADTO?)result?.Value;
             Assert.NotNull(result);
-            Assert.Equivalent(expected.SingleOrDefault(p => p.Id == id),
+            Assert.Equivalent(expected.FirstOrDefault(p => p.Id == id),
                               productADTO);
         }
     }

@@ -2,7 +2,9 @@
 using Ecommerce.API.Services;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
+using Ecommerce.DTO.Enum;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.API.UnitTest.Services
@@ -40,24 +42,24 @@ namespace Ecommerce.API.UnitTest.Services
 
             _users = new()
             {
-                new IdentityUser(){Id = "user1"},
-                new IdentityUser(){Id = "user2"},
-                new IdentityUser(){Id = "user3"}
+                new IdentityUser(){Id = "user1", Email = "email1"},
+                new IdentityUser(){Id = "user2", Email = "email2"},
+                new IdentityUser(){Id = "user3",  Email = "email3"}
 
             };
 
             _products = new()
             {
-                new Product(){Id=1, Name="Product 1", Rating=4, RatingCount=2, Category = _categories[0], Brand = _brands[0]},
-                new Product(){Id=2, Name="Product 2", Rating=3, RatingCount=2, Category = _categories[0], Brand = _brands[1]},
-                new Product(){Id=3, Name="Product 3", Rating=3, RatingCount=1, Category = _categories[1], Brand = _brands[2]},
-                new Product(){Id=4, Name="Product 4", Category = _categories[1], Brand = _brands[0]},
-                new Product(){Id=5, Name="Product 5", Category = _categories[1], Brand = _brands[1]},
-                new Product(){Id=6, Name="Product 6", Category = _categories[2], Brand = _brands[2]},
-                new Product(){Id=7, Name="Product 7", Category = _categories[1], Brand = _brands[2]},
-                new Product(){Id=8, Name="Product 8", Category = _categories[2], Brand = _brands[0]},
-                new Product(){Id=9, Name="Product 9", Category = _categories[0], Brand = _brands[1]},
-                new Product(){Id=10, Name="Product 10", Category = _categories[2], Brand = _brands[2]}
+                new Product(){Id=1, Name="Product 1", Rating=4, RatingCount=2, Category = _categories[0], Brand = _brands[0], Status = (byte)CommonStatus.Available},
+                new Product(){Id=2, Name="Product 2", Rating=3, RatingCount=2, Category = _categories[0], Brand = _brands[1], Status = (byte)CommonStatus.Available},
+                new Product(){Id=3, Name="Product 3", Rating=3, RatingCount=1, Category = _categories[1], Brand = _brands[2], Status = (byte)CommonStatus.Available},
+                new Product(){Id=4, Name="Product 4", Category = _categories[1], Brand = _brands[0], Status = (byte)CommonStatus.NotAvailable},
+                new Product(){Id=5, Name="Product 5", Category = _categories[1], Brand = _brands[1], Status = (byte)CommonStatus.Available},
+                new Product(){Id=6, Name="Product 6", Category = _categories[2], Brand = _brands[2], Status = (byte)CommonStatus.Available},
+                new Product(){Id=7, Name="Product 7", Category = _categories[1], Brand = _brands[2], Status = (byte)CommonStatus.Available},
+                new Product(){Id=8, Name="Product 8", Category = _categories[2], Brand = _brands[0], Status =(byte) CommonStatus.NotAvailable},
+                new Product(){Id=9, Name="Product 9", Category = _categories[0], Brand = _brands[1], Status =(byte) CommonStatus.Available},
+                new Product(){Id=10, Name="Product 10", Category = _categories[2], Brand = _brands[2], Status =(byte) CommonStatus.Available}
             };
 
             _ratings = new()
@@ -90,7 +92,8 @@ namespace Ecommerce.API.UnitTest.Services
             List<Product>? result = productService.GetAllAsync().Result;
             Assert.NotNull(result);
             Assert.NotEmpty(result);
-            Assert.Equivalent(_products, result);
+            Assert.Equivalent(_products.Where(p => p.Status != (byte)CommonStatus.NotAvailable),
+                              result);
         }
 
         [Theory]
@@ -103,25 +106,29 @@ namespace Ecommerce.API.UnitTest.Services
         {
             //ARRANGE
             ProductService productService = new ProductService(_context);
+            int realPage = page;
+            int realLimit = limit;
+            if (realPage > 0) realPage--;
+            int count = _products.Count;
+            if (count < limit)
+            {
+                realPage = 0;
+                realLimit = count;
+            }
             //ACT
             List<Product>? result = productService.GetPageAsync(page, limit).Result;
             Assert.NotNull(result);
             Assert.NotEmpty(result);
-            int count = _context.Products.Count();
-            if (page > 0) page--;
-            if (count < limit)
-            {
-                page = 0;
-                limit = count;
-            }
-            Assert.Equivalent(_products.Skip(page*limit).Take(limit), result);
+            Assert.Equivalent(_products.Where(p => p.Status != (byte)CommonStatus.NotAvailable)
+                                       .Skip(realPage * realLimit)
+                                       .Take(realLimit), result);
         }
 
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
-        [InlineData(4)]
+        [InlineData(9)]
         [InlineData(5)]
         [InlineData(6)]
         public void GetByID_Success(int id)
@@ -133,7 +140,9 @@ namespace Ecommerce.API.UnitTest.Services
             Product? result = productService.GetByIDAsync(id).Result;
             Assert.NotNull(result);
             Assert.IsType<Product>(result);
-            Assert.Equivalent(_products.SingleOrDefault(p => p.Id == id), result);
+            Assert.Equivalent(_products.FirstOrDefault(p => p.Id == id
+                                                            && p.Status != (byte)CommonStatus.NotAvailable),
+                              result);
         }
 
         [Theory]
@@ -161,9 +170,25 @@ namespace Ecommerce.API.UnitTest.Services
             Assert.NotNull(result);
             Assert.IsType<List<Product>?>(result);
 
-            Assert.Equivalent(_products.Where(p => p.Category.Name == categoryName)
+            Assert.Equivalent(_products.Where(p => p.Category.Name == categoryName
+                                                   && p.Status != (byte)CommonStatus.NotAvailable)
                                        .Skip(realPage * realLimit)
                                        .Take(realLimit), result);
+        }
+
+        [Fact]
+        public void Rate_Success()
+        {
+            //ARRANGE
+            RatingDTO rate = new RatingDTO() { ProductId = 3, UserEmail = "email1", Rate= 4, Date = DateTime.Now };
+            ProductService productService = new ProductService(_context);
+
+            //ACT
+            IActionResult result = productService.RateAsync(rate).Result;
+
+            Assert.IsType<OkResult>(result);
+            Assert.Equal(_context.Products.FirstOrDefault(p => p.Id == 3)?.Rating, 3.5f);
+            Assert.Equal(_context.Products.FirstOrDefault(p => p.Id == 3)?.RatingCount, 2);
         }
 
         //Clean up after test

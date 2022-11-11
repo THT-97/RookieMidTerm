@@ -20,15 +20,15 @@ namespace Ecommerce.API.Services
             return await _context.Brands.CountAsync();
         }
 
-        public async Task<List<Brand>>? GetAllAsync()
+        public async Task<List<Brand>?> GetAllAsync()
         {
             return await _context.Brands.ToListAsync();
         }
 
-        public async Task<Brand>? GetByIDAsync(int id)
+        public async Task<Brand?> GetByIDAsync(int id)
         {
             return await _context.Brands.Where(b => b.Id == id)
-                                            .SingleOrDefaultAsync();
+                                            .FirstOrDefaultAsync();
         }
 
         public async Task<ActionResult> CreateAsync(Brand entry)
@@ -53,7 +53,7 @@ namespace Ecommerce.API.Services
 
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            Brand target = await _context.Brands.FirstOrDefaultAsync(b => b.Id == id);
+            Brand? target = await _context.Brands.FirstOrDefaultAsync(b => b.Id == id);
             if (target != null)
             {
                 _context.Brands.Remove(target);
@@ -63,7 +63,7 @@ namespace Ecommerce.API.Services
             return new NotFoundResult();
         }
 
-        public Task<List<Brand>>? GetPageAsync(int page, int limit)
+        public Task<List<Brand>?> GetPageAsync(int page, int limit)
         {
             throw new NotImplementedException();
         }

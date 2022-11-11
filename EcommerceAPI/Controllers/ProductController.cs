@@ -68,7 +68,7 @@ namespace Ecommerce.API.Controllers
         [Authorize(Roles = "SysAdmin")]
         public async Task<ActionResult> GetAll()
         {
-            List<Product> products = await _productService.GetAllAsync();
+            List<Product>? products = await _productService.GetAllAsync();
             List<ProductDTO> productDTOs = _outmapper.Map<List<ProductDTO>>(products);
             if (products != null)
             {
@@ -82,7 +82,7 @@ namespace Ecommerce.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetNew()
         {
-            List<Product> products = await _productService.GetNewAsync();
+            List<Product>? products = await _productService.GetNewAsync();
             if (products != null)
             {
                 
@@ -95,7 +95,7 @@ namespace Ecommerce.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetHighRatings()
         {
-            List<Product> products = await _productService.GetHighRatingAsync();
+            List<Product>? products = await _productService.GetHighRatingAsync();
             if (products != null)
             {
                 if (products.Count > 0) return Json(_outmapper.Map<List<ProductDTO>>(products));
@@ -108,7 +108,7 @@ namespace Ecommerce.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetByCategory(string categoryName, int page=0, int limit=6)
         {
-            List<Product> products = await _productService.GetByCategoryAsync(categoryName, page, limit);
+            List<Product>? products = await _productService.GetByCategoryAsync(categoryName, page, limit);
             if (products != null)
             {
                 if (products.Count > 0) return Json(_outmapper.Map<List<ProductDTO>>(products));
@@ -121,7 +121,7 @@ namespace Ecommerce.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetByBrand(string brandName, int page = 0, int limit = 6)
         {
-            List<Product> products = await _productService.GetByBrandAsync(brandName, page, limit);
+            List<Product>? products = await _productService.GetByBrandAsync(brandName, page, limit);
             if (products != null)
             {
                 if (products.Count > 0) return Json(_outmapper.Map<List<ProductDTO>>(products));
@@ -134,7 +134,7 @@ namespace Ecommerce.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetByID(int id)
         {
-            Product product = await _productService.GetByIDAsync(id);
+            Product? product = await _productService.GetByIDAsync(id);
             if (product != null) return Json(_outmapper.Map<ProductDTO>(product));
             return NotFound();
         }
@@ -143,7 +143,7 @@ namespace Ecommerce.API.Controllers
         [Authorize(Roles = "SysAdmin")]
         public async Task<ActionResult> AdminGetByID(int id)
         {
-            Product product = await _productService.GetByIDAsync(id);
+            Product? product = await _productService.GetByIDAsync(id);
             if (product != null) return Json(_outmapper.Map<ProductADTO>(product));
             return NotFound();
         }
@@ -152,7 +152,7 @@ namespace Ecommerce.API.Controllers
         [Authorize(Roles = "SysAdmin")]
         public async Task<ActionResult> GetPage(int page=0, int limit=6)
         {
-            List<Product> products = await _productService.GetPageAsync(page, limit);
+            List<Product>? products = await _productService.GetPageAsync(page, limit);
             if (products != null)
             {
                 if (products.Count > 0) return Json(_outmapper.Map<List<ProductADTO>>(products));

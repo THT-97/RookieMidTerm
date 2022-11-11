@@ -32,6 +32,6 @@ namespace Ecommerce.Data.Models
 
         public virtual Brand Brand { get; set; }
         public virtual Category Category { get; set; }
-        public virtual ICollection<Rating> Ratings { get; set; }
+        public virtual ICollection<Rating>? Ratings { get; set; }
     }
 }

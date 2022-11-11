@@ -13,7 +13,6 @@ namespace Ecommerce.CustomerSite.Controllers
         private HttpClient _httpClient;
         private HttpResponseMessage? _response;
         private string? _content;
-        private string? _token;
         public HomeController(IHttpClientFactory clientFactory)
         {
             _httpClient = clientFactory.CreateClient("client");
@@ -30,21 +29,21 @@ namespace Ecommerce.CustomerSite.Controllers
             //Call API Controller to get list of categories
             _response = await _httpClient.GetAsync("Category/GetAll");
             _content = await _response.Content.ReadAsStringAsync();
-            categories = JsonConvert.DeserializeObject<List<CategoryDTO>>(_content)
+            categories = JsonConvert.DeserializeObject<List<CategoryDTO>>(_content)?
                                     .Where(c => c.Status != (byte)CommonStatus.NotAvailable)
                                     .ToList();
 
             //Call again to get brand
             _response = await _httpClient.GetAsync("Brand/GetAll");
             _content = await _response.Content.ReadAsStringAsync();
-            brands = JsonConvert.DeserializeObject<List<BrandDTO>>(_content)
+            brands = JsonConvert.DeserializeObject<List<BrandDTO>>(_content)?
                                 .Where(b => b.Status != (byte)CommonStatus.NotAvailable)
                                 .ToList(); ;
 
             //Call again to get list of high rating products
             _response = await _httpClient.GetAsync("Product/GetHighRatings");
             _content = await _response.Content.ReadAsStringAsync();
-            highRatings = JsonConvert.DeserializeObject<List<ProductDTO>>(_content)
+            highRatings = JsonConvert.DeserializeObject<List<ProductDTO>>(_content)?
                                      .Where(p => p.Status != (byte)CommonStatus.NotAvailable
                                                  && p.Status != (byte)ProductStatus.Suspended)
                                      .ToList();
@@ -52,7 +51,7 @@ namespace Ecommerce.CustomerSite.Controllers
             //Call again to get new products
             _response = await _httpClient.GetAsync("Product/GetNew");
             _content = await _response.Content.ReadAsStringAsync();
-            newProducts = JsonConvert.DeserializeObject<List<ProductDTO>>(_content)
+            newProducts = JsonConvert.DeserializeObject<List<ProductDTO>>(_content)?
                                      .Where(p => p.Status != (byte)CommonStatus.NotAvailable
                                                  && p.Status != (byte)ProductStatus.Suspended)
                                      .ToList(); ;

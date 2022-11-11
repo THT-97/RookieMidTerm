@@ -44,7 +44,7 @@ namespace Ecommerce.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetByID(int id)
         {
-            Category category = await _categoryService.GetByIDAsync(id);
+            Category? category = await _categoryService.GetByIDAsync(id);
             return category != null ? Json(_mapper.Map<CategoryDTO>(category)) : NotFound();
         }
 

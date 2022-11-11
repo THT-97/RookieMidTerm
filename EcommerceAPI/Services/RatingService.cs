@@ -22,7 +22,7 @@ namespace Ecommerce.API.Services
 
         public async Task<ActionResult> CreateAsync(Rating entry)
         {
-            Rating dup = await _context.Ratings.Where(r => r.Product.Id == entry.Product.Id
+            Rating? dup = await _context.Ratings.Where(r => r.Product.Id == entry.Product.Id
                                                            && r.User.Id == entry.User.Id)
                                                .FirstOrDefaultAsync();
 
@@ -40,12 +40,12 @@ namespace Ecommerce.API.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<Rating>>? GetAllAsync()
+        public Task<List<Rating>?> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Rating>? GetByIDAsync(int id)
+        public Task<Rating?> GetByIDAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -55,7 +55,7 @@ namespace Ecommerce.API.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<Rating>>? GetPageAsync(int page, int limit)
+        public Task<List<Rating>?> GetPageAsync(int page, int limit)
         {
             throw new NotImplementedException();
         }

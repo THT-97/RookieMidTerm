@@ -3,7 +3,6 @@ using Ecommerce.API.ServiceInterfaces;
 using Ecommerce.Data.Models;
 using Ecommerce.DTO.DTOs;
 using Ecommerce.DTO.Enum;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,19 +22,23 @@ namespace Ecommerce.API.Services
 
         public async Task<int> CountAsync()
         {
-            return await _context.Products.CountAsync();
+            return await _context.Products.Where(p => p.Status
+                                                      != (byte)CommonStatus.NotAvailable)
+                                          .CountAsync();
         }
 
-        public async Task<List<Product>>? GetAllAsync()
+        public async Task<List<Product>?> GetAllAsync()
         {
-            List<Product> products = await _context.Products.OrderByDescending(p => p.CreatedDate)
+            List<Product> products = await _context.Products.Where(p => p.Status
+                                                                        != (byte)CommonStatus.NotAvailable)
+                                                            .OrderByDescending(p => p.CreatedDate)
                                                             .Include(p => p.Brand)
-                                                            .Include(p => p.Category)     
+                                                            .Include(p => p.Category)
                                                             .ToListAsync();
             return products;
         }
 
-        public async Task<List<Product>>? GetPageAsync(int page=0, int limit = 6)
+        public async Task<List<Product>?> GetPageAsync(int page=0, int limit = 6)
         {
             int count = await _context.Products.CountAsync();
             if (page > 0) page--;
@@ -44,7 +47,9 @@ namespace Ecommerce.API.Services
                 page = 0;
                 limit = count;
             }
-            List<Product> products = await _context.Products.OrderByDescending(p => p.CreatedDate)
+            List<Product> products = await _context.Products.Where(p => p.Status
+                                                                        != (byte)CommonStatus.NotAvailable)
+                                                            .OrderByDescending(p => p.CreatedDate)
                                                             .Skip(page * limit)
                                                             .Take(limit)
                                                             .Include(p => p.Brand)
@@ -53,17 +58,18 @@ namespace Ecommerce.API.Services
             return products;
         }
 
-        public async Task<Product>? GetByIDAsync(int id)
+        public async Task<Product?> GetByIDAsync(int id)
         {
-            return await _context.Products.Where(p => p.Id == id)
+            return await _context.Products.Where(p => p.Id == id
+                                                      && p.Status != (byte)CommonStatus.NotAvailable)
                                           .Include(p => p.Category)
                                           .Include(p => p.Brand)
                                           .Include(p => p.Ratings.OrderByDescending(r => r.Date))
                                           .ThenInclude(r => r.User)
-                                          .SingleOrDefaultAsync();
+                                          .FirstOrDefaultAsync();
         }
 
-        public async Task<List<Product>>? GetByCategoryAsync(string categoryName, int page=0, int limit=6)
+        public async Task<List<Product>?> GetByCategoryAsync(string categoryName, int page=0, int limit=6)
         {
             int count = await _context.Products.Where(p => p.Category.Name == categoryName).CountAsync();
             if (page > 0) page--;
@@ -72,7 +78,8 @@ namespace Ecommerce.API.Services
                 page = 0;
                 limit = count;
             }
-            return await _context.Products.Where(p => p.Category.Name == categoryName)
+            return await _context.Products.Where(p => p.Category.Name == categoryName
+                                                      && p.Status != (byte)CommonStatus.NotAvailable)
                                           .Skip(page * limit)
                                           .Take(limit)
                                           .Include(p => p.Category)
@@ -80,16 +87,19 @@ namespace Ecommerce.API.Services
                                           .ToListAsync();
         }
 
-        public async Task<List<Product>>? GetByBrandAsync(string brandName, int page= 0, int limit = 6)
+        public async Task<List<Product>?> GetByBrandAsync(string brandName, int page= 0, int limit = 6)
         {
-            int count = await _context.Products.Where(p => p.Brand.Name == brandName).CountAsync();
+            int count = await _context.Products.Where(p => p.Brand.Name == brandName
+                                                           && p.Status != (byte)CommonStatus.NotAvailable)
+                                               .CountAsync();
             if (page > 0) page--;
             if (count < limit)
             {
                 page = 0;
                 limit = count;
             }
-            return await _context.Products.Where(p => p.Brand.Name == brandName)
+            return await _context.Products.Where(p => p.Brand.Name == brandName
+                                                      && p.Status != (byte)CommonStatus.NotAvailable)
                                           .Skip(page * limit)
                                           .Take(limit)
                                           .Include(p => p.Category)
@@ -98,9 +108,10 @@ namespace Ecommerce.API.Services
         }
 
         //get 30 newest products
-        public async Task<List<Product>>? GetNewAsync()
+        public async Task<List<Product>?> GetNewAsync()
         {
-            return await _context.Products.OrderByDescending(p => p.CreatedDate)
+            return await _context.Products.Where(p => p.Status != (byte)CommonStatus.NotAvailable)
+                                          .OrderByDescending(p => p.CreatedDate)
                                           .Take(30)
                                           .Include(p => p.Category)
                                           .Include(p => p.Brand)
@@ -108,9 +119,10 @@ namespace Ecommerce.API.Services
         }
 
         //get 30 products with highest rating (>3)
-        public async Task<List<Product>>? GetHighRatingAsync()
+        public async Task<List<Product>?> GetHighRatingAsync()
         {
-            return await _context.Products.Where(p => p.Rating > 3)
+            return await _context.Products.Where(p => p.Rating > 3
+                                                      && p.Status != (byte)CommonStatus.NotAvailable)
                                           .OrderByDescending(p => p.Rating)
                                           .Take(30)
                                           .Include(p => p.Category)
@@ -154,7 +166,7 @@ namespace Ecommerce.API.Services
 
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            Product? product = await _context.Products.SingleOrDefaultAsync(p => p.Id == id);
+            Product? product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
             if(product == null) return new NotFoundResult();
             try {
                 product.Status = (byte)CommonStatus.NotAvailable;
@@ -165,18 +177,19 @@ namespace Ecommerce.API.Services
         }
 
         
-        public async Task<IActionResult>? RateAsync(RatingDTO rating)
+        public async Task<IActionResult> RateAsync(RatingDTO rating)
         {
             Product? product = await _context.Products.FirstOrDefaultAsync(p => p.Id == rating.ProductId);
             IdentityUser? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == rating.UserEmail);
-            Rating? rate = await _context.Ratings.FirstOrDefaultAsync(r => r.Product.Id == product.Id && r.User.Id == user.Id);
 
             if (product != null && user != null)
             {
+                Rating? rate = await _context.Ratings.FirstOrDefaultAsync(r => r.Product.Id == product.Id
+                                                                               && r.User.Id == user.Id);
                 if (rate != null)
                 {
                     //calculate average rating for existing user rating
-                    product.Rating = (float)(product.Rating * product.RatingCount - rate.Points + rating.Rate) / product.RatingCount;
+                    product.Rating = (product.Rating * product.RatingCount - rate.Points + rating.Rate) / product.RatingCount;
                     rate.Points = rating.Rate;
                     rate.Comment = rating.Comment;
                     rate.Date = rating.Date;

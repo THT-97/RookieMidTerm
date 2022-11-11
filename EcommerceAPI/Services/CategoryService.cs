@@ -18,21 +18,23 @@ namespace Ecommerce.API.Services
 
         public async Task<int> CountAsync()
         {
-            return await _context.Categories.CountAsync();
+            return await _context.Categories.Where(c => c.Status != (byte)CommonStatus.NotAvailable)
+                                            .CountAsync();
         }
 
-        public async Task<List<Category>>? GetAllAsync()
+        public async Task<List<Category>?> GetAllAsync()
         {
-            return await _context.Categories.ToListAsync();
+            return await _context.Categories.Where(c => c.Status != (byte)CommonStatus.NotAvailable)
+                                            .ToListAsync();
         }
 
-        public async Task<Category>? GetByIDAsync(int id)
+        public async Task<Category?> GetByIDAsync(int id)
         {
-            return await _context.Categories.Where(c => c.Id == id)
-                                            .SingleOrDefaultAsync();
+            return await _context.Categories.FirstOrDefaultAsync(c => c.Id == id
+                                                                      && c.Status != (byte)CommonStatus.NotAvailable);
         }
 
-        public async Task<List<Category>>? GetPageAsync(int page, int limit)
+        public async Task<List<Category>?> GetPageAsync(int page, int limit)
         {
             int count = await _context.Categories.CountAsync();
             if (page > 0) page--;
@@ -41,28 +43,31 @@ namespace Ecommerce.API.Services
                 page = 0;
                 limit = count;
             }
-            List<Category>? categories = await _context.Categories
-                                                            .Skip(page * limit)
-                                                            .Take(limit)
-                                                            .ToListAsync();
+            List<Category>? categories = await _context.Categories.Where(c => c.Status != (byte)CommonStatus.NotAvailable)
+                                                                  .Skip(page * limit)
+                                                                  .Take(limit)
+                                                                  .ToListAsync();
             return categories;
         }
 
         public async Task<int> CountProductsAsync(string categoryName)
         {
-            Category? category = await _context.Categories.Include(c => c.Products).FirstOrDefaultAsync(c => c.Name == categoryName.Trim());
+            Category? category = await _context.Categories.Include(c => c.Products.Where(p => p.Status != (byte)CommonStatus.NotAvailable))
+                                                          .FirstOrDefaultAsync(c => c.Name == categoryName.Trim());
             if (category != null) return category.Products.Count;
             return -1;
         }
 
         public async Task<Category?> GetByNameAsync(string categoryName)
         {
-            return await _context.Categories.FirstOrDefaultAsync(c => c.Name.ToLower() == categoryName.ToLower());
+            return await _context.Categories.FirstOrDefaultAsync(c => c.Name.ToLower() == categoryName.ToLower()
+                                                                      && c.Status != (byte)CommonStatus.NotAvailable);
         }
 
         public async Task<ActionResult> CreateAsync(Category entry)
         {
-            if (await _context.Categories.AnyAsync(c => c.Name.ToLower() == entry.Name.ToLower()))
+            if (await _context.Categories.AnyAsync(c => c.Name.ToLower() == entry.Name.ToLower()
+                                                        && c.Status != (byte)CommonStatus.NotAvailable))
             {
                 return new BadRequestResult();
             }
@@ -90,7 +95,7 @@ namespace Ecommerce.API.Services
 
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            Category target = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+            Category? target = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
             if (target != null)
             {
                 target.Status = (byte)CommonStatus.NotAvailable;

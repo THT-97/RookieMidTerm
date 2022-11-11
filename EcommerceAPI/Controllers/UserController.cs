@@ -27,7 +27,7 @@ namespace Ecommerce.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAll()
         {
-            List<IdentityUser> users = await _userService.GetAllAsync();
+            List<IdentityUser>? users = await _userService.GetAllAsync();
             if(users != null)
             {
                 if (users.Count > 0) return Json(_mapper.Map<List<IdentityUser>, List<UserDTO>>(users));

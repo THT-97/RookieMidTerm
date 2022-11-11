@@ -12,17 +12,15 @@ const Login = () => {
     console.log(login);
     await LoginService.signIn(login)
       .then(async (response) => {
-        await LoginService.getRole(login.username)
-          .then((subr) => {
-            // console.log(subr.data.toString());
-            if (subr.data.toString() === "SysAdmin") {
-              Cookies.set("role", response.data);
-              Cookies.set("token", response.data);
-              Cookies.set("username", login.username);
-              window.location.href = "/";
-            } else alert("Unauthorized");
-          })
-          .catch(alert("Unauthorized"));
+        await LoginService.getRole(login.username).then((subr) => {
+          // console.log(subr.data.toString());
+          if (subr.data.toString() === "SysAdmin") {
+            Cookies.set("role", response.data);
+            Cookies.set("token", response.data);
+            Cookies.set("username", login.username);
+            window.location.href = "/";
+          } else alert("Unauthorized");
+        });
       })
       .catch((error) => alert(error));
   }

@@ -30,17 +30,17 @@ namespace Ecommerce.API.Services
             throw new NotImplementedException();
         }
 
-        public async Task<List<IdentityUser>>? GetAllAsync()
+        public async Task<List<IdentityUser>?> GetAllAsync()
         {
             return await _context.Users.ToListAsync();
         }
 
-        public Task<IdentityUser>? GetByIDAsync(int id)
+        public Task<IdentityUser?> GetByIDAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<IdentityUser>>? GetPageAsync(int page, int limit)
+        public Task<List<IdentityUser>?> GetPageAsync(int page, int limit)
         {
             throw new NotImplementedException();
         }

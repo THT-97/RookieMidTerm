@@ -42,7 +42,7 @@ namespace Ecommerce.API.UnitTest.Controllers
 
             //ACT
             JsonResult? result = await categoryController.GetAll() as JsonResult;
-            List<CategoryDTO> categoriesDTO = (List<CategoryDTO>)result.Value;
+            List<CategoryDTO>? categoriesDTO = (List<CategoryDTO>?)result?.Value;
             Assert.NotNull(result);
             Assert.Equivalent(expected, categoriesDTO);
         }
@@ -108,7 +108,7 @@ namespace Ecommerce.API.UnitTest.Controllers
             //ACT
             //Controller test
             JsonResult? result = await categoryController.GetByID(id) as JsonResult;
-            CategoryDTO categoriesDTO = (CategoryDTO)result.Value;
+            CategoryDTO? categoriesDTO = (CategoryDTO?)result?.Value;
             Assert.NotNull(result);
             Assert.Equivalent(expected[id - 1], categoriesDTO);
         }
@@ -163,9 +163,9 @@ namespace Ecommerce.API.UnitTest.Controllers
             //ACT
             //Controller test
             JsonResult? result = await categoryController.CountProducts(categoryName) as JsonResult;
-            int count = (int) result.Value;
+            int? count = (int?) result?.Value;
             Assert.NotNull(result);
-            Assert.Equal(categories.FirstOrDefault(c => c.Name == categoryName).Products.Count, count);
+            Assert.Equal(categories.FirstOrDefault(c => c.Name == categoryName)?.Products.Count, count);
         }
 
         [Theory]
@@ -242,7 +242,7 @@ namespace Ecommerce.API.UnitTest.Controllers
             CategoryController categoryController = new CategoryController(_categoryServiceMoq.Object);
             //ACT
             JsonResult? result = await categoryController.GetPage(page, limit) as JsonResult;
-            List<CategoryDTO>? categoryDTOs = (List<CategoryDTO>?)result.Value;
+            List<CategoryDTO>? categoryDTOs = (List<CategoryDTO>?)result?.Value;
             Assert.NotNull(result);
             Assert.NotNull(categoryDTOs);
             Assert.NotEmpty(categoryDTOs);

@@ -25,7 +25,7 @@ namespace Ecommerce.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAll()
         {
-            List<Brand> brands = await _brandService.GetAllAsync();
+            List<Brand>? brands = await _brandService.GetAllAsync();
             if (brands != null)
             {
                 if (brands.Count > 0) return Json(_mapper.Map<List<BrandDTO>>(brands));
@@ -38,7 +38,7 @@ namespace Ecommerce.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetByID(int id)
         {
-            Brand brand = await _brandService.GetByIDAsync(id);
+            Brand? brand = await _brandService.GetByIDAsync(id);
             return brand != null ? Json(_mapper.Map<BrandDTO>(brand)) : NotFound();
         }
 
