@@ -155,7 +155,15 @@
                     }
                     <div>
                         <input type="number" min="1" max="@Model.Quantity" name="quantity-option" value="1"/>
-                        <button type="button" class="btn btn-outline-success">Add to cart</button>
+                        <button type="button" onclick="SaveCart(
+                            @Model.Id,
+                            '@Model.Name',
+                            @Model.SalePrice,
+                            @Model.ListPrice,
+                            '@Model.Colors.Split(' ')[0]',
+                            '@Model.Sizes.Split(' ')[0]')" class="btn btn-outline-success">
+                            Add to cart
+                        </button>
                     </div>
                 </form>
 

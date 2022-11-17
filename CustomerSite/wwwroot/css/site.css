@@ -17,3 +17,28 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+#cart-btn {
+    position: relative;
+}
+
+#cart-counter {
+    background-color: red;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 1.2rem 1.2rem;
+    position: absolute;
+    top: 0;
+    left: 20%;
+    padding: 0;
+    margin-left: 2px;
+    transform: translate(0,-25%);
+}
+
+#cart-count {
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}

@@ -8,6 +8,7 @@
     }
     var count = ViewData["count"];
 }
+
 <div class="card col-3 m-3 text-center productCard">
     @if(images != null){
         <div class="slide-wrapper card-img-top">
@@ -84,7 +85,15 @@
             <a class="btn btn-primary card-link" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.Id">
                 <small>Details</small>
             </a>
-            <a href="#" class="btn btn-success"><small>Add to cart</small></a>
+            <a onclick="SaveCart(
+                    @Model.Id,
+                    '@Model.Name',
+                    @Model.SalePrice,
+                    @Model.ListPrice,
+                    '@Model.Colors.Split(' ')[0]',
+                    '@Model.Sizes.Split(' ')[0]')" class="btn btn-success">
+                <small>Add to cart</small>
+            </a>
         </div>
     </div>
 </div>
